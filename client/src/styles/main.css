@@ -318,3 +318,126 @@ textarea:focus { outline: none; border-color: var(--blue); }
 .summary-stat { text-align: center; padding: 16px; background: var(--gray-50); border-radius: 10px; }
 .summary-stat-value { font-size: 2rem; font-weight: 800; color: var(--blue); }
 .summary-stat-label { font-size: .82rem; color: var(--gray-600); margin-top: 4px; }
+
+/* ---- Welcome / Landing Page ---- */
+.welcome-page {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 20px 0 40px;
+}
+
+.welcome-hero {
+  text-align: center;
+  padding: 48px 24px 40px;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 28px;
+}
+
+.welcome-logo {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.welcome-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--blue);
+  margin-bottom: 12px;
+}
+
+.welcome-subtitle {
+  font-size: 1.05rem;
+  color: var(--gray-600);
+  max-width: 480px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+
+.welcome-cta {
+  font-size: 1.05rem;
+  padding: 14px 36px;
+  border-radius: 10px;
+}
+
+.welcome-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.welcome-step-card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.welcome-step-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.welcome-step-num {
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 6px;
+}
+
+.welcome-step-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--gray-800);
+}
+
+.welcome-step-card p {
+  font-size: .85rem;
+  color: var(--gray-600);
+  line-height: 1.55;
+}
+
+.welcome-doc-types {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  text-align: center;
+}
+
+.welcome-doc-types-title {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: 12px;
+}
+
+.welcome-doc-type-list {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.welcome-doc-type-list span {
+  font-size: .92rem;
+  color: var(--gray-600);
+  background: var(--gray-50);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--gray-200);
+}
+
+@media (max-width: 600px) {
+  .welcome-steps { grid-template-columns: 1fr; }
+  .welcome-title { font-size: 1.5rem; }
+}

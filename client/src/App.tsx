@@ -7,8 +7,10 @@ import { DiagnosticStep } from './components/DiagnosticStep';
 import { LearningStep } from './components/LearningStep';
 import { AssessmentStep } from './components/AssessmentStep';
 import { SummaryStep } from './components/SummaryStep';
+import { WelcomeStep } from './components/WelcomeStep';
 
 export type AppStep =
+  | 'welcome'
   | 'select-type'
   | 'input-doc'
   | 'diagnostic'
@@ -29,7 +31,7 @@ export interface AppState {
 }
 
 export default function App() {
-  const [step, setStep] = useState<AppStep>('select-type');
+  const [step, setStep] = useState<AppStep>('welcome');
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -128,10 +130,11 @@ export default function App() {
       completedUnits: new Set(),
     });
     setError(null);
-    setStep('select-type');
+    setStep('welcome');
   };
 
   const stepNumber: Record<AppStep, number> = {
+    'welcome': 0,
     'select-type': 1,
     'input-doc': 1,
     'diagnostic': 2,
@@ -149,7 +152,7 @@ export default function App() {
       </div>
 
       <div className="main-content">
-        <StepIndicator current={stepNumber[step]} />
+        {step !== 'welcome' && <StepIndicator current={stepNumber[step]} />}
 
         {error && (
           <div className="alert alert-error">❌ {error}</div>
@@ -160,6 +163,10 @@ export default function App() {
             <div className="spinner" />
             <div className="loader-text">{loadingText}</div>
           </div>
+        )}
+
+        {step === 'welcome' && (
+          <WelcomeStep onStart={() => setStep('select-type')} />
         )}
 
         {step === 'select-type' && (
