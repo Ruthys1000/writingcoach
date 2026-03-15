@@ -36,7 +36,8 @@ app.use('/api', coachRoutes);
 if (IS_PROD) {
   const staticDir = path.join(__dirname, '../../client/dist');
   app.use(express.static(staticDir));
-  app.get('*', (_req, res) => {
+  // Express 5 removed '*' wildcard — use app.use as catch-all for React SPA
+  app.use((_req, res) => {
     res.sendFile(path.join(staticDir, 'index.html'));
   });
 }
