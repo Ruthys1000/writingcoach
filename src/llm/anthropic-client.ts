@@ -10,23 +10,56 @@ export class AnthropicClient extends LLMClient {
   private client: Anthropic;
   private model: string;
 
-  constructor(apiKey?: string, model = 'claude-opus-4-6') {
+  constructor(apiKey?: string, model = 'claude-haiku-4-5') {
     super();
-    this.client = new Anthropic({ apiKey: apiKey ?? process.env.ANTHROPIC_API_KEY });
+
+    // In sandboxed/container environments Node.js native fetch doesn't
+    // honour https_proxy. Use node-fetch v2 + https-proxy-agent so the
+    // Anthropic SDK reaches the API through the same proxy that curl uses.
+    const proxyUrl =
+      process.env.https_proxy ??
+      process.env.HTTPS_PROXY ??
+      process.env.http_proxy ??
+      process.env.HTTP_PROXY;
+
+    let customFetch: typeof fetch | undefined;
+    if (proxyUrl) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const nodeFetch = require('node-fetch') as (
+        url: string,
+        opts?: object,
+      ) => Promise<unknown>;
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { HttpsProxyAgent } = require('https-proxy-agent') as {
+        HttpsProxyAgent: new (url: string) => object;
+      };
+      const agent = new HttpsProxyAgent(proxyUrl);
+      customFetch = (input: string | URL | Request, init?: RequestInit) => {
+        const url =
+          input instanceof Request
+            ? input.url
+            : typeof input === 'string'
+              ? input
+              : input.toString();
+        return nodeFetch(url, { ...(init as object), agent }) as Promise<Response>;
+      };
+    }
+
+    this.client = new Anthropic({
+      apiKey: apiKey ?? process.env.ANTHROPIC_API_KEY,
+      timeout: 120_000,
+      ...(customFetch ? { fetch: customFetch } : {}),
+    });
     this.model = model;
   }
 
   async chat(systemPrompt: string, userMessage: string): Promise<string> {
-    // Use streaming with get_final_message to avoid timeouts on large inputs
-    const stream = this.client.messages.stream({
+    const message = await this.client.messages.create({
       model: this.model,
       max_tokens: 4096,
-      thinking: { type: 'adaptive' },
       system: systemPrompt,
       messages: [{ role: 'user', content: userMessage }],
     });
-
-    const message = await stream.finalMessage();
 
     const textBlock = message.content.find((b) => b.type === 'text');
     if (!textBlock || textBlock.type !== 'text') {

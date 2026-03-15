@@ -18,6 +18,12 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 
+// Extend socket timeout for long LLM calls (2 min)
+app.use((_req, res, next) => {
+  res.socket?.setTimeout(150_000);
+  next();
+});
+
 // API
 app.use('/api', coachRoutes);
 
