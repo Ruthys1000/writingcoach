@@ -24,6 +24,11 @@ app.use((_req, res, next) => {
   next();
 });
 
+// Health check (used by Railway)
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok' });
+});
+
 // API
 app.use('/api', coachRoutes);
 
@@ -36,7 +41,7 @@ if (IS_PROD) {
   });
 }
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   const provider = process.env.LLM_PROVIDER ?? 'anthropic';
   console.log(`✍️  WritingCoach server on http://localhost:${PORT}`);
   console.log(`   LLM provider: ${provider}`);
