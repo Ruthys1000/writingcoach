@@ -1,0 +1,26 @@
+{
+  "name": "writingcoach",
+  "version": "1.0.0",
+  "description": "מאמן הכתיבה המנהלית - Personal Administrative Writing Coach",
+  "main": "dist/cli.js",
+  "scripts": {
+    "start": "ts-node src/cli.ts",
+    "dev": "ts-node src/cli.ts",
+    "build": "tsc",
+    "build:start": "tsc && node dist/cli.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "chalk": "^4.1.2",
+    "dotenv": "^16.4.5",
+    "inquirer": "^8.2.6",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^8.2.10",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  }
+}
