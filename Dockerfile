@@ -42,9 +42,7 @@ COPY recipes/ ./recipes/
 ENV NODE_ENV=production
 ENV PORT=3000
 
-EXPOSE 3000
-
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \
-  CMD wget -qO- http://localhost:3000/api/recipes || exit 1
+# Railway overrides PORT dynamically — expose the default and let the app bind
+EXPOSE $PORT
 
 CMD ["node", "dist/server/index.js"]
