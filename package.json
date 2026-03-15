@@ -4,22 +4,37 @@
   "description": "מאמן הכתיבה המנהלית - Personal Administrative Writing Coach",
   "main": "dist/cli.js",
   "scripts": {
-    "start": "ts-node src/cli.ts",
-    "dev": "ts-node src/cli.ts",
-    "build": "tsc",
-    "build:start": "tsc && node dist/cli.js"
+    "cli": "ts-node src/cli.ts",
+    "server": "ts-node server/index.ts",
+    "server:prod": "node dist/server/index.js",
+    "client:install": "cd client && npm install",
+    "client:dev": "cd client && npm run dev",
+    "client:build": "cd client && npm run build",
+    "dev:web": "concurrently -n server,client -c blue,cyan \"npm run server\" \"npm run client:dev\"",
+    "build": "npm run client:build && tsc",
+    "start": "NODE_ENV=production node dist/server/index.js",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up",
+    "docker:ollama": "docker compose --profile ollama up"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
     "chalk": "^4.1.2",
+    "cors": "^2.8.6",
     "dotenv": "^16.4.5",
+    "express": "^5.2.1",
     "inquirer": "^8.2.6",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/inquirer": "^8.2.10",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.14.0",
+    "@types/uuid": "^10.0.0",
+    "concurrently": "^9.2.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.0"
   }

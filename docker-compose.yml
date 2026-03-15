@@ -1,0 +1,46 @@
+# ============================================================
+# WritingCoach — Docker Compose
+#
+# Usage:
+#   Anthropic (dev/cloud):  LLM_PROVIDER=anthropic docker compose up
+#   Ollama (local/airgap):  LLM_PROVIDER=ollama docker compose --profile ollama up
+# ============================================================
+
+version: '3.9'
+
+services:
+  app:
+    build: .
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://ollama:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3}
+      RECIPES_DIR: /app/recipes
+    volumes:
+      # Mount recipes dir so you can add new recipes without rebuilding
+      - ./recipes:/app/recipes:ro
+    restart: unless-stopped
+    depends_on:
+      ollama:
+        condition: service_started
+        required: false
+
+  # ---- Local LLM (airgap mode) ----
+  # Start with: docker compose --profile ollama up
+  ollama:
+    image: ollama/ollama:latest
+    profiles: [ollama]
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    # Pull the model on first start
+    entrypoint: ["/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull ${OLLAMA_MODEL:-llama3} && wait"]
+
+volumes:
+  ollama_data:

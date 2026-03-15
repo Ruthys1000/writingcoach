@@ -1,0 +1,224 @@
+import { useState, useEffect } from 'react';
+import { api, RecipeInfo, DiagnosticReport, Recipe, LearningUnit } from './api';
+import { StepIndicator } from './components/StepIndicator';
+import { DocTypeStep } from './components/DocTypeStep';
+import { DocumentStep } from './components/DocumentStep';
+import { DiagnosticStep } from './components/DiagnosticStep';
+import { LearningStep } from './components/LearningStep';
+import { AssessmentStep } from './components/AssessmentStep';
+import { SummaryStep } from './components/SummaryStep';
+
+export type AppStep =
+  | 'select-type'
+  | 'input-doc'
+  | 'diagnostic'
+  | 'learning'
+  | 'assessment'
+  | 'summary';
+
+export interface AppState {
+  recipes: RecipeInfo[];
+  selectedRecipeId: string | null;
+  documentText: string;
+  sessionId: string | null;
+  report: DiagnosticReport | null;
+  recipe: Recipe | null;
+  learningUnits: LearningUnit[];
+  currentUnitIndex: number;
+  completedUnits: Set<number>;
+}
+
+export default function App() {
+  const [step, setStep] = useState<AppStep>('select-type');
+  const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [state, setState] = useState<AppState>({
+    recipes: [],
+    selectedRecipeId: null,
+    documentText: '',
+    sessionId: null,
+    report: null,
+    recipe: null,
+    learningUnits: [],
+    currentUnitIndex: 0,
+    completedUnits: new Set(),
+  });
+
+  useEffect(() => {
+    api.getRecipes().then((recipes) =>
+      setState((s) => ({ ...s, recipes })),
+    );
+  }, []);
+
+  const withLoading = async (text: string, fn: () => Promise<void>) => {
+    setLoadingText(text);
+    setLoading(true);
+    setError(null);
+    try {
+      await fn();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDocTypeSelect = (id: string) => {
+    setState((s) => ({ ...s, selectedRecipeId: id }));
+    setStep('input-doc');
+  };
+
+  const handleDocSubmit = (text: string) => {
+    setState((s) => ({ ...s, documentText: text }));
+    withLoading('מנתח את המסמך שלך...', async () => {
+      const { sessionId, report, recipe } = await api.diagnose(
+        state.selectedRecipeId!,
+        text,
+      );
+      setState((s) => ({ ...s, sessionId, report, recipe }));
+      setStep('diagnostic');
+    });
+  };
+
+  const handleStartLearning = () => {
+    withLoading('מכין שיעורים מותאמים אישית...', async () => {
+      const { learningUnits } = await api.generateLearning(state.sessionId!);
+      setState((s) => ({ ...s, learningUnits, currentUnitIndex: 0 }));
+      setStep('learning');
+    });
+  };
+
+  const handleStartAssessment = (unitIndex: number) => {
+    setState((s) => ({ ...s, currentUnitIndex: unitIndex }));
+    setStep('assessment');
+  };
+
+  const handleAssessmentDone = (unitIndex: number) => {
+    setState((s) => ({
+      ...s,
+      completedUnits: new Set([...s.completedUnits, unitIndex]),
+    }));
+    if (unitIndex + 1 < state.learningUnits.length) {
+      setState((s) => ({ ...s, currentUnitIndex: unitIndex + 1 }));
+      setStep('learning');
+    } else {
+      setStep('summary');
+    }
+  };
+
+  const handleSkipUnit = (unitIndex: number) => {
+    if (unitIndex + 1 < state.learningUnits.length) {
+      setState((s) => ({ ...s, currentUnitIndex: unitIndex + 1 }));
+    } else {
+      setStep('summary');
+    }
+  };
+
+  const handleRestart = () => {
+    setState({
+      recipes: state.recipes,
+      selectedRecipeId: null,
+      documentText: '',
+      sessionId: null,
+      report: null,
+      recipe: null,
+      learningUnits: [],
+      currentUnitIndex: 0,
+      completedUnits: new Set(),
+    });
+    setError(null);
+    setStep('select-type');
+  };
+
+  const stepNumber: Record<AppStep, number> = {
+    'select-type': 1,
+    'input-doc': 1,
+    'diagnostic': 2,
+    'learning': 3,
+    'assessment': 3,
+    'summary': 3,
+  };
+
+  return (
+    <div className="app-shell">
+      <div className="top-bar">
+        <span>✍️</span>
+        <h1>מאמן הכתיבה המנהלית</h1>
+        <span>Personal Writing Coach</span>
+      </div>
+
+      <div className="main-content">
+        <StepIndicator current={stepNumber[step]} />
+
+        {error && (
+          <div className="alert alert-error">❌ {error}</div>
+        )}
+
+        {loading && (
+          <div className="loader-overlay">
+            <div className="spinner" />
+            <div className="loader-text">{loadingText}</div>
+          </div>
+        )}
+
+        {step === 'select-type' && (
+          <DocTypeStep recipes={state.recipes} onSelect={handleDocTypeSelect} />
+        )}
+
+        {step === 'input-doc' && (
+          <DocumentStep
+            recipeName={
+              state.recipes.find((r) => r.id === state.selectedRecipeId)?.name ??
+              'מסמך'
+            }
+            onSubmit={handleDocSubmit}
+            onBack={() => setStep('select-type')}
+          />
+        )}
+
+        {step === 'diagnostic' && state.report && state.recipe && (
+          <DiagnosticStep
+            report={state.report}
+            recipe={state.recipe}
+            onStartLearning={handleStartLearning}
+            onRestart={handleRestart}
+          />
+        )}
+
+        {(step === 'learning' || step === 'assessment') &&
+          state.learningUnits.length > 0 && (
+            <>
+              {step === 'learning' && (
+                <LearningStep
+                  units={state.learningUnits}
+                  currentIndex={state.currentUnitIndex}
+                  completedUnits={state.completedUnits}
+                  onStartAssessment={handleStartAssessment}
+                  onSkip={handleSkipUnit}
+                />
+              )}
+              {step === 'assessment' && (
+                <AssessmentStep
+                  sessionId={state.sessionId!}
+                  unitIndex={state.currentUnitIndex}
+                  unit={state.learningUnits[state.currentUnitIndex]}
+                  onDone={handleAssessmentDone}
+                  onSkip={handleSkipUnit}
+                />
+              )}
+            </>
+          )}
+
+        {step === 'summary' && state.report && (
+          <SummaryStep
+            report={state.report}
+            totalUnits={state.learningUnits.length}
+            completedUnits={state.completedUnits.size}
+            onRestart={handleRestart}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
