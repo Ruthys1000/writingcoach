@@ -10,6 +10,7 @@ WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm ci
 COPY client/ .
+ENV NODE_OPTIONS=--max-old-space-size=512
 RUN npm run build
 
 # ---- Stage 2: Build TypeScript server ----
