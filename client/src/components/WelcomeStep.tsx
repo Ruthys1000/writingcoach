@@ -12,7 +12,7 @@ export function WelcomeStep({ onStart }: Props) {
         <p className="welcome-subtitle">
           כלי AI שמשפר את כתיבתך הארגונית — מותאם אישית לפי המסמך שלך
         </p>
-        <button className="btn-primary welcome-cta" onClick={onStart}>
+        <button className="welcome-cta" onClick={onStart}>
           התחל אימון ←
         </button>
       </div>
@@ -20,19 +20,19 @@ export function WelcomeStep({ onStart }: Props) {
       {/* 3-step explainer */}
       <div className="welcome-steps">
         <div className="welcome-step-card">
-          <div className="welcome-step-icon">🔍</div>
+          <div className="welcome-step-icon-wrap">🔍</div>
           <div className="welcome-step-num">שלב 1</div>
           <h3>אבחון</h3>
           <p>המאמן בוחן את המסמך שלך מול מחוון כשירות ומזהה נקודות לשיפור</p>
         </div>
         <div className="welcome-step-card">
-          <div className="welcome-step-icon">📚</div>
+          <div className="welcome-step-icon-wrap">📚</div>
           <div className="welcome-step-num">שלב 2</div>
           <h3>למידה</h3>
           <p>שיעורים מותאמים אישית עם דוגמאות לפני/אחרי מתוך הטקסט שלך</p>
         </div>
         <div className="welcome-step-card">
-          <div className="welcome-step-icon">✅</div>
+          <div className="welcome-step-icon-wrap">✅</div>
           <div className="welcome-step-num">שלב 3</div>
           <h3>תרגול</h3>
           <p>תכתוב מחדש קטעים מהמסמך שלך ותקבל משוב מיידי מה-AI</p>
