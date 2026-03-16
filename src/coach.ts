@@ -37,6 +37,10 @@ export class WritingCoach {
     this.assessment = new AssessmentEngine(llm);
   }
 
+  getRecipeLoader(): RecipeLoader {
+    return this.recipeLoader;
+  }
+
   listDocumentTypes(): Array<{ id: string; name: string; description: string }> {
     return this.recipeLoader.listAvailable();
   }

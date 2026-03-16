@@ -124,3 +124,29 @@ export const api = {
       { userRewrite },
     ),
 };
+
+async function del<T>(path: string): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, { method: 'DELETE' });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+  return data as T;
+}
+
+async function put<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+  return data as T;
+}
+
+export const adminApi = {
+  listRecipes: (): Promise<Recipe[]> => get('/admin/recipes'),
+  getRecipe: (id: string): Promise<Recipe> => get(`/admin/recipes/${id}`),
+  createRecipe: (recipe: Recipe): Promise<Recipe> => post('/admin/recipes', recipe),
+  updateRecipe: (id: string, recipe: Recipe): Promise<Recipe> => put(`/admin/recipes/${id}`, recipe),
+  deleteRecipe: (id: string): Promise<{ ok: boolean }> => del(`/admin/recipes/${id}`),
+};

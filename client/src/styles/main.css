@@ -441,3 +441,215 @@ textarea:focus { outline: none; border-color: var(--blue); }
   .welcome-steps { grid-template-columns: 1fr; }
   .welcome-title { font-size: 1.5rem; }
 }
+
+/* ============================================================
+   Top-bar admin link
+   ============================================================ */
+.top-bar-spacer { flex: 1; }
+.top-bar-admin {
+  font-size: .82rem;
+  color: var(--gray-600);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+.top-bar-admin:hover { background: var(--gray-100); color: var(--blue); border-color: var(--blue); }
+
+/* ============================================================
+   Admin Page — Overlay + Panel
+   ============================================================ */
+.admin-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+
+.admin-panel {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 40px rgba(0,0,0,.18);
+  width: 100%;
+  max-width: 860px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--gray-200);
+  gap: 12px;
+}
+.admin-header-right { display: flex; align-items: center; gap: 12px; }
+.admin-title { font-size: 1.1rem; font-weight: 700; color: var(--gray-800); }
+.admin-back { color: var(--blue); font-size: .9rem; }
+.admin-close { color: var(--gray-600); font-size: .9rem; }
+
+.admin-alert { margin: 12px 24px 0; }
+
+.admin-body { padding: 20px 24px; flex: 1; }
+
+/* List view */
+.admin-list-toolbar { margin-bottom: 16px; }
+.admin-loading { color: var(--gray-400); padding: 20px 0; text-align: center; }
+.admin-empty { color: var(--gray-400); padding: 20px 0; text-align: center; font-size: .95rem; }
+
+.admin-recipe-list { display: flex; flex-direction: column; gap: 12px; }
+.admin-recipe-card {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.admin-recipe-card:hover { border-color: var(--blue); background: var(--blue-lt); }
+.admin-recipe-name { font-weight: 700; font-size: 1rem; margin-bottom: 2px; }
+.admin-recipe-id { font-size: .78rem; color: var(--gray-400); font-family: monospace; margin-bottom: 4px; }
+.admin-recipe-desc { font-size: .88rem; color: var(--gray-600); margin-bottom: 4px; }
+.admin-recipe-meta { font-size: .8rem; color: var(--gray-400); }
+.admin-recipe-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* Edit view */
+.admin-section {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+.admin-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.admin-section-title { font-weight: 700; font-size: 1rem; color: var(--gray-800); margin-bottom: 14px; }
+.admin-section-header .admin-section-title { margin-bottom: 0; }
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.admin-label {
+  display: flex;
+  flex-direction: column;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--gray-600);
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.admin-hint { font-weight: 400; font-size: .78rem; color: var(--gray-400); }
+.admin-input, .admin-textarea, .admin-select {
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: .9rem;
+  font-family: inherit;
+  color: var(--gray-800);
+  background: white;
+  direction: rtl;
+  width: 100%;
+}
+.admin-input:focus, .admin-textarea:focus, .admin-select:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+}
+.admin-input:disabled { background: var(--gray-100); color: var(--gray-400); cursor: not-allowed; }
+.admin-textarea { resize: vertical; }
+
+/* Criterion cards */
+.admin-criterion-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.admin-criterion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.admin-criterion-num {
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--blue);
+}
+.admin-criterion-controls { display: flex; gap: 6px; }
+
+.btn-icon {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: .85rem;
+  color: var(--gray-600);
+  transition: all .2s;
+}
+.btn-icon:hover { background: var(--gray-200); }
+.btn-icon:disabled { opacity: .4; cursor: not-allowed; }
+.btn-icon-danger:hover { background: var(--red-lt); border-color: var(--red); color: var(--red); }
+
+.admin-micro-lesson {
+  background: var(--blue-lt);
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 12px;
+}
+.admin-micro-title {
+  font-weight: 700;
+  font-size: .85rem;
+  color: var(--blue);
+  margin-bottom: 10px;
+}
+
+.admin-save-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--gray-200);
+  margin-top: 8px;
+}
+
+/* Danger button */
+.btn-danger {
+  background: var(--red-lt);
+  color: var(--red);
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: .85rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all .2s;
+}
+.btn-danger:hover { background: var(--red); color: white; }
+
+.alert-success {
+  background: var(--green-lt);
+  color: var(--green);
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: .9rem;
+}

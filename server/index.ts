@@ -10,6 +10,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import coachRoutes from './routes/coach';
+import adminRoutes from './routes/admin';
 
 const app = express();
 const PORT = parseInt(process.env.PORT ?? '3000', 10);
@@ -31,6 +32,7 @@ app.get('/health', (_req, res) => {
 
 // API
 app.use('/api', coachRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Serve React client in production
 if (IS_PROD) {

@@ -14,6 +14,7 @@ const router = Router();
 // Shared coach instance (LLM client is stateless)
 const llm = createLLMClient();
 const coach = new WritingCoach(llm);
+export { coach };
 
 // ---- GET /api/recipes ----
 router.get('/recipes', (_req: Request, res: Response) => {
