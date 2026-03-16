@@ -7,8 +7,10 @@
 import { LLMClient } from './base';
 import { AnthropicClient } from './anthropic-client';
 import { OllamaClient } from './ollama-client';
+import { OpenAICompatibleClient } from './openai-client';
+import { CohereClient } from './cohere-client';
 
-export type LLMProvider = 'anthropic' | 'ollama';
+export type LLMProvider = 'anthropic' | 'ollama' | 'openai' | 'cohere';
 
 export function createLLMClient(provider?: LLMProvider): LLMClient {
   const resolvedProvider =
@@ -19,10 +21,14 @@ export function createLLMClient(provider?: LLMProvider): LLMClient {
       return new AnthropicClient();
     case 'ollama':
       return new OllamaClient();
+    case 'openai':
+      return new OpenAICompatibleClient();
+    case 'cohere':
+      return new CohereClient();
     default:
       throw new Error(
         `Unknown LLM_PROVIDER="${resolvedProvider}". ` +
-          `Valid options: anthropic, ollama`,
+          `Valid options: anthropic, ollama, openai, cohere`,
       );
   }
 }
