@@ -59,7 +59,7 @@ export class RecipeLoader {
   save(recipe: Recipe): void {
     this.validate(recipe, `<in-memory:${recipe.id}>`);
     const filePath = path.join(this.recipesDir, `${recipe.id}.yaml`);
-    const yamlStr = yaml.dump(recipe, { allowUnicode: true, lineWidth: 120 });
+    const yamlStr = yaml.dump(recipe, { lineWidth: 120 });
     fs.writeFileSync(filePath, yamlStr, 'utf8');
     this.cache.set(recipe.id, recipe);
   }
