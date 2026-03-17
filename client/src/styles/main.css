@@ -382,6 +382,8 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   position: relative;
   overflow: hidden;
   animation: fadeInUp .7s ease both;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Amber vertical accent line */
@@ -473,6 +475,9 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   border: 1.5px solid var(--paper-300);
   box-shadow: var(--shadow-sm);
   animation: fadeInUp .6s .1s ease both;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform-style: flat;
 }
 
 .welcome-how-heading {
