@@ -506,7 +506,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   position: relative;
   margin-bottom: 64px;
 }
-/* Connecting line */
+/* Connecting line — delayed so it doesn't flash before cards appear */
 .welcome-steps-container::before {
   content: '';
   position: absolute;
@@ -515,9 +515,11 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   left: 16.66%;
   height: 2px;
   background: linear-gradient(to left, var(--amber-500), var(--amber-300), var(--amber-500));
-  opacity: .28;
+  opacity: 0;
   z-index: 0;
+  animation: lineReveal .3s .6s ease forwards;
 }
+@keyframes lineReveal { to { opacity: .28; } }
 .welcome-step-card {
   position: relative;
   z-index: 1;
