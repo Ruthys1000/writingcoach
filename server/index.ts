@@ -16,15 +16,20 @@ const app = express();
 const PORT = parseInt(process.env.PORT ?? '3000', 10);
 const IS_PROD = process.env.NODE_ENV === 'production';
 
-const allowedOrigins = IS_PROD
-  ? (process.env.ALLOWED_ORIGINS ?? '').split(',').map(o => o.trim()).filter(Boolean)
-  : ['http://localhost:3000', 'http://localhost:5173'];
+// ALLOWED_ORIGINS: comma-separated list to restrict API access (optional).
+// When empty, all origins are allowed (required for same-origin Railway deploys,
+// since browsers send Origin even for same-origin module-script and fetch requests).
+const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? '')
+  .split(',').map(o => o.trim()).filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
     if (!origin) return callback(null, true);
-    if (!IS_PROD || allowedOrigins.includes(origin)) return callback(null, true);
+    // If no allowlist configured → open to all origins (includes same-origin Railway)
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
     callback(new Error(`CORS: origin '${origin}' not allowed`));
   },
 }));
