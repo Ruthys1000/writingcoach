@@ -8,8 +8,7 @@ import { LearningStep } from './components/LearningStep';
 import { AssessmentStep } from './components/AssessmentStep';
 import { SummaryStep } from './components/SummaryStep';
 import { WelcomeStep } from './components/WelcomeStep';
-import { AdminPage } from './components/AdminPage';
-import { SystemPromptPage } from './components/SystemPromptPage';
+import { AdminDashboard } from './components/AdminDashboard';
 
 export type AppStep =
   | 'welcome'
@@ -18,7 +17,8 @@ export type AppStep =
   | 'diagnostic'
   | 'learning'
   | 'assessment'
-  | 'summary';
+  | 'summary'
+  | 'admin';
 
 export interface AppState {
   recipes: RecipeInfo[];
@@ -34,8 +34,6 @@ export interface AppState {
 
 export default function App() {
   const [step, setStep] = useState<AppStep>('welcome');
-  const [adminOpen, setAdminOpen] = useState(false);
-  const [systemPromptOpen, setSystemPromptOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -139,6 +137,7 @@ export default function App() {
 
   const stepNumber: Record<AppStep, number> = {
     'welcome': 0,
+    'admin': 0,
     'select-type': 1,
     'input-doc': 1,
     'diagnostic': 2,
@@ -147,22 +146,18 @@ export default function App() {
     'summary': 3,
   };
 
+  // Admin page gets its own full-page layout (no top-bar, no main-content wrapper)
+  if (step === 'admin') {
+    return <AdminDashboard onBack={() => setStep('welcome')} />;
+  }
+
   return (
     <div className="app-shell">
       <div className="top-bar">
         <span>✍️</span>
         <h1>מאמן הכתיבה המנהלית</h1>
         <span className="top-bar-spacer">Personal Writing Coach</span>
-        <button className="btn-ghost top-bar-admin" onClick={() => setSystemPromptOpen(true)}>
-          ✏️ סיסטם פרומפט
-        </button>
-        <button className="btn-ghost top-bar-admin" onClick={() => setAdminOpen(true)}>
-          ⚙️ ניהול מתכונים
-        </button>
       </div>
-
-      {adminOpen && <AdminPage onClose={() => setAdminOpen(false)} />}
-      {systemPromptOpen && <SystemPromptPage onClose={() => setSystemPromptOpen(false)} />}
 
       <div className="main-content">
         {step !== 'welcome' && <StepIndicator current={stepNumber[step]} />}
@@ -179,7 +174,10 @@ export default function App() {
         )}
 
         {step === 'welcome' && (
-          <WelcomeStep onStart={() => setStep('select-type')} />
+          <WelcomeStep
+            onStart={() => setStep('select-type')}
+            onAdminOpen={() => setStep('admin')}
+          />
         )}
 
         {step === 'select-type' && (
