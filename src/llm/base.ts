@@ -38,13 +38,13 @@ export abstract class LLMClient {
       const objEnd = cleaned.lastIndexOf('}');
       const arrStart = cleaned.indexOf('[');
       const arrEnd = cleaned.lastIndexOf(']');
-      const match = objStart !== -1 && objEnd > objStart
-        ? [null, cleaned.slice(objStart, objEnd + 1)]
+      const match: string | null = objStart !== -1 && objEnd > objStart
+        ? cleaned.slice(objStart, objEnd + 1)
         : arrStart !== -1 && arrEnd > arrStart
-          ? [null, cleaned.slice(arrStart, arrEnd + 1)]
+          ? cleaned.slice(arrStart, arrEnd + 1)
           : null;
       if (match) {
-        return JSON.parse(match[1]) as T;
+        return JSON.parse(match) as T;
       }
       throw new Error(`LLM returned non-JSON response:\n${text.slice(0, 300)}`);
     }
