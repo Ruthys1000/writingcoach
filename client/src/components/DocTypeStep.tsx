@@ -6,6 +6,18 @@ const ICONS: Record<string, string> = {
   'formal-letter': '📨',
 };
 
+const ACCENTS: Record<string, string> = {
+  'meeting-summary': '#2563eb',
+  'staff-work': '#7c3aed',
+  'formal-letter': '#059669',
+};
+
+const ACCENT_LIGHTS: Record<string, string> = {
+  'meeting-summary': '#eff6ff',
+  'staff-work': '#f5f3ff',
+  'formal-letter': '#ecfdf5',
+};
+
 interface Props {
   recipes: RecipeInfo[];
   onSelect: (id: string) => void;
@@ -13,22 +25,41 @@ interface Props {
 
 export function DocTypeStep({ recipes, onSelect }: Props) {
   return (
-    <div className="card">
-      <div className="card-title">📁 בחר סוג מסמך לאימון</div>
-      <p style={{ color: 'var(--gray-600)', marginBottom: 20, fontSize: '.92rem' }}>
-        המאמן יבחן את המסמך שלך מול מחוון הכשירות המתאים ויציע שיעורים מותאמים אישית.
-      </p>
-      <div className="doc-type-grid">
-        {recipes.map((r) => (
-          <button
-            key={r.id}
-            className="doc-type-card"
-            onClick={() => onSelect(r.id)}
-          >
-            <h3>{ICONS[r.id] ?? '📄'} {r.name}</h3>
-            <p>{r.description}</p>
-          </button>
-        ))}
+    <div className="doctype-page">
+      <div className="doctype-header">
+        <h2 className="doctype-title">בחר סוג מסמך לאימון</h2>
+        <p className="doctype-subtitle">
+          המאמן יבחן את המסמך שלך מול מחוון הכשירות המתאים ויציע שיעורים מותאמים אישית
+        </p>
+      </div>
+
+      <div className="doctype-grid">
+        {recipes.map((r) => {
+          const accent = ACCENTS[r.id] ?? '#2563eb';
+          const accentLight = ACCENT_LIGHTS[r.id] ?? '#eff6ff';
+          return (
+            <button
+              key={r.id}
+              className="doctype-card"
+              onClick={() => onSelect(r.id)}
+              style={{
+                '--card-accent': accent,
+                '--card-accent-light': accentLight,
+              } as React.CSSProperties}
+            >
+              <div className="doctype-card-icon-wrap">
+                <span className="doctype-card-icon">{ICONS[r.id] ?? '📄'}</span>
+              </div>
+              <div className="doctype-card-body">
+                <h3 className="doctype-card-name">{r.name}</h3>
+                <p className="doctype-card-desc">{r.description}</p>
+              </div>
+              <div className="doctype-card-footer">
+                <span className="doctype-card-cta">בחר ←</span>
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
