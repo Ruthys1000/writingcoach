@@ -527,7 +527,7 @@ function PromptManager() {
   if (loading) return (
     <div style={{ textAlign: 'center', padding: '3rem' }}>
       <div className="spinner" style={{ margin: '0 auto' }} />
-      <p style={{ color: 'var(--gray-400)', marginTop: 16 }}>טוען פרומפטים...</p>
+      <p style={{ color: 'var(--paper-500)', marginTop: 16 }}>טוען פרומפטים...</p>
     </div>
   );
 
@@ -544,8 +544,8 @@ function PromptManager() {
         {(Object.keys(PROMPT_LABELS) as (keyof SystemPrompts)[]).map((key) => (
           <div key={key} className="admin-section" style={{ marginBottom: 0 }}>
             <div style={{ marginBottom: 12 }}>
-              <strong style={{ fontSize: '1rem', color: 'var(--gray-800)' }}>{PROMPT_LABELS[key]}</strong>
-              <div style={{ fontSize: '0.88rem', color: 'var(--gray-400)', marginTop: 4 }}>
+              <strong style={{ fontSize: '1rem', color: 'var(--ink-900)' }}>{PROMPT_LABELS[key]}</strong>
+              <div style={{ fontSize: '0.88rem', color: 'var(--paper-500)', marginTop: 4 }}>
                 {PROMPT_DESCRIPTIONS[key]}
               </div>
             </div>
