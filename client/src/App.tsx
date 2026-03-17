@@ -160,7 +160,7 @@ export default function App() {
         <span className="top-bar-spacer" />
       </div>
 
-      <div className="main-content">
+      <div className={`main-content${step === 'welcome' ? ' main-content-welcome' : ''}`}>
         {step !== 'welcome' && <StepIndicator current={stepNumber[step]} />}
 
         {error && (
