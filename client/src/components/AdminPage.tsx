@@ -2,8 +2,20 @@
 // Admin Page — Manage Writing Recipes
 // ============================================================
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { adminApi, Recipe } from '../api';
+
+// Download a recipe as a JSON file
+function downloadRecipe(recipe: Recipe) {
+  const json = JSON.stringify(recipe, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${recipe.id || 'recipe'}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 type View = 'list' | 'edit';
 
@@ -70,6 +82,7 @@ export function AdminPage({ onClose }: Props) {
   const [saved, setSaved] = useState(false);
   // Track which criterion cards are expanded
   const [expandedCriteria, setExpandedCriteria] = useState<Record<number, boolean>>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadRecipes();
@@ -202,6 +215,33 @@ export function AdminPage({ onClose }: Props) {
     setExpandedCriteria((prev) => ({ ...prev, [idx]: !prev[idx] }));
   }
 
+  function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    // Reset so same file can be re-selected
+    e.target.value = '';
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target?.result as string) as Recipe;
+        if (!parsed.name || !Array.isArray(parsed.criteria)) {
+          throw new Error('הקובץ אינו מתכון תקני');
+        }
+        // Treat imported recipe as new (new id so it doesn't overwrite)
+        parsed.id = generateRecipeId();
+        setEditing(parsed);
+        setIsNew(true);
+        setSaved(false);
+        setError(null);
+        setExpandedCriteria({});
+        setView('edit');
+      } catch (err) {
+        setError(`שגיאה בקריאת הקובץ: ${String(err)}`);
+      }
+    };
+    reader.readAsText(file);
+  }
+
   // ---- Render ----
 
   return (
@@ -229,6 +269,16 @@ export function AdminPage({ onClose }: Props) {
           <div className="admin-body">
             <div className="admin-list-toolbar">
               <button className="btn-primary" onClick={openNew}>➕ מתכון חדש</button>
+              <button className="btn-secondary" onClick={() => fileInputRef.current?.click()}>
+                📂 ייבוא מקובץ JSON
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json,application/json"
+                style={{ display: 'none' }}
+                onChange={handleImportFile}
+              />
             </div>
             {loading && <div className="admin-loading">טוען...</div>}
             <div className="admin-recipe-list">
@@ -241,6 +291,7 @@ export function AdminPage({ onClose }: Props) {
                   </div>
                   <div className="admin-recipe-actions">
                     <button className="btn-secondary" onClick={() => openEdit(r)}>✏️ עריכה</button>
+                    <button className="btn-secondary" title="הורד כקובץ JSON לעריכה offline" onClick={() => downloadRecipe(r)}>⬇️ הורדה</button>
                     <button className="btn-danger" onClick={() => handleDelete(r.id)}>🗑️ מחיקה</button>
                   </div>
                 </div>
@@ -491,6 +542,13 @@ export function AdminPage({ onClose }: Props) {
 
             <div className="admin-save-bar">
               <button className="btn-secondary" onClick={() => setView('list')}>ביטול</button>
+              <button
+                className="btn-secondary"
+                title="הורד את המתכון הנוכחי כקובץ JSON"
+                onClick={() => downloadRecipe(editing)}
+              >
+                ⬇️ הורד JSON
+              </button>
               <button className="btn-primary" onClick={handleSave} disabled={loading}>
                 {loading ? 'שומר...' : '💾 שמור מתכון'}
               </button>
