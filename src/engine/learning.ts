@@ -104,8 +104,12 @@ ${documentText.slice(0, 3000)}
         before_from_doc: raw.before_from_doc,
         after_from_doc: raw.after_from_doc,
       };
-    } catch {
+    } catch (error) {
       // Fallback to recipe's static examples if LLM fails
+      console.warn(
+        `[LearningEngine] LLM failed for criterion "${criterion.id}", using static fallback.`,
+        error,
+      );
       return {
         criterion_id: criterion.id,
         criterion_question: criterion.question,
