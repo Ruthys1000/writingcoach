@@ -7,7 +7,6 @@ export function WelcomeStep({ onStart }: Props) {
     <div className="welcome-page">
       {/* Hero */}
       <div className="welcome-hero">
-        <div className="welcome-logo">✍️</div>
         <h1 className="welcome-title">מאמן הכתיבה המנהלית</h1>
         <p className="welcome-subtitle">
           כלי AI שמשפר את כתיבתך הארגונית — מותאם אישית לפי המסמך שלך
@@ -17,25 +16,24 @@ export function WelcomeStep({ onStart }: Props) {
         </button>
       </div>
 
-      {/* 3-step explainer */}
-      <div className="welcome-steps">
-        <div className="welcome-step-card">
-          <div className="welcome-step-icon-wrap">🔍</div>
-          <div className="welcome-step-num">שלב 1</div>
-          <h3>אבחון</h3>
-          <p>המאמן בוחן את המסמך שלך מול מחוון כשירות ומזהה נקודות לשיפור</p>
+      {/* How it works – clean horizontal flow, no card boxes */}
+      <div className="welcome-how">
+        <div className="welcome-how-step">
+          <div className="welcome-how-badge">1</div>
+          <div className="welcome-how-label">אבחון</div>
+          <p className="welcome-how-text">המאמן בוחן את המסמך שלך מול מחוון כשירות ומזהה נקודות לשיפור</p>
         </div>
-        <div className="welcome-step-card">
-          <div className="welcome-step-icon-wrap">📚</div>
-          <div className="welcome-step-num">שלב 2</div>
-          <h3>למידה</h3>
-          <p>שיעורים מותאמים אישית עם דוגמאות לפני/אחרי מתוך הטקסט שלך</p>
+        <div className="welcome-how-sep" aria-hidden="true" />
+        <div className="welcome-how-step">
+          <div className="welcome-how-badge">2</div>
+          <div className="welcome-how-label">למידה</div>
+          <p className="welcome-how-text">שיעורים מותאמים אישית עם דוגמאות לפני/אחרי מתוך הטקסט שלך</p>
         </div>
-        <div className="welcome-step-card">
-          <div className="welcome-step-icon-wrap">✅</div>
-          <div className="welcome-step-num">שלב 3</div>
-          <h3>תרגול</h3>
-          <p>תכתוב מחדש קטעים מהמסמך שלך ותקבל משוב מיידי מה-AI</p>
+        <div className="welcome-how-sep" aria-hidden="true" />
+        <div className="welcome-how-step">
+          <div className="welcome-how-badge">3</div>
+          <div className="welcome-how-label">תרגול</div>
+          <p className="welcome-how-text">תכתוב מחדש קטעים מהמסמך שלך ותקבל משוב מיידי מה-AI</p>
         </div>
       </div>
 
