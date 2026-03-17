@@ -8,7 +8,7 @@ function scoreColor(score: number) {
   return score >= 75 ? '#22955A' : score >= 50 ? '#C4841D' : '#D42B31';
 }
 
-function insightText(score: number, gaps: string[]): string {
+function insightText(score: number, gaps: { criterion_id: string }[]): string {
   if (score >= 80) return 'המסמך ברמה גבוהה — שיפורים נקודתיים בלבד';
   if (score >= 60) return `זוהו ${gaps.length} תחומים לשיפור — מחכה לך שיעור ממוקד`;
   return `יש עבודה — ${gaps.length} פערים משמעותיים מחכים לשיפור`;
