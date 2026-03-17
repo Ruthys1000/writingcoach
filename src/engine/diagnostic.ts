@@ -13,6 +13,7 @@ import type {
   RawDiagnosticResponse,
   RawEvaluation,
 } from '../types';
+import { MAX_DOCUMENT_PREVIEW } from '../types';
 
 const SYSTEM_PROMPT = `אתה מעריך מומחה של כתיבה מנהלית בעברית.
 תפקידך לנתח מסמכים ארגוניים ולהעריך אותם מול מחוון כשירות.
@@ -34,7 +35,7 @@ export class DiagnosticEngine {
 
     const userMessage = `המסמך לניתוח:
 ---
-${documentText.slice(0, 6000)}
+${documentText.slice(0, MAX_DOCUMENT_PREVIEW)}
 ---
 
 הערך את המסמך מול הקריטריונים הבאים והשב ב-JSON בדיוק לפי הסכמה:

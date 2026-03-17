@@ -33,8 +33,16 @@ export abstract class LLMClient {
     try {
       return JSON.parse(cleaned) as T;
     } catch {
-      // Try to extract JSON object/array from the response
-      const match = cleaned.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
+      // Try to extract JSON by finding the outermost balanced braces/brackets
+      const objStart = cleaned.indexOf('{');
+      const objEnd = cleaned.lastIndexOf('}');
+      const arrStart = cleaned.indexOf('[');
+      const arrEnd = cleaned.lastIndexOf(']');
+      const match = objStart !== -1 && objEnd > objStart
+        ? [null, cleaned.slice(objStart, objEnd + 1)]
+        : arrStart !== -1 && arrEnd > arrStart
+          ? [null, cleaned.slice(arrStart, arrEnd + 1)]
+          : null;
       if (match) {
         return JSON.parse(match[1]) as T;
       }
