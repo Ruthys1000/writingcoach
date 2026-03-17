@@ -1344,7 +1344,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 .admin-recipe-list { display: flex; flex-direction: column; gap: var(--sp-sm); }
 .admin-recipe-card {
   border: 1px solid var(--paper-300);
-  border-right: 4px solid var(--ink-500);
+  border-right: 4px solid var(--amber-300);
   border-radius: var(--radius-md);
   padding: var(--sp-md) var(--sp-lg);
   display: flex;
@@ -1370,8 +1370,9 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   margin-bottom: var(--sp-md);
   box-shadow: var(--shadow-sm);
 }
-.admin-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-md); padding-bottom: var(--sp-md); border-bottom: 1px solid var(--paper-200); }
-.admin-section-title { font-weight: 700; font-size: 1rem; color: var(--ink-900); margin-bottom: var(--sp-md); }
+.admin-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-md); padding-bottom: var(--sp-md); border-bottom: 1.5px solid var(--paper-300); }
+.admin-section-title { font-weight: 700; font-size: 1rem; color: var(--ink-900); margin-bottom: var(--sp-md); display: flex; align-items: center; gap: 10px; }
+.admin-section-title::before { content: ''; display: block; width: 4px; height: 18px; background: var(--amber-500); border-radius: 2px; flex-shrink: 0; }
 .admin-section-header .admin-section-title { margin-bottom: 0; }
 .admin-section-subtitle { font-size: .9rem; color: var(--paper-500); margin: -8px 0 16px; line-height: 1.5; }
 
@@ -1402,7 +1403,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 .admin-criterion-card {
   background: var(--paper-100);
   border: 1px solid var(--paper-300);
-  border-right: 3px solid var(--paper-300);
+  border-right: 3px solid var(--amber-100);
   border-radius: var(--radius-md);
   padding: var(--sp-lg);
   margin-bottom: var(--sp-sm);
@@ -1410,11 +1411,11 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 }
 .admin-criterion-card:focus-within { border-right-color: var(--amber-500); }
 .admin-criterion-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-md); }
-.admin-criterion-num { font-weight: 700; font-size: 1rem; color: var(--ink-500); background: var(--paper-200); border: 1px solid var(--paper-300); border-radius: var(--radius-sm); padding: 3px 10px; }
+.admin-criterion-num { font-weight: 800; font-size: .8rem; color: var(--amber-300); background: var(--ink-900); border: none; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .admin-criterion-controls { display: flex; gap: 6px; align-items: center; }
 
 .admin-criterion-header-clickable { cursor: pointer; border-radius: var(--radius-sm); padding: 4px 0; user-select: none; }
-.admin-criterion-header-clickable:hover { background: rgba(44,93,163,.04); }
+.admin-criterion-header-clickable:hover { background: rgba(228,176,74,.07); }
 .admin-criterion-header-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
 .admin-criterion-preview-title { font-size: .97rem; color: var(--ink-700); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; }
 .admin-criterion-toggle { font-size: .85rem; color: var(--paper-500); margin-right: 4px; }
@@ -1425,8 +1426,8 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 .badge-specific      { background: var(--amber-100); color: var(--amber-500); }
 .badge-importance    { background: var(--success-100); color: var(--success); }
 
-.admin-preview-card { background: var(--paper-200); border: 1px dashed var(--paper-500); border-radius: var(--radius-md); padding: var(--sp-md) var(--sp-lg); margin-bottom: var(--sp-lg); }
-.admin-preview-label { font-size: .82rem; color: var(--ink-500); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .04em; }
+.admin-preview-card { background: var(--amber-50); border: 1.5px solid var(--amber-100); border-right: 4px solid var(--amber-500); border-radius: var(--radius-md); padding: var(--sp-md) var(--sp-lg); margin-bottom: var(--sp-lg); }
+.admin-preview-label { font-size: .82rem; color: var(--amber-500); font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .04em; }
 .admin-preview-doctype { background: var(--paper-50); border: 1px solid var(--paper-300); border-radius: var(--radius-md); padding: var(--sp-md) var(--sp-lg); box-shadow: var(--shadow-sm); }
 .admin-preview-doctype-name  { font-weight: 700; font-size: 1.08rem; color: var(--ink-900); margin-bottom: 4px; }
 .admin-preview-doctype-desc  { font-size: .93rem; color: var(--paper-500); margin-bottom: 6px; }
@@ -1445,14 +1446,14 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 .admin-radio-desc { font-size: .82rem; color: var(--paper-500); margin-top: 2px; font-weight: 400; }
 
 .admin-micro-lesson {
-  background: var(--paper-200);
-  border: 1px solid var(--paper-300);
-  border-right: 3px solid var(--ink-500);
+  background: var(--amber-50);
+  border: 1px solid var(--amber-100);
+  border-right: 3px solid var(--amber-500);
   border-radius: var(--radius-md);
   padding: var(--sp-md) var(--sp-lg);
   margin-top: var(--sp-md);
 }
-.admin-micro-title { font-weight: 700; font-size: 1rem; color: var(--ink-700); margin-bottom: var(--sp-md); display: flex; align-items: center; gap: 6px; }
-.admin-micro-subtitle { font-size: .85rem; color: var(--paper-500); font-weight: 400; }
+.admin-micro-title { font-weight: 700; font-size: .95rem; color: var(--amber-500); margin-bottom: var(--sp-md); display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: .04em; }
+.admin-micro-subtitle { font-size: .85rem; color: var(--paper-500); font-weight: 400; text-transform: none; letter-spacing: 0; }
 
-.admin-save-bar { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding: var(--sp-md) 0 4px; border-top: 1px solid var(--paper-300); margin-top: var(--sp-sm); }
+.admin-save-bar { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding: var(--sp-md) var(--sp-md); border-top: 2px solid var(--paper-300); margin-top: var(--sp-md); position: sticky; bottom: 0; background: var(--paper-50); z-index: 10; box-shadow: 0 -4px 16px rgba(11,29,51,.07); border-radius: 0 0 var(--radius-md) var(--radius-md); margin-left: calc(-1 * var(--sp-xl)); margin-right: calc(-1 * var(--sp-xl)); padding-left: var(--sp-xl); padding-right: var(--sp-xl); }
