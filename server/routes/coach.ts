@@ -44,6 +44,12 @@ router.post('/diagnose', async (req: Request, res: Response) => {
     return;
   }
 
+  const MAX_DOCUMENT_LENGTH = 50_000;
+  if (documentText.length > MAX_DOCUMENT_LENGTH) {
+    res.status(400).json({ error: `המסמך ארוך מדי — מקסימום ${MAX_DOCUMENT_LENGTH} תווים` });
+    return;
+  }
+
   try {
     const session = await coach.runDiagnostic(documentTypeId, documentText);
     const sessionId = uuidv4();

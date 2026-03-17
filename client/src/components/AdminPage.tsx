@@ -37,9 +37,9 @@ const IMPORTANCE_LABELS: Record<string, string> = {
   low: 'נמוכה',
 };
 
-// Auto-generate a recipe id from a Hebrew name + timestamp
+// Auto-generate a unique recipe id using crypto.randomUUID()
 function generateRecipeId(): string {
-  return `recipe-${Date.now()}`;
+  return `recipe-${crypto.randomUUID()}`;
 }
 
 // Auto-generate a criterion id from its index

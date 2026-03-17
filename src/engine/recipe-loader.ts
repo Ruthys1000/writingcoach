@@ -88,5 +88,11 @@ export class RecipeLoader {
         );
       }
     }
+    const totalWeight = recipe.criteria.reduce((sum, c) => sum + c.weight, 0);
+    if (Math.abs(totalWeight - 1.0) > 0.01) {
+      console.warn(
+        `[RecipeLoader] Recipe "${recipe.id}" weights sum to ${totalWeight.toFixed(3)}, expected 1.0. Scores may be inaccurate.`,
+      );
+    }
   }
 }

@@ -16,12 +16,46 @@ const app = express();
 const PORT = parseInt(process.env.PORT ?? '3000', 10);
 const IS_PROD = process.env.NODE_ENV === 'production';
 
-app.use(cors());
+const allowedOrigins = IS_PROD
+  ? (process.env.ALLOWED_ORIGINS ?? '').split(',').map(o => o.trim()).filter(Boolean)
+  : ['http://localhost:3000', 'http://localhost:5173'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+    if (!origin) return callback(null, true);
+    if (!IS_PROD || allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS: origin '${origin}' not allowed`));
+  },
+}));
 app.use(express.json({ limit: '1mb' }));
 
 // Extend socket timeout for long LLM calls (2 min)
 app.use((_req, res, next) => {
   res.socket?.setTimeout(150_000);
+  next();
+});
+
+// Simple in-memory rate limiter: max 60 API requests per IP per 15 minutes
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_MAX = 60;
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+
+app.use('/api', (req, res, next) => {
+  const ip = req.ip ?? 'unknown';
+  const now = Date.now();
+  const entry = rateLimitStore.get(ip);
+
+  if (!entry || now > entry.resetAt) {
+    rateLimitStore.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return next();
+  }
+
+  entry.count++;
+  if (entry.count > RATE_LIMIT_MAX) {
+    res.status(429).json({ error: 'יותר מדי בקשות — נסה שוב בעוד מספר דקות' });
+    return;
+  }
   next();
 });
 

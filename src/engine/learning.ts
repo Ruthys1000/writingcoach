@@ -12,6 +12,7 @@ import type {
   LearningUnit,
   RubricCriterion,
 } from '../types';
+import { MAX_DOCUMENT_PREVIEW } from '../types';
 
 const SYSTEM_PROMPT = `אתה מאמן כתיבה מנהלית מומחה.
 תפקידך להסביר פערים בכתיבה ולהראות "לפני ואחרי" על בסיס הטקסט של הכותב עצמו.
@@ -76,7 +77,7 @@ ${ml.formula ? `- נוסחה: ${ml.formula}` : ''}
 
 חלק מהמסמך המקורי:
 ---
-${documentText.slice(0, 3000)}
+${documentText.slice(0, MAX_DOCUMENT_PREVIEW)}
 ---
 
 צור שיעור מיקרו-למידה מותאם אישית. השב ב-JSON לפי הסכמה:
@@ -104,8 +105,12 @@ ${documentText.slice(0, 3000)}
         before_from_doc: raw.before_from_doc,
         after_from_doc: raw.after_from_doc,
       };
-    } catch {
+    } catch (error) {
       // Fallback to recipe's static examples if LLM fails
+      console.warn(
+        `[LearningEngine] LLM failed for criterion "${criterion.id}", using static fallback.`,
+        error,
+      );
       return {
         criterion_id: criterion.id,
         criterion_question: criterion.question,

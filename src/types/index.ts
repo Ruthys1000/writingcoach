@@ -2,6 +2,9 @@
 // WritingCoach — Core TypeScript Types
 // ============================================================
 
+/** Max characters of a document sent to the LLM for analysis. */
+export const MAX_DOCUMENT_PREVIEW = 6000;
+
 /** A single micro-lesson tied to a rubric criterion. */
 export interface MicroLesson {
   /** Why this skill matters (in Hebrew) */
