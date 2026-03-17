@@ -607,44 +607,40 @@ export function AdminDashboard({ onBack }: Props) {
         <span className="top-bar-spacer" />
       </div>
 
-      {/* Body */}
-      <div className="adm-layout">
-        {/* Sidebar nav */}
-        <nav className="adm-nav">
-          <div className="adm-nav-label">ניהול</div>
+      {/* Centered tab navigation */}
+      <div className="adm-tabs-bar">
+        <div className="adm-tabs-inner">
           <button
-            className={`adm-nav-item ${activeTab === 'recipes' ? 'active' : ''}`}
+            className={`adm-tab ${activeTab === 'recipes' ? 'active' : ''}`}
             onClick={() => setActiveTab('recipes')}
           >
-            <span className="adm-nav-icon">📋</span>
-            מתכוני כתיבה
+            📋 מתכוני כתיבה
           </button>
           <button
-            className={`adm-nav-item ${activeTab === 'prompts' ? 'active' : ''}`}
+            className={`adm-tab ${activeTab === 'prompts' ? 'active' : ''}`}
             onClick={() => setActiveTab('prompts')}
           >
-            <span className="adm-nav-icon">✏️</span>
-            סיסטם פרומפט
+            ✏️ סיסטם פרומפט
           </button>
-        </nav>
-
-        {/* Main content */}
-        <main className="adm-content">
-          <div className="adm-content-header">
-            <h2 className="adm-content-title">
-              {activeTab === 'recipes' ? '📋 מתכוני כתיבה' : '✏️ סיסטם פרומפט'}
-            </h2>
-            <p className="adm-content-subtitle">
-              {activeTab === 'recipes'
-                ? 'הגדר את סוגי המסמכים, הקריטריונים והשיעורים שיוצגו למשתמשים'
-                : 'ערוך את ההנחיות שמנחות את ה-AI בכל שלב של הדרכה'}
-            </p>
-          </div>
-
-          {activeTab === 'recipes' && <RecipeManager />}
-          {activeTab === 'prompts' && <PromptManager />}
-        </main>
+        </div>
       </div>
+
+      {/* Main content — centered */}
+      <main className="adm-content">
+        <div className="adm-content-header">
+          <h2 className="adm-content-title">
+            {activeTab === 'recipes' ? '📋 מתכוני כתיבה' : '✏️ סיסטם פרומפט'}
+          </h2>
+          <p className="adm-content-subtitle">
+            {activeTab === 'recipes'
+              ? 'הגדר את סוגי המסמכים, הקריטריונים והשיעורים שיוצגו למשתמשים'
+              : 'ערוך את ההנחיות שמנחות את ה-AI בכל שלב של הדרכה'}
+          </p>
+        </div>
+
+        {activeTab === 'recipes' && <RecipeManager />}
+        {activeTab === 'prompts' && <PromptManager />}
+      </main>
     </div>
   );
 }
