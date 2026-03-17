@@ -13,10 +13,7 @@ import type {
   RubricCriterion,
 } from '../types';
 import { MAX_DOCUMENT_PREVIEW } from '../types';
-
-const SYSTEM_PROMPT = `אתה מאמן כתיבה מנהלית מומחה.
-תפקידך להסביר פערים בכתיבה ולהראות "לפני ואחרי" על בסיס הטקסט של הכותב עצמו.
-השב ב-JSON תקני בלבד, לפי הסכמה שתינתן.`;
+import { systemPromptStore } from './system-prompt-store';
 
 interface RawLearningResponse {
   gap_summary: string;
@@ -91,7 +88,7 @@ ${documentText.slice(0, MAX_DOCUMENT_PREVIEW)}
 
     try {
       const raw = await this.llm.chatJSON<RawLearningResponse>(
-        SYSTEM_PROMPT,
+        systemPromptStore.get('learning'),
         userMessage,
       );
 

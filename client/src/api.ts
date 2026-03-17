@@ -150,3 +150,15 @@ export const adminApi = {
   updateRecipe: (id: string, recipe: Recipe): Promise<Recipe> => put(`/admin/recipes/${id}`, recipe),
   deleteRecipe: (id: string): Promise<{ ok: boolean }> => del(`/admin/recipes/${id}`),
 };
+
+export interface SystemPrompts {
+  diagnostic: string;
+  learning: string;
+  assessment: string;
+}
+
+export const systemPromptApi = {
+  getAll: (): Promise<SystemPrompts> => get('/admin/system-prompts'),
+  updateAll: (prompts: Partial<SystemPrompts>): Promise<SystemPrompts> =>
+    put('/admin/system-prompts', prompts),
+};

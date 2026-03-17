@@ -39,6 +39,9 @@ COPY --from=client-builder /app/client/dist ./client/dist
 
 # Copy recipes (config — not compiled)
 COPY recipes/ ./recipes/
+# Bundled defaults — used to seed DATA_DIR/recipes/ on first run when a
+# persistent volume is mounted (set DATA_DIR=/data in Railway env vars).
+COPY recipes/ ./default-recipes/
 
 ENV NODE_ENV=production
 ENV PORT=3000

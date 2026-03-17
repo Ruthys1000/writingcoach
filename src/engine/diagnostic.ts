@@ -14,16 +14,7 @@ import type {
   RawEvaluation,
 } from '../types';
 import { MAX_DOCUMENT_PREVIEW } from '../types';
-
-const SYSTEM_PROMPT = `אתה מעריך מומחה של כתיבה מנהלית בעברית.
-תפקידך לנתח מסמכים ארגוניים ולהעריך אותם מול מחוון כשירות.
-
-כללי הערכה:
-- השב אך ורק ב-JSON תקני לפי הסכמה שתינתן.
-- לכל קריטריון השב: עבר/לא עבר, רמת ביטחון (0-1), והסבר קצר בעברית.
-- ההסבר: עד 2 משפטים. אם הקריטריון עבר — ציין מה עשוי היטב. אם נכשל — ציין את הפגם הספציפי.
-- אם ניתן, ציין ציטוט קצר מהמסמך (excerpt) הממחיש את הממצא.
-- הגדר: passed=true רק אם הקריטריון מתקיים בצורה ברורה.`;
+import { systemPromptStore } from './system-prompt-store';
 
 export class DiagnosticEngine {
   constructor(private llm: LLMClient) {}
@@ -58,7 +49,7 @@ ${criteriaList}
 חשוב: החזר את כל ${recipe.criteria.length} הקריטריונים ב-evaluations, לפי הסדר. ה-id חייב להתאים לרשימה למעלה.`;
 
     const raw = await this.llm.chatJSON<RawDiagnosticResponse>(
-      SYSTEM_PROMPT,
+      systemPromptStore.get('diagnostic'),
       userMessage,
     );
 
