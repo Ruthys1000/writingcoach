@@ -67,15 +67,15 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Supported doc types */}
-      <div className="welcome-doc-types">
-        <div className="welcome-doc-types-title">סוגי מסמכים נתמכים</div>
-        <div className="welcome-doc-type-list">
-          <span>📋 סיכום דיון</span>
-          <span>📊 עבודת מטה / נייר עמדה</span>
-          <span>📨 מכתב רשמי</span>
+        <div className="welcome-how-divider" />
+        <div className="welcome-how-doctypes">
+          <span className="welcome-how-doctypes-label">סוגי מסמכים נתמכים:</span>
+          <div className="welcome-doc-type-list">
+            <span>📋 סיכום דיון</span>
+            <span>📊 עבודת מטה / נייר עמדה</span>
+            <span>📨 מכתב רשמי</span>
+          </div>
         </div>
       </div>
 
