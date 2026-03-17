@@ -260,9 +260,9 @@ function RecipeManager() {
     <div>
       {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
       <div className="adm-toolbar">
-        <button className="btn-primary" onClick={openNew}>➕ מתכון חדש</button>
+        <button className="btn-primary" onClick={openNew}>+ מתכון חדש</button>
         <button className="btn-secondary" onClick={() => fileInputRef.current?.click()}>
-          📂 ייבוא מ-CSV
+          ייבוא CSV
         </button>
         <input ref={fileInputRef} type="file" accept=".csv,text/csv" style={{ display: 'none' }} onChange={handleImportFile} />
       </div>
@@ -276,9 +276,9 @@ function RecipeManager() {
               <div className="admin-recipe-meta">{r.criteria.length} קריטריונים</div>
             </div>
             <div className="admin-recipe-actions">
-              <button className="btn-secondary" onClick={() => openEdit(r)}>✏️ עריכה</button>
-              <button className="btn-secondary" title="הורד CSV" onClick={() => downloadRecipeCSV(r)}>⬇️ CSV</button>
-              <button className="btn-danger" onClick={() => handleDelete(r.id)}>🗑️ מחיקה</button>
+              <button className="btn-secondary btn-sm" onClick={() => openEdit(r)}>עריכה</button>
+              <button className="btn-secondary btn-sm" title="הורד CSV" onClick={() => downloadRecipeCSV(r)}>CSV</button>
+              <button className="btn-danger btn-sm" onClick={() => handleDelete(r.id)}>מחיקה</button>
             </div>
           </div>
         ))}
@@ -296,7 +296,7 @@ function RecipeManager() {
 
       <div className="adm-edit-nav">
         <button className="adm-back-btn" onClick={() => setView('list')}>← רשימת מתכונים</button>
-        <span className="adm-edit-title">{isNew ? '➕ מתכון חדש' : `✏️ עריכת: ${editing.name}`}</span>
+        <span className="adm-edit-title">{isNew ? 'מתכון חדש' : `עריכת: ${editing.name}`}</span>
       </div>
 
       {/* Preview */}
@@ -339,7 +339,7 @@ function RecipeManager() {
               כל קריטריון הוא שאלה כן/לא שה-AI ישאל על המסמך. לכל קריטריון מצורף מיקרו-שיעור.
             </p>
           </div>
-          <button className="btn-secondary" onClick={addCriterion}>➕ הוסף קריטריון</button>
+          <button className="btn-secondary btn-sm" onClick={addCriterion}>+ הוסף קריטריון</button>
         </div>
 
         {editing.criteria.map((c, idx) => {
@@ -467,9 +467,9 @@ function RecipeManager() {
 
       <div className="admin-save-bar">
         <button className="btn-secondary" onClick={() => setView('list')}>ביטול</button>
-        <button className="btn-secondary" title="הורד כ-CSV" onClick={() => downloadRecipeCSV(editing)}>⬇️ הורד CSV</button>
+        <button className="btn-secondary" title="הורד כ-CSV" onClick={() => downloadRecipeCSV(editing)}>הורד CSV</button>
         <button className="btn-primary" onClick={handleSave} disabled={loading}>
-          {loading ? 'שומר...' : '💾 שמור מתכון'}
+          {loading ? 'שומר...' : 'שמור מתכון'}
         </button>
       </div>
     </div>
