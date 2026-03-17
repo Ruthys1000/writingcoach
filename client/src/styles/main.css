@@ -407,21 +407,6 @@ textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px
   bottom: -80px; right: -60px;
 }
 
-.welcome-logo {
-  font-size: 3.5rem;
-  margin-bottom: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,.15);
-  border: 2px solid rgba(255,255,255,.2);
-  border-radius: 50%;
-  width: 84px;
-  height: 84px;
-  backdrop-filter: blur(8px);
-  position: relative;
-  z-index: 1;
-}
 
 .welcome-title {
   font-size: 2.5rem;
@@ -463,76 +448,57 @@ textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px
 .welcome-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,.25); }
 .welcome-cta:active { transform: translateY(0); }
 
-/* Step cards */
-.welcome-steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.welcome-step-card {
+/* How it works – clean horizontal flow, no card boxes */
+.welcome-how {
+  display: flex;
+  align-items: flex-start;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.06);
-  padding: 30px 22px 26px;
+  padding: 36px 32px;
+  margin-bottom: 20px;
+  border: 1.5px solid var(--gray-200);
+  box-shadow: var(--shadow);
+}
+
+.welcome-how-step {
+  flex: 1;
   text-align: center;
-  border: 1.5px solid var(--gray-100);
-  border-top: 3px solid;
-  transition: transform .2s, box-shadow .2s;
+  padding: 0 20px;
 }
-.welcome-step-card:nth-child(1) { border-top-color: var(--blue); }
-.welcome-step-card:nth-child(2) { border-top-color: var(--teal); }
-.welcome-step-card:nth-child(3) { border-top-color: var(--green); }
 
-.welcome-step-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 6px rgba(0,0,0,.04), 0 16px 40px rgba(0,0,0,.1);
-  border-color: var(--gray-200);
-}
-.welcome-step-card:nth-child(1):hover { border-top-color: var(--blue); }
-.welcome-step-card:nth-child(2):hover { border-top-color: var(--teal); }
-.welcome-step-card:nth-child(3):hover { border-top-color: var(--green); }
-
-/* Icon circle */
-.welcome-step-icon-wrap {
-  width: 60px;
-  height: 60px;
-  border-radius: 14px;
+.welcome-how-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: white;
+  font-size: 1.15rem;
+  font-weight: 800;
   display: grid;
   place-items: center;
-  font-size: 1.7rem;
-  margin: 0 auto 14px;
+  margin: 0 auto 16px;
 }
-.welcome-step-card:nth-child(1) .welcome-step-icon-wrap { background: #eff6ff; }
-.welcome-step-card:nth-child(2) .welcome-step-icon-wrap { background: var(--teal-lt); }
-.welcome-step-card:nth-child(3) .welcome-step-icon-wrap { background: var(--green-lt); }
 
-/* Numbered badge */
-.welcome-step-num {
-  display: inline-block;
-  font-size: .75rem;
-  font-weight: 700;
-  letter-spacing: .05em;
-  padding: 3px 11px;
-  border-radius: 20px;
-  margin-bottom: 10px;
-}
-.welcome-step-card:nth-child(1) .welcome-step-num { color: var(--blue); background: var(--blue-lt); }
-.welcome-step-card:nth-child(2) .welcome-step-num { color: var(--teal); background: var(--teal-lt); }
-.welcome-step-card:nth-child(3) .welcome-step-num { color: var(--green); background: var(--green-lt); }
-
-.welcome-step-card h3 {
-  font-size: 1.08rem;
+.welcome-how-label {
+  font-size: 1.1rem;
   font-weight: 800;
-  margin-bottom: 8px;
   color: var(--gray-800);
+  margin-bottom: 8px;
 }
 
-.welcome-step-card p {
-  font-size: .9rem;
+.welcome-how-text {
+  font-size: .88rem;
   color: var(--gray-600);
   line-height: 1.7;
+}
+
+/* Vertical separator between steps */
+.welcome-how-sep {
+  flex-shrink: 0;
+  width: 1px;
+  background: var(--gray-200);
+  align-self: stretch;
+  margin: 8px 0;
 }
 
 /* Supported doc types */
@@ -574,7 +540,9 @@ textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px
 .welcome-doc-type-list span:hover { background: #dbeafe; border-color: #93c5fd; }
 
 @media (max-width: 600px) {
-  .welcome-steps { grid-template-columns: 1fr; }
+  .welcome-how { flex-direction: column; padding: 28px 20px; }
+  .welcome-how-sep { width: 100%; height: 1px; margin: 8px 0; align-self: auto; }
+  .welcome-how-step { padding: 16px 0; }
   .welcome-title { font-size: 1.85rem; }
   .welcome-hero { padding: 48px 24px 44px; }
   .welcome-page { padding: 20px 0 48px; }
