@@ -36,6 +36,29 @@ app.use((_req, res, next) => {
   next();
 });
 
+// Simple in-memory rate limiter: max 60 API requests per IP per 15 minutes
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_MAX = 60;
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+
+app.use('/api', (req, res, next) => {
+  const ip = req.ip ?? 'unknown';
+  const now = Date.now();
+  const entry = rateLimitStore.get(ip);
+
+  if (!entry || now > entry.resetAt) {
+    rateLimitStore.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return next();
+  }
+
+  entry.count++;
+  if (entry.count > RATE_LIMIT_MAX) {
+    res.status(429).json({ error: 'יותר מדי בקשות — נסה שוב בעוד מספר דקות' });
+    return;
+  }
+  next();
+});
+
 // Health check (used by Railway)
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
