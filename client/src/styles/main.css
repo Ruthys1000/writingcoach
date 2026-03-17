@@ -423,22 +423,22 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 }
 
 .welcome-title {
-  font-size: 3rem;
+  font-size: 3.75rem;
   font-weight: 900;
   color: white;
   margin-bottom: 14px;
   position: relative;
   z-index: 1;
-  letter-spacing: -.02em;
-  line-height: 1.15;
+  letter-spacing: -.03em;
+  line-height: 1.1;
   animation: fadeInUp .6s .15s ease both;
 }
 .welcome-title .accent { color: var(--amber-300); }
 
 .welcome-subtitle {
-  font-size: 1.05rem;
-  color: rgba(255,255,255,.72);
-  max-width: 480px;
+  font-size: 1.15rem;
+  color: rgba(255,255,255,.82);
+  max-width: 520px;
   margin: 0 auto var(--sp-xxl);
   line-height: 1.75;
   position: relative;
@@ -459,7 +459,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   cursor: pointer;
   position: relative;
   z-index: 1;
-  animation: pulseGlow 2.5s ease-in-out infinite, fadeInUp .6s .25s ease both;
+  animation: fadeInUp .6s .25s ease both;
   transition: transform .18s;
   letter-spacing: .01em;
 }
@@ -481,13 +481,12 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 }
 
 .welcome-how-heading {
-  font-size: .78rem;
-  font-weight: 700;
-  color: var(--paper-500);
-  text-transform: uppercase;
-  letter-spacing: .1em;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--ink-900);
   margin-bottom: var(--sp-xl);
   text-align: center;
+  letter-spacing: -.01em;
 }
 
 .welcome-how-flow {
@@ -509,8 +508,8 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 
 .welcome-flow-icon-wrap {
   position: relative;
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   margin-bottom: var(--sp-md);
 }
 
@@ -518,14 +517,15 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
-  background: var(--paper-200);
-  border: 2px solid var(--paper-300);
+  width: 72px;
+  height: 72px;
+  background: var(--ink-900);
+  border: 2px solid var(--ink-700);
   border-radius: var(--radius-lg);
-  font-size: 1.75rem;
+  font-size: 1.9rem;
   position: relative;
   z-index: 1;
+  box-shadow: var(--shadow-md);
 }
 
 .welcome-flow-num {
@@ -546,26 +546,52 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   z-index: 2;
 }
 
+.welcome-flow-body { flex: 1; }
+
 .welcome-flow-label {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--ink-900);
   margin-bottom: 6px;
 }
 
 .welcome-flow-text {
-  font-size: .88rem;
+  font-size: .95rem;
   color: var(--paper-500);
   line-height: 1.65;
 }
 
 .welcome-flow-arrow {
   flex-shrink: 0;
-  font-size: 1.3rem;
-  color: var(--paper-300);
-  margin-top: 20px;
+  font-size: 1.6rem;
+  color: var(--amber-300);
+  margin-top: 24px;
   cursor: default;
   user-select: none;
+}
+
+/* Divider + doc types merged inside how section */
+.welcome-how-divider {
+  height: 1px;
+  background: var(--paper-300);
+  margin: var(--sp-xl) 0 var(--sp-lg);
+}
+
+.welcome-how-doctypes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.welcome-how-doctypes-label {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--paper-500);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  white-space: nowrap;
 }
 
 /* Supported doc types */
@@ -638,7 +664,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 
 @media (max-width: 640px) {
   .welcome-hero { padding: 52px 24px 48px; }
-  .welcome-title { font-size: 2rem; }
+  .welcome-title { font-size: 2.4rem; }
   .welcome-how-section { padding: var(--sp-xl) var(--sp-md); }
   .welcome-how-flow { flex-direction: column; align-items: stretch; gap: var(--sp-md); }
   .welcome-flow-step { flex-direction: row; text-align: right; align-items: flex-start; gap: var(--sp-md); padding: 0; }
