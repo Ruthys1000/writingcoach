@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+const MIN_CHARS = 50;
+const TARGET_CHARS = 300;
+
 interface Props {
   recipeName: string;
   onSubmit: (text: string) => void;
@@ -9,25 +12,57 @@ interface Props {
 export function DocumentStep({ recipeName, onSubmit, onBack }: Props) {
   const [text, setText] = useState('');
 
+  const len    = text.length;
+  const filled = Math.min(len / TARGET_CHARS, 1);
+  const ready  = text.trim().length >= MIN_CHARS;
+
   return (
     <div className="card">
-      <div className="card-title">📄 הדבק את ה{recipeName} שלך</div>
-      <p style={{ color: 'var(--gray-600)', marginBottom: 16, fontSize: '.92rem' }}>
-        הדבק את הטקסט המלא של המסמך. המאמן יבחן אותו ויזהה את נקודות השיפור.
+      {/* Chip showing selected type */}
+      <div className="doc-input-chip">
+        <span className="chip chip-dark">📄 {recipeName}</span>
+      </div>
+
+      <div className="card-title">הדבק את המסמך שלך</div>
+
+      {/* Dark hint box */}
+      <div className="doc-hint-box">
+        <strong>מה להדביק:</strong> הטקסט המלא של ה{recipeName} — כולל כותרת, גוף המסמך וסיכום.
         <br />
-        <strong>שים לב:</strong> הטקסט נשמר רק בזיכרון הזמני של השרת ואינו מועבר לשום גוף חיצוני.
-      </p>
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        rows={14}
-        placeholder={`הדבק כאן את ${recipeName}...`}
-      />
-      <div className="char-count">{text.length} תווים</div>
+        הטקסט נשמר <strong>רק</strong> בזיכרון הזמני של השרת ואינו מועבר לשום גוף חיצוני.
+      </div>
+
+      <div className="doc-textarea-wrap">
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          rows={14}
+          placeholder={`הדבק כאן את ${recipeName}...`}
+        />
+      </div>
+
+      {/* Progress bar */}
+      <div className="doc-progress-bar">
+        <div
+          className={`doc-progress-fill${ready ? ' complete' : ''}`}
+          style={{ width: `${filled * 100}%` }}
+        />
+      </div>
+      <div className="doc-status-bar">
+        <span className={`doc-status-msg${ready ? ' ready' : ''}`}>
+          {len === 0
+            ? 'הדבק טקסט להתחלה'
+            : !ready
+            ? `עוד ${MIN_CHARS - text.trim().length} תווים נדרשים`
+            : '✓ המסמך מוכן לניתוח'}
+        </span>
+        <span className="char-count">{len} תווים</span>
+      </div>
+
       <div className="btn-row">
         <button
           className="btn btn-primary"
-          disabled={text.trim().length < 50}
+          disabled={!ready}
           onClick={() => onSubmit(text.trim())}
         >
           🔍 נתח את המסמך
@@ -36,11 +71,6 @@ export function DocumentStep({ recipeName, onSubmit, onBack }: Props) {
           ← חזור
         </button>
       </div>
-      {text.length > 0 && text.trim().length < 50 && (
-        <p style={{ marginTop: 10, fontSize: '.82rem', color: 'var(--red)' }}>
-          הטקסט קצר מדי. נדרשים לפחות 50 תווים.
-        </p>
-      )}
     </div>
   );
 }

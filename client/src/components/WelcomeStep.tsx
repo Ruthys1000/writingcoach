@@ -6,10 +6,12 @@ interface Props {
 export function WelcomeStep({ onStart, onAdminOpen }: Props) {
   return (
     <div className="welcome-page">
-      {/* Hero */}
+      {/* Hero — dark Ink with Amber accent */}
       <div className="welcome-hero">
         <div className="welcome-hero-badge">AI לכתיבה מנהלית</div>
-        <h1 className="welcome-title">מאמן הכתיבה המנהלית</h1>
+        <h1 className="welcome-title">
+          מאמן הכתיבה <span className="accent">המנהלית</span>
+        </h1>
         <p className="welcome-subtitle">
           העלה מסמך, קבל אבחון מדויק, ולמד לשפר את כתיבתך עם דוגמאות מהטקסט שלך עצמו
         </p>
@@ -18,7 +20,7 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
         </button>
       </div>
 
-      {/* How it works — clearly informational, NOT clickable */}
+      {/* How it works */}
       <div className="welcome-how-section">
         <div className="welcome-how-heading">כיצד זה עובד?</div>
         <div className="welcome-how-flow">
