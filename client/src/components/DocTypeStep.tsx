@@ -1,22 +1,18 @@
 import { RecipeInfo } from '../api';
 
+// Default icon for unknown recipe IDs
 const ICONS: Record<string, string> = {
   'meeting-summary': '📋',
-  'staff-work': '📊',
-  'formal-letter': '📨',
+  'staff-work':      '📊',
+  'formal-letter':   '📨',
 };
 
-const ACCENTS: Record<string, string> = {
-  'meeting-summary': '#2563eb',
-  'staff-work': '#7c3aed',
-  'formal-letter': '#059669',
-};
+// Fallback icons for future recipes (cycling)
+const FALLBACK_ICONS = ['📄', '📝', '🗂️', '📃', '📑', '🖊️'];
 
-const ACCENT_LIGHTS: Record<string, string> = {
-  'meeting-summary': '#eff6ff',
-  'staff-work': '#f5f3ff',
-  'formal-letter': '#ecfdf5',
-};
+function getIcon(id: string, index: number): string {
+  return ICONS[id] ?? FALLBACK_ICONS[index % FALLBACK_ICONS.length];
+}
 
 interface Props {
   recipes: RecipeInfo[];
@@ -33,33 +29,23 @@ export function DocTypeStep({ recipes, onSelect }: Props) {
         </p>
       </div>
 
-      <div className="doctype-grid">
-        {recipes.map((r) => {
-          const accent = ACCENTS[r.id] ?? '#2563eb';
-          const accentLight = ACCENT_LIGHTS[r.id] ?? '#eff6ff';
-          return (
-            <button
-              key={r.id}
-              className="doctype-card"
-              onClick={() => onSelect(r.id)}
-              style={{
-                '--card-accent': accent,
-                '--card-accent-light': accentLight,
-              } as React.CSSProperties}
-            >
-              <div className="doctype-card-icon-wrap">
-                <span className="doctype-card-icon">{ICONS[r.id] ?? '📄'}</span>
-              </div>
-              <div className="doctype-card-body">
-                <h3 className="doctype-card-name">{r.name}</h3>
-                <p className="doctype-card-desc">{r.description}</p>
-              </div>
-              <div className="doctype-card-footer">
-                <span className="doctype-card-cta">בחר ←</span>
-              </div>
-            </button>
-          );
-        })}
+      <div className="doctype-list">
+        {recipes.map((r, i) => (
+          <button
+            key={r.id}
+            className="doctype-card"
+            onClick={() => onSelect(r.id)}
+          >
+            <div className="doctype-card-icon-wrap">
+              <span>{getIcon(r.id, i)}</span>
+            </div>
+            <div className="doctype-card-body">
+              <h3 className="doctype-card-name">{r.name}</h3>
+              <p className="doctype-card-desc">{r.description}</p>
+            </div>
+            <span className="doctype-card-arrow">←</span>
+          </button>
+        ))}
       </div>
     </div>
   );

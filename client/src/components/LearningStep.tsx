@@ -18,52 +18,63 @@ export function LearningStep({
   const unit = units[currentIndex];
   if (!unit) return null;
 
+  const isLast = currentIndex + 1 >= units.length;
+
   return (
     <div className="card">
-      {/* Lesson nav dots */}
-      <div className="lesson-nav">
-        <span style={{ fontSize: '.85rem', color: 'var(--gray-400)' }}>
-          שיעור {currentIndex + 1} מתוך {units.length}
-        </span>
-        <div style={{ display: 'flex', gap: 8 }}>
-          {units.map((_, i) => (
-            <div
-              key={i}
-              className={`lesson-nav-dot ${i === currentIndex ? 'active' : ''}`}
-              style={completedUnits.has(i) ? { background: 'var(--green)' } : {}}
-            />
-          ))}
+      {/* Progress dots */}
+      <div className="lesson-header">
+        <div className="lesson-progress-row">
+          <span className="lesson-progress-label">
+            שיעור {currentIndex + 1} מתוך {units.length}
+          </span>
+          <div className="lesson-dots">
+            {units.map((_, i) => (
+              <div
+                key={i}
+                className={`lesson-dot${
+                  i === currentIndex ? ' active' : ''
+                }${completedUnits.has(i) ? ' done' : ''}`}
+              />
+            ))}
+          </div>
+        </div>
+        <h2 className="lesson-title">{unit.criterion_question}</h2>
+      </div>
+
+      {/* Block 1: Gap summary + Why */}
+      <div className="lesson-block-why">
+        <div className="lesson-block-label">🔍 הפער שזוהה ולמה זה חשוב</div>
+        <div className="lesson-text" style={{ marginBottom: '10px' }}>
+          {unit.gap_summary}
+        </div>
+        <div className="lesson-text" style={{ color: 'var(--ink-700)', fontStyle: 'italic' }}>
+          {unit.why_it_matters}
         </div>
       </div>
 
-      <div className="card-title">📚 {unit.criterion_question}</div>
-
-      <div className="lesson-section">
-        <div className="lesson-section-title">🔍 הפער שזוהה</div>
-        <div className="lesson-text">{unit.gap_summary}</div>
-      </div>
-
-      <div className="lesson-section">
-        <div className="lesson-section-title">💡 למה זה חשוב?</div>
-        <div className="lesson-text">{unit.why_it_matters}</div>
-      </div>
-
-      <div className="lesson-section">
-        <div className="lesson-section-title">🛠️ הכלי הפרקטי</div>
-        <div className="lesson-text">{unit.practical_tool}</div>
+      {/* Block 2: Formula / Practical tool — dark */}
+      <div className="lesson-block-formula">
+        <div className="lesson-block-formula-label">🛠️ הכלי הפרקטי</div>
+        <div className="lesson-block-formula-text">{unit.practical_tool}</div>
         {unit.formula && (
-          <div className="formula-box">{unit.formula}</div>
+          <div className="lesson-formula-box">{unit.formula}</div>
         )}
       </div>
 
-      <div className="before-after">
-        <div className="ba-box before">
-          <div className="ba-label">✗ לפני</div>
-          <div>{unit.before_from_doc}</div>
-        </div>
-        <div className="ba-box after">
-          <div className="ba-label">✓ אחרי</div>
-          <div>{unit.after_from_doc}</div>
+      {/* Block 3: Before / After — the heart */}
+      <div className="before-after-section">
+        <div className="before-after-title">📌 לפני ואחרי — מתוך המסמך שלך</div>
+        <div className="before-after-grid">
+          <div className="ba-box before">
+            <div className="ba-label">✕ לפני</div>
+            <div>{unit.before_from_doc}</div>
+          </div>
+          <div className="ba-arrow">↓</div>
+          <div className="ba-box after">
+            <div className="ba-label">✓ אחרי</div>
+            <div>{unit.after_from_doc}</div>
+          </div>
         </div>
       </div>
 
@@ -78,7 +89,7 @@ export function LearningStep({
           className="btn btn-secondary"
           onClick={() => onSkip(currentIndex)}
         >
-          {currentIndex + 1 < units.length ? 'דלג לשיעור הבא →' : 'סיים אימון'}
+          {isLast ? 'סיים אימון' : 'דלג לשיעור הבא →'}
         </button>
       </div>
     </div>
