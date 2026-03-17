@@ -10,10 +10,7 @@ import type {
   PracticeExercise,
   AssessmentResult,
 } from '../types';
-
-const SYSTEM_PROMPT = `אתה מאמן כתיבה מנהלית מומחה.
-תפקידך ליצור תרגילי שכתוב ולהעריך אותם בצורה מעודדת ובונה.
-השב ב-JSON תקני בלבד.`;
+import { systemPromptStore } from './system-prompt-store';
 
 interface RawExerciseResponse {
   instruction: string;
@@ -56,7 +53,7 @@ ${documentText.slice(0, 3000)}
 
     try {
       const raw = await this.llm.chatJSON<RawExerciseResponse>(
-        SYSTEM_PROMPT,
+        systemPromptStore.get('assessment'),
         userMessage,
       );
 
@@ -107,7 +104,7 @@ ${lesson.formula ? `הנוסחה: ${lesson.formula}` : ''}
 קריטריון הצלחה: passed=true אם השכתוב מיישם את הכלי שנלמד בצורה ניכרת (score >= 70).`;
 
     const raw = await this.llm.chatJSON<RawAssessmentResponse>(
-      SYSTEM_PROMPT,
+      systemPromptStore.get('assessment'),
       userMessage,
     );
 

@@ -9,6 +9,7 @@ import { AssessmentStep } from './components/AssessmentStep';
 import { SummaryStep } from './components/SummaryStep';
 import { WelcomeStep } from './components/WelcomeStep';
 import { AdminPage } from './components/AdminPage';
+import { SystemPromptPage } from './components/SystemPromptPage';
 
 export type AppStep =
   | 'welcome'
@@ -34,6 +35,7 @@ export interface AppState {
 export default function App() {
   const [step, setStep] = useState<AppStep>('welcome');
   const [adminOpen, setAdminOpen] = useState(false);
+  const [systemPromptOpen, setSystemPromptOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -151,12 +153,16 @@ export default function App() {
         <span>✍️</span>
         <h1>מאמן הכתיבה המנהלית</h1>
         <span className="top-bar-spacer">Personal Writing Coach</span>
+        <button className="btn-ghost top-bar-admin" onClick={() => setSystemPromptOpen(true)}>
+          ✏️ סיסטם פרומפט
+        </button>
         <button className="btn-ghost top-bar-admin" onClick={() => setAdminOpen(true)}>
           ⚙️ ניהול מתכונים
         </button>
       </div>
 
       {adminOpen && <AdminPage onClose={() => setAdminOpen(false)} />}
+      {systemPromptOpen && <SystemPromptPage onClose={() => setSystemPromptOpen(false)} />}
 
       <div className="main-content">
         {step !== 'welcome' && <StepIndicator current={stepNumber[step]} />}
