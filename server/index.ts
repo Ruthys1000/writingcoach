@@ -16,7 +16,18 @@ const app = express();
 const PORT = parseInt(process.env.PORT ?? '3000', 10);
 const IS_PROD = process.env.NODE_ENV === 'production';
 
-app.use(cors());
+const allowedOrigins = IS_PROD
+  ? (process.env.ALLOWED_ORIGINS ?? '').split(',').map(o => o.trim()).filter(Boolean)
+  : ['http://localhost:3000', 'http://localhost:5173'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+    if (!origin) return callback(null, true);
+    if (!IS_PROD || allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS: origin '${origin}' not allowed`));
+  },
+}));
 app.use(express.json({ limit: '1mb' }));
 
 // Extend socket timeout for long LLM calls (2 min)
