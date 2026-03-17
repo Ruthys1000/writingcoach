@@ -598,27 +598,34 @@ textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px
   cursor: default;
 }
 
-/* Subtle admin link */
+/* Admin link */
 .welcome-admin-area {
   text-align: center;
   padding-top: 8px;
 }
 
 .welcome-admin-link {
-  background: none;
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: white;
+  border: 1.5px solid var(--gray-200);
   cursor: pointer;
   font-family: 'Heebo', Arial, sans-serif;
-  font-size: .82rem;
-  color: var(--gray-400);
-  padding: 6px 14px;
-  border-radius: 6px;
-  transition: color .15s, background .15s;
+  font-size: .92rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  padding: 9px 22px;
+  border-radius: 10px;
+  transition: color .15s, background .15s, border-color .15s, box-shadow .15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
 }
 
 .welcome-admin-link:hover {
-  color: var(--gray-600);
-  background: var(--gray-100);
+  color: var(--navy);
+  background: var(--gray-50);
+  border-color: var(--gray-300);
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
 }
 
 @media (max-width: 600px) {
