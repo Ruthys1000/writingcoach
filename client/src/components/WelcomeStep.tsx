@@ -23,6 +23,10 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
       {/* How it works */}
       <div className="welcome-how-section">
         <div className="welcome-how-heading">כיצד זה עובד?</div>
+        <p className="welcome-how-subtitle">
+          תהליך מובנה שמאבחן את הכתיבה שלך, מלמד אותך לשפר, ונותן לך לתרגל
+          – הכל על בסיס הטקסט שלך
+        </p>
         <div className="welcome-how-flow">
           <div className="welcome-flow-step">
             <div className="welcome-flow-icon-wrap">
@@ -79,12 +83,21 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
         </div>
       </div>
 
-      {/* Subtle admin link */}
-      <div className="welcome-admin-area">
-        <button className="welcome-admin-link" onClick={onAdminOpen}>
-          ⚙️ ניהול מערכת
-        </button>
-      </div>
+      {/* Footer */}
+      <footer className="welcome-footer">
+        <div className="welcome-footer-content">
+          <div className="welcome-footer-brand">
+            <span className="welcome-footer-name">מאמן הכתיבה המנהלית</span>
+            <span className="welcome-footer-tagline">AI לשיפור כתיבה מנהלית מקצועית</span>
+          </div>
+          <button className="welcome-footer-admin" onClick={onAdminOpen}>
+            ⚙️ ניהול מערכת
+          </button>
+        </div>
+        <div className="welcome-footer-bottom">
+          <span>© 2025 כל הזכויות שמורות</span>
+        </div>
+      </footer>
     </div>
   );
 }
