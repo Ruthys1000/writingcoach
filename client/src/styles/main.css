@@ -588,18 +588,19 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 .welcome-step-title { font-size: 1.35rem; font-weight: 700; color: var(--ink-900); margin-bottom: 10px; }
 .welcome-step-desc { font-size: .95rem; color: var(--paper-500); line-height: 1.75; max-width: 240px; }
 
-/* Animated arrows between steps */
+/* Animated arrows between steps — hidden until cards finish fading in */
 .welcome-step-arrow {
   position: absolute;
   top: 86px;
   z-index: 2;
   color: var(--amber-300);
   font-size: 1.4rem;
-  opacity: .6;
-  animation: pulseArrow 2.2s ease-in-out infinite;
+  opacity: 0;
+  animation: arrowReveal .3s .9s ease forwards, pulseArrow 2.2s 1.2s ease-in-out infinite;
 }
 .welcome-step-arrow-1 { right: 33.33%; transform: translateX(50%); }
 .welcome-step-arrow-2 { right: 66.66%; transform: translateX(50%); }
+@keyframes arrowReveal { to { opacity: .3; } }
 @keyframes pulseArrow {
   0%, 100% { opacity: .3; transform: translateX(50%); }
   50% { opacity: .7; transform: translateX(calc(50% - 5px)); }
