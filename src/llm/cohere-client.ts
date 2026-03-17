@@ -26,13 +26,13 @@ export class CohereClient extends LLMClient {
     model = process.env.COHERE_MODEL ?? 'command-r',
   ) {
     super();
-    if (!apiKey) throw new Error('COHERE_API_KEY is required');
     this.apiKey = apiKey;
     this.baseUrl = baseUrl.replace(/\/$/, '');
     this.model = model;
   }
 
   async chat(systemPrompt: string, userMessage: string): Promise<string> {
+    if (!this.apiKey) throw new Error('COHERE_API_KEY is required');
     const url = `${this.baseUrl}/chat`;
 
     const body = JSON.stringify({
