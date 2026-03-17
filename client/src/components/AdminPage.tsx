@@ -5,14 +5,106 @@
 import { useState, useEffect, useRef } from 'react';
 import { adminApi, Recipe } from '../api';
 
-// Download a recipe as a JSON file
-function downloadRecipe(recipe: Recipe) {
-  const json = JSON.stringify(recipe, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
+// ---- CSV helpers ----
+
+const CSV_HEADERS = [
+  'recipe_id', 'recipe_name', 'recipe_description',
+  'criterion_id', 'question', 'importance', 'layer',
+  'why', 'tool', 'formula', 'before_example', 'after_example',
+];
+
+function csvField(s: string | undefined | null): string {
+  const str = (s ?? '').toString();
+  if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+function recipeToCSV(recipe: Recipe): string {
+  const rows = recipe.criteria.map((c) =>
+    [
+      recipe.id, recipe.name, recipe.description,
+      c.id, c.question, weightToImportance(c.weight), c.layer,
+      c.micro_lesson.why, c.micro_lesson.tool, c.micro_lesson.formula ?? '',
+      c.micro_lesson.before_example, c.micro_lesson.after_example,
+    ].map(csvField).join(',')
+  );
+  return [CSV_HEADERS.join(','), ...rows].join('\r\n');
+}
+
+// Full RFC-4180 CSV parser (handles quoted fields with embedded newlines/commas)
+function parseCSV(text: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let field = '';
+  let inQuotes = false;
+  let i = 0;
+  while (i < text.length) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"' && text[i + 1] === '"') { field += '"'; i += 2; }
+      else if (ch === '"') { inQuotes = false; i++; }
+      else { field += ch; i++; }
+    } else {
+      if (ch === '"') { inQuotes = true; i++; }
+      else if (ch === ',') { row.push(field); field = ''; i++; }
+      else if (ch === '\r' && text[i + 1] === '\n') { row.push(field); field = ''; rows.push(row); row = []; i += 2; }
+      else if (ch === '\n') { row.push(field); field = ''; rows.push(row); row = []; i++; }
+      else { field += ch; i++; }
+    }
+  }
+  if (field !== '' || row.length > 0) { row.push(field); rows.push(row); }
+  return rows;
+}
+
+function csvToRecipe(csvText: string): Recipe {
+  // Strip BOM if present
+  const text = csvText.startsWith('\uFEFF') ? csvText.slice(1) : csvText;
+  const rows = parseCSV(text).filter((r) => r.some((f) => f.trim() !== ''));
+  if (rows.length < 2) throw new Error('הקובץ ריק או חסר שורות נתונים');
+
+  const headers = rows[0].map((h) => h.trim());
+  const col = (name: string) => headers.indexOf(name);
+
+  for (const req of ['recipe_name', 'criterion_id', 'question', 'importance', 'layer', 'why', 'tool']) {
+    if (col(req) === -1) throw new Error(`עמודה חסרה בקובץ CSV: "${req}"`);
+  }
+
+  const criteria = rows.slice(1).map((cols, i) => {
+    const importance = cols[col('importance')]?.trim() || 'medium';
+    return {
+      id: cols[col('criterion_id')]?.trim() || `c${i + 1}`,
+      question: cols[col('question')]?.trim() || '',
+      weight: IMPORTANCE_MAP[importance] ?? 0.5,
+      layer: (cols[col('layer')]?.trim() || 'foundational') as 'foundational' | 'document_specific',
+      micro_lesson: {
+        why: cols[col('why')]?.trim() || '',
+        tool: cols[col('tool')]?.trim() || '',
+        formula: cols[col('formula')]?.trim() || undefined,
+        before_example: cols[col('before_example')]?.trim() || '',
+        after_example: cols[col('after_example')]?.trim() || '',
+      },
+    };
+  });
+
+  const first = rows[1];
+  return {
+    id: first[col('recipe_id')]?.trim() || generateRecipeId(),
+    name: first[col('recipe_name')]?.trim() || '',
+    description: first[col('recipe_description')]?.trim() || '',
+    criteria,
+  };
+}
+
+function downloadRecipeCSV(recipe: Recipe) {
+  const bom = '\uFEFF'; // UTF-8 BOM — Excel opens Hebrew correctly
+  const csv = recipeToCSV(recipe);
+  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${recipe.id || 'recipe'}.json`;
+  a.download = `${recipe.id || 'recipe'}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -218,16 +310,14 @@ export function AdminPage({ onClose }: Props) {
   function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    // Reset so same file can be re-selected
     e.target.value = '';
     const reader = new FileReader();
     reader.onload = (ev) => {
       try {
-        const parsed = JSON.parse(ev.target?.result as string) as Recipe;
+        const parsed = csvToRecipe(ev.target?.result as string);
         if (!parsed.name || !Array.isArray(parsed.criteria)) {
           throw new Error('הקובץ אינו מתכון תקני');
         }
-        // Treat imported recipe as new (new id so it doesn't overwrite)
         parsed.id = generateRecipeId();
         setEditing(parsed);
         setIsNew(true);
@@ -239,7 +329,7 @@ export function AdminPage({ onClose }: Props) {
         setError(`שגיאה בקריאת הקובץ: ${String(err)}`);
       }
     };
-    reader.readAsText(file);
+    reader.readAsText(file, 'utf-8');
   }
 
   // ---- Render ----
@@ -270,12 +360,12 @@ export function AdminPage({ onClose }: Props) {
             <div className="admin-list-toolbar">
               <button className="btn-primary" onClick={openNew}>➕ מתכון חדש</button>
               <button className="btn-secondary" onClick={() => fileInputRef.current?.click()}>
-                📂 ייבוא מקובץ JSON
+                📂 ייבוא מ-CSV
               </button>
               <input
                 ref={fileInputRef}
                 type="file"
-                accept=".json,application/json"
+                accept=".csv,text/csv"
                 style={{ display: 'none' }}
                 onChange={handleImportFile}
               />
@@ -291,7 +381,7 @@ export function AdminPage({ onClose }: Props) {
                   </div>
                   <div className="admin-recipe-actions">
                     <button className="btn-secondary" onClick={() => openEdit(r)}>✏️ עריכה</button>
-                    <button className="btn-secondary" title="הורד כקובץ JSON לעריכה offline" onClick={() => downloadRecipe(r)}>⬇️ הורדה</button>
+                    <button className="btn-secondary" title="הורד כקובץ CSV לעריכה ב-Excel" onClick={() => downloadRecipeCSV(r)}>⬇️ הורד CSV</button>
                     <button className="btn-danger" onClick={() => handleDelete(r.id)}>🗑️ מחיקה</button>
                   </div>
                 </div>
@@ -544,10 +634,10 @@ export function AdminPage({ onClose }: Props) {
               <button className="btn-secondary" onClick={() => setView('list')}>ביטול</button>
               <button
                 className="btn-secondary"
-                title="הורד את המתכון הנוכחי כקובץ JSON"
-                onClick={() => downloadRecipe(editing)}
+                title="הורד את המתכון הנוכחי כקובץ CSV לעריכה ב-Excel"
+                onClick={() => downloadRecipeCSV(editing)}
               >
-                ⬇️ הורד JSON
+                ⬇️ הורד CSV
               </button>
               <button className="btn-primary" onClick={handleSave} disabled={loading}>
                 {loading ? 'שומר...' : '💾 שמור מתכון'}

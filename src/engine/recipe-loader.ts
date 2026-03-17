@@ -15,10 +15,42 @@ export class RecipeLoader {
   private cache: Map<string, Recipe> = new Map();
 
   constructor(recipesDir?: string) {
+    const dataDir = process.env.DATA_DIR;
     this.recipesDir =
       recipesDir ??
       process.env.RECIPES_DIR ??
-      path.join(process.cwd(), 'recipes');
+      (dataDir ? path.join(dataDir, 'recipes') : path.join(process.cwd(), 'recipes'));
+
+    // When DATA_DIR is configured (persistent volume), ensure the recipes dir
+    // exists and seed it from the bundled defaults if it is empty.
+    if (dataDir && !recipesDir && !process.env.RECIPES_DIR) {
+      this.ensureDataDirRecipes();
+    }
+  }
+
+  private ensureDataDirRecipes(): void {
+    if (!fs.existsSync(this.recipesDir)) {
+      fs.mkdirSync(this.recipesDir, { recursive: true });
+    }
+
+    const hasRecipes = fs
+      .readdirSync(this.recipesDir)
+      .some((f) => f.endsWith('.yaml'));
+
+    if (!hasRecipes) {
+      const defaultDir = path.join(process.cwd(), 'default-recipes');
+      if (fs.existsSync(defaultDir)) {
+        for (const file of fs.readdirSync(defaultDir)) {
+          if (file.endsWith('.yaml')) {
+            fs.copyFileSync(
+              path.join(defaultDir, file),
+              path.join(this.recipesDir, file),
+            );
+          }
+        }
+        console.log(`[RecipeLoader] Seeded recipes from default-recipes/ into ${this.recipesDir}`);
+      }
+    }
   }
 
   /** Load a recipe by its id (filename without .yaml). */

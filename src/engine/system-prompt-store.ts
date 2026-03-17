@@ -10,7 +10,7 @@ import * as path from 'path';
 export type SystemPromptKey = 'diagnostic' | 'learning' | 'assessment';
 
 const CONFIG_PATH = path.join(
-  process.env.CONFIG_DIR ?? process.cwd(),
+  process.env.CONFIG_DIR ?? (process.env.DATA_DIR ?? process.cwd()),
   'config',
   'system-prompts.json',
 );
