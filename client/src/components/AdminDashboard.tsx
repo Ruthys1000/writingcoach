@@ -116,6 +116,14 @@ const IMPORTANCE_LABELS: Record<string, string> = { high: 'גבוהה', medium: 
 function generateRecipeId(): string {
   return `recipe-${crypto.randomUUID()}`;
 }
+
+function recipeIcon(name: string): string {
+  if (name.includes('פנייה') || name.includes('מכתב')) return '✉️';
+  if (name.includes('סיכום') || name.includes('דיון')) return '📝';
+  if (name.includes('מטה') || name.includes('עמדה')) return '📊';
+  if (name.includes('דוח') || name.includes('דו"ח')) return '📑';
+  return '📄';
+}
 function criterionId(idx: number): string {
   return `c${idx + 1}`;
 }
@@ -262,29 +270,34 @@ function RecipeManager() {
       <div className="adm-toolbar">
         <button className="btn-primary" onClick={openNew}>+ מתכון חדש</button>
         <button className="btn-secondary" onClick={() => fileInputRef.current?.click()}>
-          ייבוא CSV
+          ⤓ ייבוא CSV
         </button>
         <input ref={fileInputRef} type="file" accept=".csv,text/csv" style={{ display: 'none' }} onChange={handleImportFile} />
+        {!loading && <span className="adm-recipe-count">{recipes.length} מתכונים</span>}
       </div>
       {loading && <div className="admin-loading">טוען...</div>}
       <div className="admin-recipe-list">
         {recipes.map((r) => (
           <div key={r.id} className="admin-recipe-card">
+            <div className="adm-recipe-icon">{recipeIcon(r.name)}</div>
             <div className="admin-recipe-info">
               <div className="admin-recipe-name">{r.name}</div>
               <div className="admin-recipe-desc">{r.description}</div>
-              <div className="admin-recipe-meta">{r.criteria.length} קריטריונים</div>
+              <div className="admin-recipe-meta">
+                <span className="admin-recipe-criteria-badge">✓ {r.criteria.length} קריטריונים</span>
+              </div>
             </div>
             <div className="admin-recipe-actions">
-              <button className="btn-secondary btn-sm" onClick={() => openEdit(r)}>עריכה</button>
-              <button className="btn-secondary btn-sm" title="הורד CSV" onClick={() => downloadRecipeCSV(r)}>CSV</button>
-              <button className="btn-danger btn-sm" onClick={() => handleDelete(r.id)}>מחיקה</button>
+              <button className="adm-recipe-btn adm-recipe-btn-edit" onClick={() => openEdit(r)}>✎ עריכה</button>
+              <button className="adm-recipe-btn adm-recipe-btn-csv" title="הורד CSV" onClick={() => downloadRecipeCSV(r)}>⤓ CSV</button>
+              <button className="adm-recipe-btn adm-recipe-btn-delete" onClick={() => handleDelete(r.id)}>מחיקה</button>
             </div>
           </div>
         ))}
-        {!loading && recipes.length === 0 && (
-          <div className="admin-empty">אין מתכונים. לחצו על "מתכון חדש" להתחיל.</div>
-        )}
+        <div className="adm-empty-hint" onClick={openNew}>
+          <div className="adm-empty-hint-icon">+</div>
+          <div>הוסף מתכון כתיבה חדש</div>
+        </div>
       </div>
     </div>
   );
