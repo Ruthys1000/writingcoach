@@ -55,6 +55,10 @@ export default function App() {
     );
   }, []);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [step]);
+
   const withLoading = async (text: string, fn: () => Promise<void>) => {
     setLoadingText(text);
     setLoading(true);
@@ -158,6 +162,19 @@ export default function App() {
         <h1>מאמן הכתיבה המנהלית</h1>
         <span className="top-bar-sub">Writing Coach</span>
         <span className="top-bar-spacer" />
+        {step !== 'welcome' && (
+          <button
+            className="top-bar-home-btn"
+            onClick={() => {
+              if (window.confirm('לחזור לדף הבית? ההתקדמות בשיעור הנוכחי תאבד.')) {
+                handleRestart();
+              }
+            }}
+            title="חזרה לדף הבית"
+          >
+            🏠 דף הבית
+          </button>
+        )}
       </div>
 
       <div className={`main-content${step === 'welcome' ? ' main-content-welcome' : ''}`}>
