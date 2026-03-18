@@ -512,8 +512,9 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   gap: 0;
   position: relative;
   margin-bottom: 64px;
+  isolation: isolate; /* creates stacking context so ::before z-index:-1 stays inside */
 }
-/* Connecting line — delayed so it doesn't flash before cards appear */
+/* Connecting line — z-index:-1 keeps it behind cards in all browsers (incl. Chrome/grid) */
 .welcome-steps-container::before {
   content: '';
   position: absolute;
@@ -523,7 +524,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   height: 2px;
   background: linear-gradient(to left, var(--amber-500), var(--amber-300), var(--amber-500));
   opacity: .28;
-  z-index: 0;
+  z-index: -1;
   animation: lineReveal 0.4s 0.5s ease both;
 }
 @keyframes lineReveal { from { opacity: 0; } to { opacity: .28; } }
