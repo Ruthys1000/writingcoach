@@ -228,6 +228,23 @@ export function AdminPage({ onClose }: Props) {
   async function handleSave() {
     if (!editing) return;
 
+    // Client-side validation
+    if (!editing.name.trim()) {
+      setError('יש למלא שם לסוג המסמך');
+      return;
+    }
+    if (isNew && !editing.id.trim()) {
+      setError('יש למלא מזהה לקובץ ה-YAML');
+      return;
+    }
+    for (let i = 0; i < editing.criteria.length; i++) {
+      if (!editing.criteria[i].question.trim()) {
+        setError(`קריטריון #${i + 1} חסר שאלת אבחון`);
+        setExpandedCriteria((prev) => ({ ...prev, [i]: true }));
+        return;
+      }
+    }
+
     // Sync criterion ids before saving
     const withIds: Recipe = {
       ...editing,
@@ -425,6 +442,26 @@ export function AdminPage({ onClose }: Props) {
                   autoFocus
                 />
                 <span className="admin-hint">השם שיופיע למשתמש בדף הבחירה</span>
+              </label>
+
+              <label className="admin-label" style={{ marginTop: '0.75rem' }}>
+                מזהה (שם קובץ ה-YAML)
+                {isNew ? (
+                  <>
+                    <input
+                      className="admin-input"
+                      value={editing.id}
+                      placeholder="לדוגמה: invitation-letter"
+                      onChange={(e) => updateField('id', e.target.value.replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase())}
+                    />
+                    <span className="admin-hint">ייווצר הקובץ <code>{editing.id || 'my-recipe'}.yaml</code> בתיקיית recipes/ — רק אותיות אנגליות, מספרים ומקף</span>
+                  </>
+                ) : (
+                  <>
+                    <input className="admin-input" value={editing.id} readOnly style={{ opacity: 0.6, cursor: 'default' }} />
+                    <span className="admin-hint">קובץ: <code>{editing.id}.yaml</code> — לא ניתן לשינוי לאחר יצירה</span>
+                  </>
+                )}
               </label>
 
               <label className="admin-label" style={{ marginTop: '0.75rem' }}>
@@ -639,6 +676,8 @@ export function AdminPage({ onClose }: Props) {
               >
                 ⬇️ הורד CSV
               </button>
+              {error && <span className="admin-save-error">❌ {error}</span>}
+              {saved && <span className="admin-save-success">✅ נשמר בהצלחה!</span>}
               <button className="btn-primary" onClick={handleSave} disabled={loading}>
                 {loading ? 'שומר...' : '💾 שמור מתכון'}
               </button>
