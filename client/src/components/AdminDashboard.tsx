@@ -305,7 +305,6 @@ function RecipeManager() {
   if (view === 'edit' && editing) return (
     <div>
       {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
-      {saved && <div className="alert alert-success" style={{ marginBottom: 16 }}>✅ נשמר בהצלחה!</div>}
 
       <div className="adm-edit-nav">
         <button className="adm-back-btn" onClick={() => setView('list')}>← רשימת מתכונים</button>
@@ -481,6 +480,7 @@ function RecipeManager() {
       <div className="admin-save-bar">
         <button className="btn-secondary" onClick={() => setView('list')}>ביטול</button>
         <button className="btn-secondary" title="הורד כ-CSV" onClick={() => downloadRecipeCSV(editing)}>הורד CSV</button>
+        {saved && <span className="admin-save-success">✅ נשמר בהצלחה!</span>}
         <button className="btn-primary" onClick={handleSave} disabled={loading}>
           {loading ? 'שומר...' : 'שמור מתכון'}
         </button>
@@ -547,7 +547,6 @@ function PromptManager() {
   return (
     <div>
       {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
-      {saved && <div className="alert alert-success" style={{ marginBottom: 16 }}>✅ נשמר בהצלחה!</div>}
 
       <div className="adm-prompts-info">
         <p>הסיסטם פרומפטים קובעים כיצד ה-AI מתנהג בכל שלב. שינוי ללא זהירות עלול לפגוע בתפקוד המערכת.</p>
@@ -574,6 +573,7 @@ function PromptManager() {
       </div>
 
       <div className="admin-save-bar" style={{ marginTop: 24 }}>
+        {saved && <span className="admin-save-success">✅ נשמר בהצלחה!</span>}
         <button className="btn-primary" onClick={handleSave} disabled={saving}>
           {saving ? 'שומר...' : '💾 שמור פרומפטים'}
         </button>
