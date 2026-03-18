@@ -5,6 +5,7 @@
    ============================================================ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+button { outline: none; }
 
 input, select, button, textarea, optgroup {
   font-family: 'Heebo', Arial, sans-serif;
@@ -225,6 +226,7 @@ body {
   font-family: 'Heebo', Arial, sans-serif;
   cursor: pointer;
   border: none;
+  outline: none;
   transition: all .18s;
 }
 .btn:disabled { opacity: .4; cursor: not-allowed; }
@@ -1626,16 +1628,17 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
    Spinner, confetti, and progress bars keep their animations.
    ============================================================ */
 :is(
-  .step-indicator-row,
+  .step-indicator,
   .card,
   .welcome-hero,
-  .welcome-badge,
+  .welcome-hero-badge,
   .welcome-title,
   .welcome-subtitle,
   .welcome-cta,
   .welcome-how-section,
   .welcome-step-card,
   .welcome-step-icon-wrap,
+  .welcome-step-arrow,
   .welcome-steps-container::before,
   .welcome-step-arrow-1,
   .welcome-step-arrow-2,
@@ -1643,7 +1646,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   .welcome-doc-chip,
   .doctype-header,
   .doctype-card,
-  .score-ring,
+  .score-ring-wrap,
   .diagnostic-insight,
   .criterion-item,
   .lesson-block-why,
@@ -1651,7 +1654,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   .before-after-section,
   .assessment-feedback,
   .feedback-score-wrap,
-  .summary-emoji,
+  .summary-trophy,
   .summary-title,
   .summary-subtitle,
   .summary-stat,
