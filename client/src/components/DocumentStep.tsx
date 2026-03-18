@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 const MIN_CHARS = 50;
+const MAX_CHARS = 50_000;
 const TARGET_CHARS = 300;
 
 interface Props {
@@ -12,9 +13,10 @@ interface Props {
 export function DocumentStep({ recipeName, onSubmit, onBack }: Props) {
   const [text, setText] = useState('');
 
-  const len    = text.length;
-  const filled = Math.min(len / TARGET_CHARS, 1);
-  const ready  = text.trim().length >= MIN_CHARS;
+  const len      = text.length;
+  const tooLong  = len > MAX_CHARS;
+  const filled   = Math.min(len / TARGET_CHARS, 1);
+  const ready    = text.trim().length >= MIN_CHARS && !tooLong;
 
   return (
     <div className="card">
@@ -49,9 +51,11 @@ export function DocumentStep({ recipeName, onSubmit, onBack }: Props) {
         />
       </div>
       <div className="doc-status-bar">
-        <span className={`doc-status-msg${ready ? ' ready' : ''}`}>
+        <span className={`doc-status-msg${ready ? ' ready' : ''}${tooLong ? ' error' : ''}`}>
           {len === 0
             ? 'הדבק טקסט להתחלה'
+            : tooLong
+            ? `המסמך ארוך מדי — מקסימום ${MAX_CHARS.toLocaleString()} תווים`
             : !ready
             ? `עוד ${MIN_CHARS - text.trim().length} תווים נדרשים`
             : '✓ המסמך מוכן לניתוח'}

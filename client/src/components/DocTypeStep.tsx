@@ -30,6 +30,11 @@ export function DocTypeStep({ recipes, onSelect }: Props) {
       </div>
 
       <div className="doctype-list">
+        {recipes.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--paper-500)', fontSize: '.95rem' }}>
+            טוען סוגי מסמכים...
+          </div>
+        )}
         {recipes.map((r, i) => (
           <button
             key={r.id}

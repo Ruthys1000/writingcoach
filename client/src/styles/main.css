@@ -882,6 +882,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 }
 .doc-status-msg { font-size: .82rem; color: var(--paper-500); }
 .doc-status-msg.ready { color: var(--success); font-weight: 600; }
+.doc-status-msg.error { color: var(--danger); font-weight: 600; }
 
 /* ============================================================
    Diagnostic Report
