@@ -1619,3 +1619,46 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 .admin-micro-subtitle { font-size: .85rem; color: var(--paper-500); font-weight: 400; text-transform: none; letter-spacing: 0; }
 
 .admin-save-bar { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding: var(--sp-md) 0; border-top: 2px solid var(--paper-300); margin-top: var(--sp-md); }
+
+/* ============================================================
+   Disable stagger animations — prevent horizontal stripe flash on load.
+   Each element had opacity:0 + animation-delay, creating visible gaps.
+   Spinner, confetti, and progress bars keep their animations.
+   ============================================================ */
+:is(
+  .step-indicator-row,
+  .card,
+  .welcome-hero,
+  .welcome-badge,
+  .welcome-title,
+  .welcome-subtitle,
+  .welcome-cta,
+  .welcome-how-section,
+  .welcome-step-card,
+  .welcome-step-icon-wrap,
+  .welcome-steps-container::before,
+  .welcome-step-arrow-1,
+  .welcome-step-arrow-2,
+  .welcome-footer,
+  .welcome-doc-chip,
+  .doctype-header,
+  .doctype-card,
+  .score-ring,
+  .diagnostic-insight,
+  .criterion-item,
+  .lesson-block-why,
+  .lesson-block-formula,
+  .before-after-section,
+  .assessment-feedback,
+  .feedback-score-wrap,
+  .summary-emoji,
+  .summary-title,
+  .summary-subtitle,
+  .summary-stat,
+  .summary-next,
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-slide-in
+) {
+  animation: none !important;
+}
