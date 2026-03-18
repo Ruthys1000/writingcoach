@@ -83,11 +83,19 @@ if (IS_PROD) {
   });
 }
 
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   const provider = process.env.LLM_PROVIDER ?? 'anthropic';
   console.log(`✍️  WritingCoach server on http://localhost:${PORT}`);
   console.log(`   LLM provider: ${provider}`);
   if (!IS_PROD) {
     console.log(`   API only (run 'npm run client:dev' for the frontend)`);
   }
+});
+
+server.on('error', (err: NodeJS.ErrnoException) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`❌ Port ${PORT} already in use — kill the previous process and retry.`);
+    process.exit(1);
+  }
+  throw err;
 });
