@@ -4,6 +4,40 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>מאמן הכתיבה המנהלית</title>
+    <style>
+      /* Critical CSS — prevents FOUC before JS-loaded stylesheet applies */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { font-size: 16px; }
+      body {
+        font-family: Arial, sans-serif;
+        background: #F4F1E8;
+        color: #0B1D33;
+        direction: rtl;
+        line-height: 1.65;
+      }
+      /* Remove native browser button appearance so buttons are never gray */
+      button {
+        -webkit-appearance: none;
+        appearance: none;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      /* Key structural backgrounds — these sections are dark; without this they
+         flash white and their borders/children appear as stray lines */
+      .app-shell { min-height: 100vh; display: flex; flex-direction: column; }
+      .top-bar {
+        background: linear-gradient(135deg, #0B1D33 0%, #1B3D6B 100%);
+      }
+      .welcome-hero {
+        background: linear-gradient(160deg, #0B1D33 0%, #1B3D6B 60%, #1e3a6e 100%);
+      }
+      .welcome-how-section { background: #FDFCF9; }
+      .welcome-footer {
+        background: linear-gradient(135deg, #0B1D33 0%, #1B3D6B 100%);
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
