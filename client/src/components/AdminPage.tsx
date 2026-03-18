@@ -228,6 +228,19 @@ export function AdminPage({ onClose }: Props) {
   async function handleSave() {
     if (!editing) return;
 
+    // Client-side validation
+    if (!editing.name.trim()) {
+      setError('יש למלא שם לסוג המסמך');
+      return;
+    }
+    for (let i = 0; i < editing.criteria.length; i++) {
+      if (!editing.criteria[i].question.trim()) {
+        setError(`קריטריון #${i + 1} חסר שאלת אבחון`);
+        setExpandedCriteria((prev) => ({ ...prev, [i]: true }));
+        return;
+      }
+    }
+
     // Sync criterion ids before saving
     const withIds: Recipe = {
       ...editing,
@@ -639,6 +652,7 @@ export function AdminPage({ onClose }: Props) {
               >
                 ⬇️ הורד CSV
               </button>
+              {error && <span className="admin-save-error">❌ {error}</span>}
               {saved && <span className="admin-save-success">✅ נשמר בהצלחה!</span>}
               <button className="btn-primary" onClick={handleSave} disabled={loading}>
                 {loading ? 'שומר...' : '💾 שמור מתכון'}
