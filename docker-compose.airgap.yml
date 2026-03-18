@@ -1,0 +1,43 @@
+# ============================================================
+# WritingCoach — Airgap Deployment
+#
+# Usage (on the airgap machine after loading images):
+#   docker compose -f docker-compose.airgap.yml up
+#
+# Preparation (on a machine WITH internet):
+#   ./scripts/prepare-airgap.sh
+# ============================================================
+
+version: '3.9'
+
+services:
+  app:
+    image: writingcoach:airgap
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      LLM_PROVIDER: ollama
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3}
+      RECIPES_DIR: /app/recipes
+    volumes:
+      - ./recipes:/app/recipes:ro
+    restart: unless-stopped
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    # Model is already in the volume — no internet pull needed
+    entrypoint: ["ollama", "serve"]
+
+volumes:
+  ollama_data:
+    external: true
+    name: writingcoach_ollama_data
