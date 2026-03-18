@@ -112,6 +112,18 @@ body {
 .top-bar h1  { font-size: 1.15rem; font-weight: 800; color: white; letter-spacing: -.01em; }
 .top-bar-sub { font-size: .85rem; color: var(--amber-300); font-weight: 500; }
 .top-bar-spacer { flex: 1; }
+.top-bar-home-btn {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.25);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: .85rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s;
+}
+.top-bar-home-btn:hover { background: rgba(255,255,255,.22); }
 
 .main-content {
   flex: 1;
