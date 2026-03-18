@@ -6,6 +6,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 button { outline: none; }
+button:focus-visible { outline: 2px solid var(--amber-500); outline-offset: 2px; border-radius: 4px; }
 
 input, select, button, textarea, optgroup {
   font-family: 'Heebo', Arial, sans-serif;
@@ -75,7 +76,7 @@ body {
 
 /* ---- Animations ---- */
 @keyframes spin          { to { transform: rotate(360deg); } }
-@keyframes fadeInUp      { from { opacity:0; } to { opacity:1; } }
+@keyframes fadeInUp      { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 @keyframes scaleIn       { from { opacity:0; transform:scale(.7); } to { opacity:1; transform:scale(1); } }
 @keyframes slideInRight  { from { opacity:0; transform:translateX(-20px); } to { opacity:1; transform:translateX(0); } }
 @keyframes progressFill  { from { width:0; } }
@@ -88,9 +89,9 @@ body {
   100% { transform: translateY(120px) rotate(540deg); opacity:0; }
 }
 
-.animate-fade-in    { }
-.animate-scale-in   { }
-.animate-slide-in   { }
+.animate-fade-in  { animation: fadeInUp .4s both; }
+.animate-scale-in { animation: scaleIn .4s both; }
+.animate-slide-in { animation: slideInRight .4s both; }
 
 /* ============================================================
    Layout Shell
@@ -523,8 +524,9 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   background: linear-gradient(to left, var(--amber-500), var(--amber-300), var(--amber-500));
   opacity: .28;
   z-index: 0;
+  animation: lineReveal 0.4s 0.5s ease both;
 }
-@keyframes lineReveal { to { opacity: .28; } }
+@keyframes lineReveal { from { opacity: 0; } to { opacity: .28; } }
 .welcome-step-card {
   position: relative;
   z-index: 1;
@@ -533,6 +535,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   align-items: center;
   text-align: center;
   padding: 0 24px;
+  animation: fadeInUp 0.4s both;
 }
 .welcome-step-card:nth-child(3) { animation-delay: .1s; }
 .welcome-step-card:nth-child(4) { animation-delay: .27s; }
@@ -572,6 +575,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   position: relative;
   box-shadow: 0 8px 32px rgba(11,29,51,.25), 0 2px 8px rgba(11,29,51,.15), inset 0 1px 0 rgba(255,255,255,.05);
   transition: transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease;
+  animation: scaleIn 0.4s both;
 }
 /* Match icon-wrap animation delay to parent card delay so border lines don't flash */
 .welcome-step-card:nth-child(3) .welcome-step-icon-wrap { animation-delay: .1s; }
@@ -603,14 +607,15 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   z-index: 2;
   color: var(--amber-300);
   font-size: 1.4rem;
-  opacity: .3;
+  opacity: 0;
+  animation: arrowReveal 0.3s 0.7s ease forwards, pulseArrow 2s 1.0s ease-in-out infinite;
 }
 .welcome-step-arrow-1 { right: 33.33%; transform: translateX(50%); }
 .welcome-step-arrow-2 { right: 66.66%; transform: translateX(50%); }
-@keyframes arrowReveal { to { opacity: .3; } }
+@keyframes arrowReveal { from { opacity: 0; } to { opacity: .3; } }
 @keyframes pulseArrow {
   0%, 100% { opacity: .3; transform: translateX(50%); }
-  50% { opacity: .7; transform: translateX(calc(50% - 5px)); }
+  50% { opacity: .7; transform: translateX(calc(50% + 5px)); }
 }
 
 /* Document types */
@@ -639,10 +644,11 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   color: var(--ink-900);
   transition: border-color .3s ease, background .3s ease, box-shadow .3s ease, transform .3s ease;
   box-shadow: var(--shadow-sm);
+  animation: fadeInUp 0.3s both;
 }
-.welcome-doctypes-grid .welcome-doc-chip:nth-child(1) { animation-delay: 1.0s; }
-.welcome-doctypes-grid .welcome-doc-chip:nth-child(2) { animation-delay: 1.1s; }
-.welcome-doctypes-grid .welcome-doc-chip:nth-child(3) { animation-delay: 1.2s; }
+.welcome-doctypes-grid .welcome-doc-chip:nth-child(1) { animation-delay: .6s; }
+.welcome-doctypes-grid .welcome-doc-chip:nth-child(2) { animation-delay: .7s; }
+.welcome-doctypes-grid .welcome-doc-chip:nth-child(3) { animation-delay: .8s; }
 .welcome-doc-chip:hover {
   border-color: var(--amber-300);
   background: var(--amber-50);
@@ -766,8 +772,10 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   box-shadow: var(--shadow-sm);
   width: 100%;
   font-family: 'Heebo', Arial, sans-serif;
+  animation: slideInRight 0.35s both;
 }
 
+.doctype-card:nth-child(1) { animation-delay: 0s; }
 .doctype-card:nth-child(2) { animation-delay: .07s; }
 .doctype-card:nth-child(3) { animation-delay: .14s; }
 .doctype-card:nth-child(4) { animation-delay: .21s; }
@@ -1227,7 +1235,9 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   background: var(--paper-100);
   border-radius: var(--radius-md);
   border: 1px solid var(--paper-300);
+  animation: fadeInUp 0.35s both;
 }
+.summary-stat:nth-child(1) { animation-delay: 0s; }
 .summary-stat:nth-child(2) { animation-delay: .07s; }
 .summary-stat:nth-child(3) { animation-delay: .14s; }
 .summary-stat-value {
