@@ -12,10 +12,21 @@ import { llmConfigStore } from '../llm-config-store';
 
 const router = Router();
 
-// Mutable coach instance — replaced when LLM config changes
-let _coach: WritingCoach = new WritingCoach(createLLMClient(llmConfigStore.get()));
+// Mutable coach instance — null until first use or after config save
+let _coach: WritingCoach | null = null;
 
-export function getCoach(): WritingCoach { return _coach; }
+try {
+  _coach = new WritingCoach(createLLMClient(llmConfigStore.get()));
+} catch {
+  // No valid API key yet — server still starts, admin panel is accessible
+}
+
+export function getCoach(): WritingCoach {
+  if (!_coach) {
+    throw new Error('ספק ה-AI לא מוגדר — עבור לדשבורד הניהול ← ספק AI והכנס את מפתח ה-API');
+  }
+  return _coach;
+}
 
 export function reloadCoach(): void {
   _coach = new WritingCoach(createLLMClient(llmConfigStore.get()));
