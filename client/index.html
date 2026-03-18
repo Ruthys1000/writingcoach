@@ -4,6 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>מאמן הכתיבה המנהלית</title>
+    <style>
+      /* Critical CSS — prevents FOUC before JS-loaded stylesheet applies */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { font-size: 16px; }
+      body {
+        font-family: Arial, sans-serif;
+        background: #F4F1E8;
+        color: #0B1D33;
+        direction: rtl;
+      }
+      /* Remove native browser button appearance so buttons are never gray */
+      button {
+        -webkit-appearance: none;
+        appearance: none;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-family: inherit;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
