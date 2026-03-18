@@ -3,7 +3,7 @@
 // ============================================================
 
 import { useState, useEffect, useRef } from 'react';
-import { adminApi, systemPromptApi, Recipe, SystemPrompts } from '../api';
+import { adminApi, systemPromptApi, llmConfigApi, Recipe, SystemPrompts, LLMConfig, LLMProvider } from '../api';
 
 // ================================================================
 // CSV helpers (for recipes)
@@ -582,7 +582,196 @@ function PromptManager() {
 // Admin Dashboard — Main export
 // ================================================================
 
-type AdminTab = 'recipes' | 'prompts';
+// ================================================================
+// LLM Config Manager
+// ================================================================
+
+const PROVIDER_LABELS: Record<LLMProvider, string> = {
+  anthropic: '🟣 Anthropic Claude',
+  openai:    '🟢 OpenAI / תואם-OpenAI',
+  cohere:    '🔵 Cohere',
+  ollama:    '🟡 Ollama (מקומי)',
+};
+
+const PROVIDER_DESCS: Record<LLMProvider, string> = {
+  anthropic: 'Claude Haiku — מהיר וחסכוני לשימוש ביומיום',
+  openai:    'GPT או כל שרת תואם-OpenAI (vLLM, LM Studio, Azure)',
+  cohere:    'Command R — אפשרות ענן חלופית',
+  ollama:    'מודל מקומי בלי שליחת מידע לענן',
+};
+
+function LLMManager() {
+  const [config, setConfig] = useState<LLMConfig>({ provider: 'anthropic' });
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    llmConfigApi.get()
+      .then(setConfig)
+      .catch((e) => setError(String(e)))
+      .finally(() => setLoading(false));
+  }, []);
+
+  function update(patch: Partial<LLMConfig>) {
+    setConfig((c) => ({ ...c, ...patch }));
+    setSaved(false);
+  }
+
+  async function handleSave() {
+    setSaving(true); setError(null); setSaved(false);
+    try {
+      const updated = await llmConfigApi.update(config);
+      setConfig(updated);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (e) { setError(String(e)); }
+    finally { setSaving(false); }
+  }
+
+  if (loading) return (
+    <div style={{ textAlign: 'center', padding: '3rem' }}>
+      <div className="spinner" style={{ margin: '0 auto' }} />
+      <p style={{ color: 'var(--paper-500)', marginTop: 16 }}>טוען הגדרות...</p>
+    </div>
+  );
+
+  return (
+    <div>
+      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
+
+      {/* Provider selector */}
+      <div className="admin-section">
+        <h3 className="admin-section-title">ספק AI</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {(Object.keys(PROVIDER_LABELS) as LLMProvider[]).map((p) => (
+            <button
+              key={p}
+              onClick={() => update({ provider: p })}
+              style={{
+                padding: '12px 16px',
+                borderRadius: 'var(--radius-md)',
+                border: config.provider === p
+                  ? '2px solid var(--ink-700)'
+                  : '1px solid var(--paper-300)',
+                background: config.provider === p ? 'var(--ink-900)' : 'var(--paper-50)',
+                color: config.provider === p ? 'white' : 'var(--ink-700)',
+                cursor: 'pointer',
+                textAlign: 'right',
+                fontFamily: 'Heebo, Arial, sans-serif',
+                transition: 'all .18s',
+              }}
+            >
+              <div style={{ fontWeight: 700, fontSize: '.95rem' }}>{PROVIDER_LABELS[p]}</div>
+              <div style={{ fontSize: '.78rem', opacity: .75, marginTop: 3 }}>{PROVIDER_DESCS[p]}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Fields per provider */}
+      <div className="admin-section">
+        <h3 className="admin-section-title">פרטי חיבור — {PROVIDER_LABELS[config.provider]}</h3>
+
+        {config.provider === 'anthropic' && (
+          <label className="admin-label">
+            מפתח API
+            <input
+              className="admin-input"
+              type="password"
+              value={config.anthropic_api_key ?? ''}
+              placeholder="sk-ant-api03-..."
+              onChange={(e) => update({ anthropic_api_key: e.target.value })}
+            />
+            <span className="admin-hint">
+              מצא את המפתח ב־<a href="https://console.anthropic.com" target="_blank" rel="noreferrer" style={{ color: 'var(--ink-500)' }}>console.anthropic.com</a> ← API Keys
+            </span>
+          </label>
+        )}
+
+        {config.provider === 'openai' && (
+          <>
+            <label className="admin-label">
+              כתובת שרת (Base URL)
+              <input className="admin-input" value={config.openai_base_url ?? ''}
+                placeholder="https://api.openai.com/v1"
+                onChange={(e) => update({ openai_base_url: e.target.value })} />
+              <span className="admin-hint">לשרת OpenAI הרגיל השאר כברירת מחדל. לשרת פנימי — הכנס כתובת מלאה.</span>
+            </label>
+            <label className="admin-label" style={{ marginTop: '0.75rem' }}>
+              מפתח API
+              <input className="admin-input" type="password" value={config.openai_api_key ?? ''}
+                placeholder="sk-..."
+                onChange={(e) => update({ openai_api_key: e.target.value })} />
+            </label>
+            <label className="admin-label" style={{ marginTop: '0.75rem' }}>
+              שם מודל
+              <input className="admin-input" value={config.openai_model ?? ''}
+                placeholder="gpt-4o-mini"
+                onChange={(e) => update({ openai_model: e.target.value })} />
+            </label>
+          </>
+        )}
+
+        {config.provider === 'cohere' && (
+          <>
+            <label className="admin-label">
+              מפתח API
+              <input className="admin-input" type="password" value={config.cohere_api_key ?? ''}
+                placeholder="..."
+                onChange={(e) => update({ cohere_api_key: e.target.value })} />
+              <span className="admin-hint">
+                מצא ב־<a href="https://dashboard.cohere.com" target="_blank" rel="noreferrer" style={{ color: 'var(--ink-500)' }}>dashboard.cohere.com</a>
+              </span>
+            </label>
+            <label className="admin-label" style={{ marginTop: '0.75rem' }}>
+              כתובת שרת (Base URL)
+              <input className="admin-input" value={config.cohere_base_url ?? ''}
+                placeholder="https://api.cohere.com/v2"
+                onChange={(e) => update({ cohere_base_url: e.target.value })} />
+              <span className="admin-hint">לשרת on-prem הכנס כתובת פנימית, אחרת השאר ריק.</span>
+            </label>
+            <label className="admin-label" style={{ marginTop: '0.75rem' }}>
+              שם מודל
+              <input className="admin-input" value={config.cohere_model ?? ''}
+                placeholder="command-r-plus"
+                onChange={(e) => update({ cohere_model: e.target.value })} />
+            </label>
+          </>
+        )}
+
+        {config.provider === 'ollama' && (
+          <>
+            <label className="admin-label">
+              כתובת שרת Ollama
+              <input className="admin-input" value={config.ollama_base_url ?? ''}
+                placeholder="http://localhost:11434"
+                onChange={(e) => update({ ollama_base_url: e.target.value })} />
+              <span className="admin-hint">הרץ Ollama מקומית ותן כאן את הכתובת. ללא שליחת נתונים לענן.</span>
+            </label>
+            <label className="admin-label" style={{ marginTop: '0.75rem' }}>
+              שם מודל
+              <input className="admin-input" value={config.ollama_model ?? ''}
+                placeholder="llama3"
+                onChange={(e) => update({ ollama_model: e.target.value })} />
+            </label>
+          </>
+        )}
+      </div>
+
+      <div className="admin-save-bar">
+        {saved && <span className="admin-save-success">✅ נשמר — הספק הוחלף מיידית</span>}
+        <button className="btn-primary" onClick={handleSave} disabled={saving}>
+          {saving ? 'שומר...' : '💾 שמור הגדרות'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+type AdminTab = 'recipes' | 'prompts' | 'llm';
 
 interface Props {
   onBack: () => void;
@@ -618,6 +807,12 @@ export function AdminDashboard({ onBack }: Props) {
           >
             ✏️ סיסטם פרומפט
           </button>
+          <button
+            className={`adm-tab ${activeTab === 'llm' ? 'active' : ''}`}
+            onClick={() => setActiveTab('llm')}
+          >
+            🤖 ספק AI
+          </button>
         </div>
       </div>
 
@@ -625,17 +820,22 @@ export function AdminDashboard({ onBack }: Props) {
       <main className="adm-content">
         <div className="adm-content-header">
           <h2 className="adm-content-title">
-            {activeTab === 'recipes' ? '📋 מתכוני כתיבה' : '✏️ סיסטם פרומפט'}
+            {activeTab === 'recipes' ? '📋 מתכוני כתיבה'
+              : activeTab === 'prompts' ? '✏️ סיסטם פרומפט'
+              : '🤖 ספק AI'}
           </h2>
           <p className="adm-content-subtitle">
             {activeTab === 'recipes'
               ? 'הגדר את סוגי המסמכים, הקריטריונים והשיעורים שיוצגו למשתמשים'
-              : 'ערוך את ההנחיות שמנחות את ה-AI בכל שלב של הדרכה'}
+              : activeTab === 'prompts'
+              ? 'ערוך את ההנחיות שמנחות את ה-AI בכל שלב של הדרכה'
+              : 'בחר את מנוע ה-AI וספק את פרטי הגישה — השינוי נכנס לתוקף מיידית'}
           </p>
         </div>
 
         {activeTab === 'recipes' && <RecipeManager />}
         {activeTab === 'prompts' && <PromptManager />}
+        {activeTab === 'llm' && <LLMManager />}
       </main>
     </div>
   );
