@@ -639,6 +639,7 @@ export function AdminPage({ onClose }: Props) {
               >
                 ⬇️ הורד CSV
               </button>
+              {saved && <span className="admin-save-success">✅ נשמר בהצלחה!</span>}
               <button className="btn-primary" onClick={handleSave} disabled={loading}>
                 {loading ? 'שומר...' : '💾 שמור מתכון'}
               </button>
