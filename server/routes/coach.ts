@@ -13,16 +13,13 @@ import { llmConfigStore } from '../llm-config-store';
 const router = Router();
 
 // Mutable coach instance — replaced when LLM config changes
-let _coach = new WritingCoach(createLLMClient(llmConfigStore.get()));
+let _coach: WritingCoach = new WritingCoach(createLLMClient(llmConfigStore.get()));
 
 export function getCoach(): WritingCoach { return _coach; }
 
 export function reloadCoach(): void {
   _coach = new WritingCoach(createLLMClient(llmConfigStore.get()));
 }
-
-// Keep legacy named export for backward compatibility with admin.ts
-export { _coach as coach };
 
 // ---- GET /api/recipes ----
 router.get('/recipes', (_req: Request, res: Response) => {
