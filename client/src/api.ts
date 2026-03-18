@@ -162,3 +162,23 @@ export const systemPromptApi = {
   updateAll: (prompts: Partial<SystemPrompts>): Promise<SystemPrompts> =>
     put('/admin/system-prompts', prompts),
 };
+
+export type LLMProvider = 'anthropic' | 'openai' | 'ollama' | 'cohere';
+
+export interface LLMConfig {
+  provider: LLMProvider;
+  anthropic_api_key?: string;
+  openai_api_key?: string;
+  openai_base_url?: string;
+  openai_model?: string;
+  cohere_api_key?: string;
+  cohere_base_url?: string;
+  cohere_model?: string;
+  ollama_base_url?: string;
+  ollama_model?: string;
+}
+
+export const llmConfigApi = {
+  get: (): Promise<LLMConfig> => get('/admin/llm-config'),
+  update: (config: Partial<LLMConfig>): Promise<LLMConfig> => put('/admin/llm-config', config),
+};

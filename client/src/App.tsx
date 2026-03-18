@@ -50,9 +50,9 @@ export default function App() {
   });
 
   useEffect(() => {
-    api.getRecipes().then((recipes) =>
-      setState((s) => ({ ...s, recipes })),
-    );
+    api.getRecipes()
+      .then((recipes) => setState((s) => ({ ...s, recipes })))
+      .catch(() => setError('לא ניתן לטעון את רשימת סוגי המסמכים — בדוק שהשרת פועל'));
   }, []);
 
   useEffect(() => {

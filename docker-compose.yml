@@ -34,7 +34,7 @@ services:
       RECIPES_DIR: /app/recipes
     volumes:
       # Mount recipes dir so you can add new recipes without rebuilding
-      - ./recipes:/app/recipes:ro
+      - ./recipes:/app/recipes:rw
     restart: unless-stopped
     depends_on:
       ollama:

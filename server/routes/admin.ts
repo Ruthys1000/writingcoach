@@ -4,16 +4,17 @@
 // ============================================================
 
 import { Router, Request, Response } from 'express';
-import { coach } from './coach';
+import { getCoach, reloadCoach } from './coach';
 import type { Recipe } from '../../src/types';
 import { systemPromptStore } from '../../src/engine/system-prompt-store';
+import { llmConfigStore, LLMConfig } from '../llm-config-store';
 
 const router = Router();
 
 // ---- GET /api/admin/recipes ---- list all (full data)
 router.get('/recipes', (_req: Request, res: Response) => {
   try {
-    const loader = coach.getRecipeLoader();
+    const loader = getCoach().getRecipeLoader();
     const list = loader.listAvailable();
     const full = list.map((r) => loader.load(r.id));
     res.json(full);
@@ -25,7 +26,7 @@ router.get('/recipes', (_req: Request, res: Response) => {
 // ---- GET /api/admin/recipes/:id ---- single recipe
 router.get('/recipes/:id', (req: Request, res: Response) => {
   try {
-    const recipe = coach.getRecipeLoader().load(req.params['id'] as string);
+    const recipe = getCoach().getRecipeLoader().load(req.params['id'] as string);
     res.json(recipe);
   } catch (err) {
     res.status(404).json({ error: String(err) });
@@ -42,7 +43,7 @@ router.post('/recipes', (req: Request, res: Response) => {
 
   // Reject if recipe id already exists
   try {
-    coach.getRecipeLoader().load(recipe.id);
+    getCoach().getRecipeLoader().load(recipe.id);
     res.status(409).json({ error: `מתכון עם המזהה "${recipe.id}" כבר קיים` });
     return;
   } catch {
@@ -50,7 +51,7 @@ router.post('/recipes', (req: Request, res: Response) => {
   }
 
   try {
-    coach.getRecipeLoader().save(recipe);
+    getCoach().getRecipeLoader().save(recipe);
     res.status(201).json(recipe);
   } catch (err) {
     res.status(400).json({ error: String(err) });
@@ -73,7 +74,7 @@ router.put('/recipes/:id', (req: Request, res: Response) => {
   }
 
   try {
-    coach.getRecipeLoader().save(recipe);
+    getCoach().getRecipeLoader().save(recipe);
     res.json(recipe);
   } catch (err) {
     res.status(400).json({ error: String(err) });
@@ -83,7 +84,7 @@ router.put('/recipes/:id', (req: Request, res: Response) => {
 // ---- DELETE /api/admin/recipes/:id ---- delete recipe
 router.delete('/recipes/:id', (req: Request, res: Response) => {
   try {
-    coach.getRecipeLoader().delete(req.params['id'] as string);
+    getCoach().getRecipeLoader().delete(req.params['id'] as string);
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: String(err) });
@@ -109,6 +110,31 @@ router.put('/system-prompts', (req: Request, res: Response) => {
   try {
     systemPromptStore.setAll({ diagnostic, learning, assessment });
     res.json(systemPromptStore.getAll());
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+
+// ---- GET /api/admin/llm-config ---- get current LLM config (keys masked)
+router.get('/llm-config', (_req: Request, res: Response) => {
+  try {
+    res.json(llmConfigStore.getMasked());
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+
+// ---- PUT /api/admin/llm-config ---- update LLM config and reload coach
+router.put('/llm-config', (req: Request, res: Response) => {
+  const update = req.body as Partial<LLMConfig>;
+  if (!update.provider) {
+    res.status(400).json({ error: 'provider is required' });
+    return;
+  }
+  try {
+    llmConfigStore.set(update);
+    reloadCoach();
+    res.json(llmConfigStore.getMasked());
   } catch (err) {
     res.status(500).json({ error: String(err) });
   }

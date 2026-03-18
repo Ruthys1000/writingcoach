@@ -8,18 +8,34 @@ import { v4 as uuidv4 } from 'uuid';
 import { createLLMClient } from '../../src/llm/factory';
 import { WritingCoach } from '../../src/coach';
 import { setSession, getSession } from '../session-store';
+import { llmConfigStore } from '../llm-config-store';
 
 const router = Router();
 
-// Shared coach instance (LLM client is stateless)
-const llm = createLLMClient();
-const coach = new WritingCoach(llm);
-export { coach };
+// Mutable coach instance — null until first use or after config save
+let _coach: WritingCoach | null = null;
+
+try {
+  _coach = new WritingCoach(createLLMClient(llmConfigStore.get()));
+} catch {
+  // No valid API key yet — server still starts, admin panel is accessible
+}
+
+export function getCoach(): WritingCoach {
+  if (!_coach) {
+    throw new Error('ספק ה-AI לא מוגדר — עבור לדשבורד הניהול ← ספק AI והכנס את מפתח ה-API');
+  }
+  return _coach;
+}
+
+export function reloadCoach(): void {
+  _coach = new WritingCoach(createLLMClient(llmConfigStore.get()));
+}
 
 // ---- GET /api/recipes ----
 router.get('/recipes', (_req: Request, res: Response) => {
   try {
-    res.json(coach.listDocumentTypes());
+    res.json(getCoach().listDocumentTypes());
   } catch (err) {
     res.status(500).json({ error: String(err) });
   }
@@ -51,7 +67,7 @@ router.post('/diagnose', async (req: Request, res: Response) => {
   }
 
   try {
-    const session = await coach.runDiagnostic(documentTypeId, documentText);
+    const session = await getCoach().runDiagnostic(documentTypeId, documentText);
     const sessionId = uuidv4();
     setSession(sessionId, session);
     res.json({ sessionId, report: session.diagnosticReport, recipe: session.recipe });
@@ -70,7 +86,7 @@ router.post('/session/:id/learn', async (req: Request, res: Response) => {
   }
 
   try {
-    const updated = await coach.generateLearning(session, 3);
+    const updated = await getCoach().generateLearning(session, 3);
     setSession(req.params['id'] as string, updated);
     res.json({ learningUnits: updated.learningUnits });
   } catch (err) {
@@ -88,7 +104,7 @@ router.get('/session/:id/exercise/:unitIndex', async (req: Request, res: Respons
 
   const unitIndex = parseInt(req.params['unitIndex'] as string, 10);
   try {
-    const exercise = await coach.generateExercise(session, unitIndex);
+    const exercise = await getCoach().generateExercise(session, unitIndex);
     res.json({ exercise });
   } catch (err) {
     res.status(500).json({ error: String(err) });
@@ -112,8 +128,8 @@ router.post('/session/:id/assess/:unitIndex', async (req: Request, res: Response
 
   const unitIndex = parseInt(req.params['unitIndex'] as string, 10);
   try {
-    const exercise = await coach.generateExercise(session, unitIndex);
-    const result = await coach.evaluateRewrite(exercise, userRewrite, session, unitIndex);
+    const exercise = await getCoach().generateExercise(session, unitIndex);
+    const result = await getCoach().evaluateRewrite(exercise, userRewrite, session, unitIndex);
     res.json({ result, exercise });
   } catch (err) {
     res.status(500).json({ error: String(err) });
