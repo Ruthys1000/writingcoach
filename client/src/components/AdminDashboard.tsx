@@ -294,10 +294,6 @@ function RecipeManager() {
             </div>
           </div>
         ))}
-        <div className="adm-empty-hint" onClick={openNew}>
-          <div className="adm-empty-hint-icon">+</div>
-          <div>הוסף מתכון כתיבה חדש</div>
-        </div>
       </div>
     </div>
   );

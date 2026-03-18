@@ -262,7 +262,7 @@ body {
 .btn-secondary {
   background: transparent;
   color: var(--ink-700);
-  border: 2px solid var(--ink-700);
+  border: 1px solid var(--paper-400);
   display: inline-flex; align-items: center; gap: 6px;
   padding: 10px 22px; border-radius: var(--radius-md);
   font-size: 1rem; font-weight: 700; cursor: pointer;
