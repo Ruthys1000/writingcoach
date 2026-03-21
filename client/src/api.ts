@@ -192,6 +192,9 @@ export interface SystemSettings {
   rate_limit_window_minutes: number;
   site_title: string;
   site_tagline: string;
+  footer_color: string;
+  footer_text: string;
+  logo_data_url: string;
 }
 
 export const settingsApi = {

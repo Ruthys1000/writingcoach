@@ -3,9 +3,12 @@ interface Props {
   onAdminOpen: () => void;
   siteTitle: string;
   siteTagline: string;
+  footerColor?: string;
+  footerText?: string;
+  logoDataUrl?: string;
 }
 
-export function WelcomeStep({ onStart, onAdminOpen, siteTitle, siteTagline }: Props) {
+export function WelcomeStep({ onStart, onAdminOpen, siteTitle, siteTagline, footerColor, footerText, logoDataUrl }: Props) {
   return (
     <div className="welcome-page">
 
@@ -197,6 +200,9 @@ export function WelcomeStep({ onStart, onAdminOpen, siteTitle, siteTagline }: Pr
       <footer className="welcome-footer">
         <div className="welcome-footer-inner">
           <div className="welcome-footer-content">
+            {logoDataUrl && (
+              <img src={logoDataUrl} alt="לוגו" className="welcome-footer-logo" />
+            )}
             <div className="welcome-footer-brand">
               <span className="welcome-footer-name">{siteTitle}</span>
               <span className="welcome-footer-tagline">{siteTagline}</span>
@@ -205,9 +211,11 @@ export function WelcomeStep({ onStart, onAdminOpen, siteTitle, siteTagline }: Pr
               ניהול מערכת
             </button>
           </div>
-          <div className="welcome-footer-bottom">
-            <span>© 2025 כל הזכויות שמורות</span>
-          </div>
+          {footerText && (
+            <div className="welcome-footer-bottom">
+              <span>{footerText}</span>
+            </div>
+          )}
         </div>
       </footer>
 
