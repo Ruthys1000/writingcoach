@@ -34,7 +34,7 @@ export function WelcomeStep({ onStart, onAdminOpen, siteTitle, siteTagline, foot
           <div className="welcome-section-label"><span>3 שלבים פשוטים</span></div>
           <h2 className="welcome-how-heading">כיצד זה עובד?</h2>
           <p className="welcome-how-subtitle">
-            מעתיקים מסמך, מקבלים פידבק מפורט ולומדים לשפר את הכתיבה — הכל בכמה דקות
+            מעתיקים מסמך, מקבלים פידבק מפורט ולומדים לשפר את הכתיבה
           </p>
 
           {/* Timeline */}
@@ -190,7 +190,6 @@ export function WelcomeStep({ onStart, onAdminOpen, siteTitle, siteTagline, foot
           {/* Bottom CTA */}
           <div className="wh-bottom-cta">
             <button className="welcome-cta" onClick={onStart}>התחל אימון ←</button>
-            <div className="wh-cta-sub">לוקח פחות מ-3 דקות</div>
           </div>
 
         </div>
