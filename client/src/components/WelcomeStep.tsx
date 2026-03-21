@@ -12,7 +12,7 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
         <div className="welcome-hero-inner">
           <div className="welcome-hero-badge">AI לכתיבה מנהלית</div>
           <h1 className="welcome-title">
-            מאמן הכתיבה <span className="accent">המנהלית</span>
+            מאמן כתיבה <span className="accent">מנהלית</span>
           </h1>
           <p className="welcome-subtitle">
             העלה מסמך, קבל אבחון מדויק, ולמד לשפר את כתיבתך עם דוגמאות מהטקסט שלך עצמו
@@ -29,8 +29,7 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
           <div className="welcome-section-label"><span>3 שלבים פשוטים</span></div>
           <h2 className="welcome-how-heading">כיצד זה עובד?</h2>
           <p className="welcome-how-subtitle">
-            תהליך מובנה שמאבחן את הכתיבה שלך, מלמד אותך לשפר, ונותן לך לתרגל
-            – הכל על בסיס הטקסט שלך
+            מעתיקים מסמך, מקבלים פידבק ולומדים לשפר את הכתיבה
           </p>
 
           <div className="welcome-steps-container">
@@ -51,7 +50,7 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
                 <span className="welcome-step-num">2</span>
               </div>
               <h3 className="welcome-step-title">למידה</h3>
-              <p className="welcome-step-desc">שיעורים מותאמים אישית עם דוגמאות לפני/אחרי מתוך הטקסט שלך</p>
+              <p className="welcome-step-desc">ניסוחים מותאמים אישית עם דוגמה לפני/אחרי מתוך הטקסט</p>
             </div>
 
             <div className="welcome-step-card">
@@ -80,7 +79,7 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
         <div className="welcome-footer-inner">
           <div className="welcome-footer-content">
             <div className="welcome-footer-brand">
-              <span className="welcome-footer-name">מאמן הכתיבה המנהלית</span>
+              <span className="welcome-footer-name">מאמן כתיבה מנהלית</span>
               <span className="welcome-footer-tagline">AI לשיפור כתיבה מנהלית מקצועית</span>
             </div>
             <button className="welcome-footer-admin" onClick={onAdminOpen}>
