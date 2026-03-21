@@ -84,7 +84,7 @@ export default function App() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [step]);
+  }, [step, state.currentUnitIndex]);
 
   const withLoading = async (text: string, fn: () => Promise<void>) => {
     setLoadingText(text);

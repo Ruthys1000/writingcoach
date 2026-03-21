@@ -79,7 +79,7 @@ body {
 @keyframes spin          { to { transform: rotate(360deg); } }
 @keyframes fadeInUp      { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 /* Transform-only variant — use on containers with dark-background children to avoid Chrome GPU compositing artifacts */
-@keyframes slideUp       { from { transform:translateY(20px); } to { transform:none; } }
+@keyframes slideUp       { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
 @keyframes scaleIn       { from { opacity:0; transform:scale(.7); } to { opacity:1; transform:scale(1); } }
 @keyframes slideInRight  { from { opacity:0; transform:translateX(-20px); } to { opacity:1; transform:translateX(0); } }
 @keyframes progressFill  { from { width:0; } }
