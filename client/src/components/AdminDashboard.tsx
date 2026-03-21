@@ -811,7 +811,11 @@ function SettingsManager() {
   }
 
   if (loading) return <div className="admin-loading">טוען הגדרות...</div>;
-  if (!settings) return null;
+  if (!settings) return (
+    <div className="alert alert-error">
+      לא ניתן לטעון הגדרות — {error ?? 'שגיאה לא ידועה'}. בדוק שהשרת פועל ורענן.
+    </div>
+  );
 
   return (
     <div>
