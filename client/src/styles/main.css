@@ -102,8 +102,8 @@ body {
 .app-shell { min-height: 100vh; display: flex; flex-direction: column; }
 
 .top-bar {
-  background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-700) 100%);
-  border-bottom: 2px solid rgba(96,165,250,.25);
+  background: #020617;
+  border-bottom: 2px solid rgba(96,165,250,.15);
   padding: 14px 32px;
   display: flex;
   align-items: center;
