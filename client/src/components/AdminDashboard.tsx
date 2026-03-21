@@ -279,9 +279,8 @@ function RecipeManager() {
       <div className="admin-recipe-list">
         {recipes.map((r) => (
           <div key={r.id} className="admin-recipe-card">
-            <div className="adm-recipe-icon">{recipeIcon(r.name)}</div>
             <div className="admin-recipe-info">
-              <div className="admin-recipe-name">{r.name}</div>
+              <div className="admin-recipe-name"><span className="adm-recipe-icon-inline">{recipeIcon(r.name)}</span>{r.name}</div>
               <div className="admin-recipe-desc">{r.description}</div>
               <div className="admin-recipe-meta">
                 <span className="admin-recipe-criteria-badge">✓ {r.criteria.length} קריטריונים</span>
