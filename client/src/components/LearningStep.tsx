@@ -44,7 +44,7 @@ export function LearningStep({
 
       {/* Block 1: Gap summary + Why */}
       <div className="lesson-block-why">
-        <div className="lesson-block-label">🔍 הפער שזוהה ולמה זה חשוב</div>
+        <div className="lesson-block-label">הפער שזוהה ולמה זה חשוב</div>
         <div className="lesson-text" style={{ marginBottom: '10px' }}>
           {unit.gap_summary}
         </div>
@@ -55,7 +55,7 @@ export function LearningStep({
 
       {/* Block 2: Formula / Practical tool — dark */}
       <div className="lesson-block-formula">
-        <div className="lesson-block-formula-label">🛠️ הכלי הפרקטי</div>
+        <div className="lesson-block-formula-label">הכלי הפרקטי</div>
         <div className="lesson-block-formula-text">{unit.practical_tool}</div>
         {unit.formula && (
           <div className="lesson-formula-box">{unit.formula}</div>
@@ -64,15 +64,15 @@ export function LearningStep({
 
       {/* Block 3: Before / After — the heart */}
       <div className="before-after-section">
-        <div className="before-after-title">📌 לפני ואחרי — מתוך המסמך שלך</div>
+        <div className="before-after-title">לפני ואחרי — מתוך המסמך שלך</div>
         <div className="before-after-grid">
           <div className="ba-box before">
-            <div className="ba-label">✕ לפני</div>
+            <div className="ba-label">לפני</div>
             <div>{unit.before_from_doc}</div>
           </div>
-          <div className="ba-arrow">↓</div>
+          <div className="ba-arrow">←</div>
           <div className="ba-box after">
-            <div className="ba-label">✓ אחרי</div>
+            <div className="ba-label">אחרי</div>
             <div>{unit.after_from_doc}</div>
           </div>
         </div>
@@ -83,7 +83,7 @@ export function LearningStep({
           className="btn btn-primary"
           onClick={() => onStartAssessment(currentIndex)}
         >
-          ✍️ תרגל כישור זה
+          תרגל כישור זה
         </button>
         <button
           className="btn btn-secondary"

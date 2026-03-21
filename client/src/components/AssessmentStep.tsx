@@ -46,7 +46,7 @@ export function AssessmentStep({ sessionId, unitIndex, unit, onDone, onSkip }: P
   if (!exercise) {
     return (
       <div className="card">
-        <div className="card-title">✍️ תרגיל שכתוב</div>
+        <div className="card-title">תרגיל שכתוב</div>
         <p style={{ color: 'var(--paper-500)', marginBottom: 20, fontSize: '.95rem', lineHeight: 1.7 }}>
           <strong style={{ color: 'var(--ink-900)' }}>{unit.criterion_question}</strong>
           <br />
@@ -55,7 +55,7 @@ export function AssessmentStep({ sessionId, unitIndex, unit, onDone, onSkip }: P
         {error && <div className="alert alert-error">{error}</div>}
         <div className="btn-row">
           <button className="btn btn-primary" onClick={loadExercise} disabled={loading}>
-            {loading ? '⏳ מכין תרגיל...' : '🎯 הכן לי תרגיל'}
+            {loading ? 'מכין תרגיל...' : 'הכן לי תרגיל'}
           </button>
           <button className="btn btn-secondary" onClick={() => onSkip(unitIndex)}>דלג</button>
         </div>
@@ -66,17 +66,17 @@ export function AssessmentStep({ sessionId, unitIndex, unit, onDone, onSkip }: P
   /* ---- Exercise loaded ---- */
   return (
     <div className="card">
-      <div className="card-title">✍️ {unit.criterion_question}</div>
+      <div className="card-title">{unit.criterion_question}</div>
 
       {/* Instructions */}
       <div className="lesson-block-why" style={{ marginBottom: 'var(--sp-md)' }}>
-        <div className="lesson-block-label" style={{ color: 'var(--amber-500)' }}>📋 הוראות</div>
+        <div className="lesson-block-label" style={{ color: 'var(--amber-500)' }}>הוראות</div>
         <div className="lesson-text">{exercise.instruction}</div>
       </div>
 
       {/* Original excerpt */}
       <div style={{ marginBottom: 'var(--sp-md)' }}>
-        <div className="lesson-block-label">📝 קטע לשכתוב</div>
+        <div className="lesson-block-label">קטע לשכתוב</div>
         <div className="exercise-original">{exercise.weak_excerpt}</div>
       </div>
 
@@ -84,10 +84,10 @@ export function AssessmentStep({ sessionId, unitIndex, unit, onDone, onSkip }: P
       {!result ? (
         <>
           <div className="lesson-block-label">
-            ✍️ הגרסה שלך{attempts > 0 ? ` (ניסיון ${attempts + 1})` : ''}
+            הגרסה שלך{attempts > 0 ? ` (ניסיון ${attempts + 1})` : ''}
           </div>
           <div>
-            <div className="studio-header">✍️ סטודיו כתיבה</div>
+            <div className="studio-header">סטודיו כתיבה</div>
             <textarea
               className="studio-textarea"
               value={rewrite}
@@ -103,7 +103,7 @@ export function AssessmentStep({ sessionId, unitIndex, unit, onDone, onSkip }: P
               onClick={submit}
               disabled={loading || rewrite.trim().length < 10}
             >
-              {loading ? '⏳ מעריך...' : '📤 שלח לבדיקה'}
+              {loading ? 'מעריך...' : 'שלח לבדיקה'}
             </button>
             <button className="btn btn-secondary" onClick={() => onSkip(unitIndex)}>דלג</button>
           </div>
@@ -124,11 +124,11 @@ export function AssessmentStep({ sessionId, unitIndex, unit, onDone, onSkip }: P
             </div>
             <div className="feedback-body">
               <div className="feedback-status">
-                {result.passed ? '🎉 כישור אושר!' : '🔄 ממשיכים לתרגל'}
+                {result.passed ? 'כישור אושר' : 'ממשיכים לתרגל'}
               </div>
               <div className="feedback-text">{result.feedback}</div>
               {result.improvement_tip && (
-                <div className="feedback-tip">💡 {result.improvement_tip}</div>
+                <div className="feedback-tip">{result.improvement_tip}</div>
               )}
             </div>
           </div>
@@ -140,7 +140,7 @@ export function AssessmentStep({ sessionId, unitIndex, unit, onDone, onSkip }: P
               </button>
             ) : attempts < 3 ? (
               <>
-                <button className="btn btn-primary" onClick={retry}>🔄 נסה שוב</button>
+                <button className="btn btn-primary" onClick={retry}>נסה שוב</button>
                 <button className="btn btn-secondary" onClick={() => onDone(unitIndex)}>
                   המשך בכל זאת →
                 </button>

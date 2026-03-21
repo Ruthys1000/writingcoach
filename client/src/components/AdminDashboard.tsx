@@ -3,7 +3,7 @@
 // ============================================================
 
 import { useState, useEffect, useRef } from 'react';
-import { adminApi, systemPromptApi, llmConfigApi, Recipe, SystemPrompts, LLMConfig, LLMProvider } from '../api';
+import { adminApi, systemPromptApi, llmConfigApi, settingsApi, Recipe, SystemPrompts, LLMConfig, LLMProvider, SystemSettings } from '../api';
 
 // ================================================================
 // CSV helpers (for recipes)
@@ -117,13 +117,6 @@ function generateRecipeId(): string {
   return `recipe-${crypto.randomUUID()}`;
 }
 
-function recipeIcon(name: string): string {
-  if (name.includes('פנייה') || name.includes('מכתב')) return '✉️';
-  if (name.includes('סיכום') || name.includes('דיון')) return '📝';
-  if (name.includes('מטה') || name.includes('עמדה')) return '📊';
-  if (name.includes('דוח') || name.includes('דו"ח')) return '📑';
-  return '📄';
-}
 function criterionId(idx: number): string {
   return `c${idx + 1}`;
 }
@@ -266,7 +259,7 @@ function RecipeManager() {
 
   if (view === 'list') return (
     <div>
-      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
+      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>{error}</div>}
       <div className="adm-toolbar">
         <button className="btn-primary" onClick={openNew}>+ מתכון חדש</button>
         <button className="btn-secondary" onClick={() => fileInputRef.current?.click()}>
@@ -279,7 +272,6 @@ function RecipeManager() {
       <div className="admin-recipe-list">
         {recipes.map((r) => (
           <div key={r.id} className="admin-recipe-card">
-            <div className="adm-recipe-icon">{recipeIcon(r.name)}</div>
             <div className="admin-recipe-info">
               <div className="admin-recipe-name">{r.name}</div>
               <div className="admin-recipe-desc">{r.description}</div>
@@ -300,7 +292,7 @@ function RecipeManager() {
 
   if (view === 'edit' && editing) return (
     <div>
-      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
+      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>{error}</div>}
 
       <div className="adm-edit-nav">
         <button className="adm-back-btn" onClick={() => setView('list')}>← רשימת מתכונים</button>
@@ -542,7 +534,7 @@ function PromptManager() {
 
   return (
     <div>
-      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
+      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>{error}</div>}
 
       <div className="adm-prompts-info">
         <p>הסיסטם פרומפטים קובעים כיצד ה-AI מתנהג בכל שלב. שינוי ללא זהירות עלול לפגוע בתפקוד המערכת.</p>
@@ -571,7 +563,7 @@ function PromptManager() {
       <div className="admin-save-bar" style={{ marginTop: 24 }}>
         {saved && <span className="admin-save-success">✅ נשמר בהצלחה!</span>}
         <button className="btn-primary" onClick={handleSave} disabled={saving}>
-          {saving ? 'שומר...' : '💾 שמור פרומפטים'}
+          {saving ? 'שומר...' : 'שמור פרומפטים'}
         </button>
       </div>
     </div>
@@ -587,10 +579,17 @@ function PromptManager() {
 // ================================================================
 
 const PROVIDER_LABELS: Record<LLMProvider, string> = {
-  anthropic: '🟣 Anthropic Claude',
-  openai:    '🟢 OpenAI / תואם-OpenAI',
-  cohere:    '🔵 Cohere',
-  ollama:    '🟡 Ollama (מקומי)',
+  anthropic: 'Anthropic Claude',
+  openai:    'OpenAI / תואם-OpenAI',
+  cohere:    'Cohere',
+  ollama:    'Ollama (מקומי)',
+};
+
+const PROVIDER_COLORS: Record<LLMProvider, string> = {
+  anthropic: '#8b5cf6',
+  openai:    '#22c55e',
+  cohere:    '#3b82f6',
+  ollama:    '#eab308',
 };
 
 const PROVIDER_DESCS: Record<LLMProvider, string> = {
@@ -640,7 +639,7 @@ function LLMManager() {
 
   return (
     <div>
-      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
+      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>{error}</div>}
 
       {/* Provider selector */}
       <div className="admin-section">
@@ -664,7 +663,10 @@ function LLMManager() {
                 transition: 'all .18s',
               }}
             >
-              <div style={{ fontWeight: 700, fontSize: '.95rem' }}>{PROVIDER_LABELS[p]}</div>
+              <div style={{ fontWeight: 700, fontSize: '.95rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8 }}>
+                {PROVIDER_LABELS[p]}
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: PROVIDER_COLORS[p], flexShrink: 0, display: 'inline-block' }} />
+              </div>
               <div style={{ fontSize: '.78rem', opacity: .75, marginTop: 3 }}>{PROVIDER_DESCS[p]}</div>
             </button>
           ))}
@@ -686,7 +688,7 @@ function LLMManager() {
               onChange={(e) => update({ anthropic_api_key: e.target.value })}
             />
             <span className="admin-hint">
-              מצא את המפתח ב־<a href="https://console.anthropic.com" target="_blank" rel="noreferrer" style={{ color: 'var(--ink-500)' }}>console.anthropic.com</a> ← API Keys
+              מפתח ה-API זמין תחת <em>API Keys</em> ב-<a href="https://console.anthropic.com" target="_blank" rel="noreferrer" style={{ color: 'var(--ink-500)' }}>console.anthropic.com</a>
             </span>
           </label>
         )}
@@ -764,14 +766,138 @@ function LLMManager() {
       <div className="admin-save-bar">
         {saved && <span className="admin-save-success">✅ נשמר — הספק הוחלף מיידית</span>}
         <button className="btn-primary" onClick={handleSave} disabled={saving}>
-          {saving ? 'שומר...' : '💾 שמור הגדרות'}
+          {saving ? 'שומר...' : 'שמור הגדרות'}
         </button>
       </div>
     </div>
   );
 }
 
-type AdminTab = 'recipes' | 'prompts' | 'llm';
+// ================================================================
+// Settings Manager Panel
+// ================================================================
+
+function SettingsManager() {
+  const [settings, setSettings] = useState<SystemSettings | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    settingsApi.get()
+      .then(setSettings)
+      .catch((e) => setError(String(e)))
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function handleSave() {
+    if (!settings) return;
+    setSaving(true); setError(null);
+    try {
+      const updated = await settingsApi.update(settings);
+      setSettings(updated);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function patch(field: keyof SystemSettings, value: unknown) {
+    setSettings((s) => s ? { ...s, [field]: value } : s);
+  }
+
+  if (loading) return <div className="admin-loading">טוען הגדרות...</div>;
+  if (!settings) return (
+    <div className="alert alert-error">
+      לא ניתן לטעון הגדרות — {error ?? 'שגיאה לא ידועה'}. בדוק שהשרת פועל ורענן.
+    </div>
+  );
+
+  return (
+    <div>
+      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>{error}</div>}
+
+      {/* Site identity */}
+      <div className="admin-section">
+        <h3 className="admin-section-title">זהות הכלי</h3>
+        <p className="admin-section-subtitle">הטקסטים שמופיעים בדף הבית ובכותרת</p>
+        <label className="admin-label">
+          שם הכלי
+          <input className="admin-input" value={settings.site_title}
+            onChange={(e) => patch('site_title', e.target.value)} />
+        </label>
+        <label className="admin-label" style={{ marginTop: '0.75rem' }}>
+          תיאור קצר (Footer)
+          <input className="admin-input" value={settings.site_tagline}
+            onChange={(e) => patch('site_tagline', e.target.value)} />
+        </label>
+      </div>
+
+      {/* Learning */}
+      <div className="admin-section">
+        <h3 className="admin-section-title">למידה</h3>
+        <label className="admin-label">
+          מספר שיעורים לסשן (1–5)
+          <input className="admin-input" type="number" min={1} max={5}
+            value={settings.max_lessons}
+            onChange={(e) => patch('max_lessons', Math.min(5, Math.max(1, Number(e.target.value))))} />
+          <span className="admin-hint">כמה פערים ילמד המשתמש בכל סשן</span>
+        </label>
+      </div>
+
+      {/* AI timeout */}
+      <div className="admin-section">
+        <h3 className="admin-section-title">ביצועים</h3>
+        <label className="admin-label">
+          Timeout ל-AI (שניות)
+          <input className="admin-input" type="number" min={30} max={600}
+            value={settings.llm_timeout_seconds}
+            onChange={(e) => patch('llm_timeout_seconds', Number(e.target.value))} />
+          <span className="admin-hint">להגדיל אם ה-AI מקומי (Ollama) איטי</span>
+        </label>
+      </div>
+
+      {/* Rate limit */}
+      <div className="admin-section">
+        <h3 className="admin-section-title">הגבלת קצב</h3>
+        <label className="admin-label" style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <input type="checkbox" checked={settings.rate_limit_enabled}
+            onChange={(e) => patch('rate_limit_enabled', e.target.checked)} />
+          הפעל הגבלת קצב (מומלץ לכבות ברשת פנימית)
+        </label>
+        {settings.rate_limit_enabled && (
+          <div style={{ display: 'flex', gap: 16, marginTop: '0.75rem' }}>
+            <label className="admin-label" style={{ flex: 1 }}>
+              מקסימום בקשות
+              <input className="admin-input" type="number" min={1}
+                value={settings.rate_limit_max}
+                onChange={(e) => patch('rate_limit_max', Number(e.target.value))} />
+            </label>
+            <label className="admin-label" style={{ flex: 1 }}>
+              חלון זמן (דקות)
+              <input className="admin-input" type="number" min={1}
+                value={settings.rate_limit_window_minutes}
+                onChange={(e) => patch('rate_limit_window_minutes', Number(e.target.value))} />
+            </label>
+          </div>
+        )}
+      </div>
+
+      <div className="adm-save-row">
+        <button className="btn-primary" onClick={handleSave} disabled={saving}>
+          {saving ? 'שומר...' : 'שמור הגדרות'}
+        </button>
+        {saved && <span className="adm-saved-badge">✓ נשמר</span>}
+      </div>
+    </div>
+  );
+}
+
+type AdminTab = 'recipes' | 'prompts' | 'llm' | 'settings';
 
 interface Props {
   onBack: () => void;
@@ -787,7 +913,6 @@ export function AdminDashboard({ onBack }: Props) {
         <button className="adm-back-top" onClick={onBack}>
           ← חזרה
         </button>
-        <span>⚙️</span>
         <h1>ניהול מערכת</h1>
         <span className="top-bar-spacer" />
       </div>
@@ -799,19 +924,25 @@ export function AdminDashboard({ onBack }: Props) {
             className={`adm-tab ${activeTab === 'recipes' ? 'active' : ''}`}
             onClick={() => setActiveTab('recipes')}
           >
-            📋 מתכוני כתיבה
+            מתכוני כתיבה
           </button>
           <button
             className={`adm-tab ${activeTab === 'prompts' ? 'active' : ''}`}
             onClick={() => setActiveTab('prompts')}
           >
-            ✏️ סיסטם פרומפט
+            סיסטם פרומפט
           </button>
           <button
             className={`adm-tab ${activeTab === 'llm' ? 'active' : ''}`}
             onClick={() => setActiveTab('llm')}
           >
-            🤖 ספק AI
+            ספק AI
+          </button>
+          <button
+            className={`adm-tab ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+          >
+            הגדרות מערכת
           </button>
         </div>
       </div>
@@ -820,22 +951,26 @@ export function AdminDashboard({ onBack }: Props) {
       <main className="adm-content">
         <div className="adm-content-header">
           <h2 className="adm-content-title">
-            {activeTab === 'recipes' ? '📋 מתכוני כתיבה'
-              : activeTab === 'prompts' ? '✏️ סיסטם פרומפט'
-              : '🤖 ספק AI'}
+            {activeTab === 'recipes' ? 'מתכוני כתיבה'
+              : activeTab === 'prompts' ? 'סיסטם פרומפט'
+              : activeTab === 'llm' ? 'ספק AI'
+              : 'הגדרות מערכת'}
           </h2>
           <p className="adm-content-subtitle">
             {activeTab === 'recipes'
               ? 'הגדר את סוגי המסמכים, הקריטריונים והשיעורים שיוצגו למשתמשים'
               : activeTab === 'prompts'
               ? 'ערוך את ההנחיות שמנחות את ה-AI בכל שלב של הדרכה'
-              : 'בחר את מנוע ה-AI וספק את פרטי הגישה — השינוי נכנס לתוקף מיידית'}
+              : activeTab === 'llm'
+              ? 'בחר את מנוע ה-AI וספק את פרטי הגישה — השינוי נכנס לתוקף מיידית'
+              : 'הגדרות כלליות — שם הכלי, מספר שיעורים, timeout והגבלת קצב'}
           </p>
         </div>
 
         {activeTab === 'recipes' && <RecipeManager />}
         {activeTab === 'prompts' && <PromptManager />}
         {activeTab === 'llm' && <LLMManager />}
+        {activeTab === 'settings' && <SettingsManager />}
       </main>
     </div>
   );

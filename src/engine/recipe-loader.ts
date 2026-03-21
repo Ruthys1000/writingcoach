@@ -72,7 +72,7 @@ export class RecipeLoader {
   }
 
   /** List all available recipe ids. */
-  listAvailable(): Array<{ id: string; name: string; description: string }> {
+  listAvailable(): Array<{ id: string; name: string; description: string; criteria_count: number }> {
     if (!fs.existsSync(this.recipesDir)) {
       throw new Error(`Recipes directory not found: ${this.recipesDir}`);
     }
@@ -83,7 +83,7 @@ export class RecipeLoader {
       .map((f) => {
         const id = f.replace('.yaml', '');
         const recipe = this.load(id);
-        return { id, name: recipe.name, description: recipe.description };
+        return { id, name: recipe.name, description: recipe.description, criteria_count: recipe.criteria.length };
       });
   }
 

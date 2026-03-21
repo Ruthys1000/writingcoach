@@ -8,6 +8,7 @@ import { getCoach, reloadCoach } from './coach';
 import type { Recipe } from '../../src/types';
 import { systemPromptStore } from '../../src/engine/system-prompt-store';
 import { llmConfigStore, LLMConfig } from '../llm-config-store';
+import { settingsStore } from '../../src/engine/settings-store';
 
 const router = Router();
 
@@ -135,6 +136,25 @@ router.put('/llm-config', (req: Request, res: Response) => {
     llmConfigStore.set(update);
     reloadCoach();
     res.json(llmConfigStore.getMasked());
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+
+// ---- GET /api/admin/settings ---- get system settings
+router.get('/settings', (_req: Request, res: Response) => {
+  try {
+    res.json(settingsStore.get());
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+
+// ---- PUT /api/admin/settings ---- update system settings
+router.put('/settings', (req: Request, res: Response) => {
+  try {
+    const updated = settingsStore.update(req.body);
+    res.json(updated);
   } catch (err) {
     res.status(500).json({ error: String(err) });
   }

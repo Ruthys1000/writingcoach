@@ -41,7 +41,7 @@ export class WritingCoach {
     return this.recipeLoader;
   }
 
-  listDocumentTypes(): Array<{ id: string; name: string; description: string }> {
+  listDocumentTypes(): Array<{ id: string; name: string; description: string; criteria_count: number }> {
     return this.recipeLoader.listAvailable();
   }
 

@@ -9,6 +9,7 @@ import { createLLMClient } from '../../src/llm/factory';
 import { WritingCoach } from '../../src/coach';
 import { setSession, getSession } from '../session-store';
 import { llmConfigStore } from '../llm-config-store';
+import { settingsStore } from '../../src/engine/settings-store';
 
 const router = Router();
 
@@ -86,7 +87,7 @@ router.post('/session/:id/learn', async (req: Request, res: Response) => {
   }
 
   try {
-    const updated = await getCoach().generateLearning(session, 3);
+    const updated = await getCoach().generateLearning(session, settingsStore.get().max_lessons);
     setSession(req.params['id'] as string, updated);
     res.json({ learningUnits: updated.learningUnits });
   } catch (err) {

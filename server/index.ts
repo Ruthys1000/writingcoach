@@ -11,6 +11,7 @@ import cors from 'cors';
 import path from 'path';
 import coachRoutes from './routes/coach';
 import adminRoutes from './routes/admin';
+import { settingsStore } from '../src/engine/settings-store';
 
 const app = express();
 const PORT = parseInt(process.env.PORT ?? '3000', 10);
@@ -35,29 +36,32 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '1mb' }));
 
-// Extend socket timeout for long LLM calls (2 min)
+// Extend socket timeout — reads from settings dynamically
 app.use((_req, res, next) => {
-  res.socket?.setTimeout(150_000);
+  const { llm_timeout_seconds } = settingsStore.get();
+  res.socket?.setTimeout(llm_timeout_seconds * 1000 + 30_000);
   next();
 });
 
-// Simple in-memory rate limiter: max 60 API requests per IP per 15 minutes
+// Rate limiter — reads limits from settings on every request
 const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT_MAX = 60;
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 
 app.use('/api', (req, res, next) => {
+  const { rate_limit_enabled, rate_limit_max, rate_limit_window_minutes } = settingsStore.get();
+  if (!rate_limit_enabled) return next();
+
   const ip = req.ip ?? 'unknown';
   const now = Date.now();
+  const windowMs = rate_limit_window_minutes * 60 * 1000;
   const entry = rateLimitStore.get(ip);
 
   if (!entry || now > entry.resetAt) {
-    rateLimitStore.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    rateLimitStore.set(ip, { count: 1, resetAt: now + windowMs });
     return next();
   }
 
   entry.count++;
-  if (entry.count > RATE_LIMIT_MAX) {
+  if (entry.count > rate_limit_max) {
     res.status(429).json({ error: 'יותר מדי בקשות — נסה שוב בעוד מספר דקות' });
     return;
   }
