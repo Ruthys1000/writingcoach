@@ -117,13 +117,6 @@ function generateRecipeId(): string {
   return `recipe-${crypto.randomUUID()}`;
 }
 
-function recipeIcon(name: string): string {
-  if (name.includes('פנייה') || name.includes('מכתב')) return '✉️';
-  if (name.includes('סיכום') || name.includes('דיון')) return '📝';
-  if (name.includes('מטה') || name.includes('עמדה')) return '📊';
-  if (name.includes('דוח') || name.includes('דו"ח')) return '📑';
-  return '📄';
-}
 function criterionId(idx: number): string {
   return `c${idx + 1}`;
 }
@@ -280,7 +273,7 @@ function RecipeManager() {
         {recipes.map((r) => (
           <div key={r.id} className="admin-recipe-card">
             <div className="admin-recipe-info">
-              <div className="admin-recipe-name"><span className="adm-recipe-icon-inline">{recipeIcon(r.name)}</span>{r.name}</div>
+              <div className="admin-recipe-name">{r.name}</div>
               <div className="admin-recipe-desc">{r.description}</div>
               <div className="admin-recipe-meta">
                 <span className="admin-recipe-criteria-badge">✓ {r.criteria.length} קריטריונים</span>

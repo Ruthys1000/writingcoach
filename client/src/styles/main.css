@@ -1509,8 +1509,6 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 .admin-recipe-card:hover { border-color: rgba(11,29,51,.12); box-shadow: var(--shadow-md); transform: translateY(-2px); }
 .admin-recipe-card:hover::before { opacity: 1; }
 
-.adm-recipe-icon-inline { font-size: 1rem; margin-left: 6px; opacity: 0.7; }
-
 .admin-recipe-info { flex: 1; min-width: 0; }
 .admin-recipe-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; color: var(--ink-900); }
 .admin-recipe-id   { font-size: .85rem; color: var(--paper-500); margin-bottom: 5px; }
