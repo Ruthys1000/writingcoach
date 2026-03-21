@@ -362,7 +362,7 @@ export function AdminPage({ onClose }: Props) {
               </button>
             )}
             <h2 className="admin-title">
-              {view === 'list' ? '⚙️ ניהול מתכוני כתיבה' : isNew ? '➕ מתכון חדש' : `✏️ עריכת: ${editing?.name}`}
+              {view === 'list' ? 'ניהול מתכוני כתיבה' : isNew ? 'מתכון חדש' : `עריכת: ${editing?.name}`}
             </h2>
           </div>
           <button className="btn-ghost admin-close" onClick={onClose}>סגור</button>

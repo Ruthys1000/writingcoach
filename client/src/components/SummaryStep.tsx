@@ -47,7 +47,7 @@ export function SummaryStep({ report, totalUnits, completedUnits, onRestart }: P
           ))}
         </div>
 
-        <span className="summary-trophy">🏆</span>
+        <div className="summary-trophy" aria-hidden="true" />
         <h2 className="summary-title">סיימת את האימון!</h2>
         <p className="summary-subtitle">
           עשית צעד משמעותי לשיפור כישורי הכתיבה המנהלית שלך

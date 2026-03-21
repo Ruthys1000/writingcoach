@@ -39,27 +39,24 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
             <div className="welcome-step-arrow welcome-step-arrow-2" aria-hidden="true">←</div>
 
             <div className="welcome-step-card">
-              <div className="welcome-step-number">1</div>
               <div className="welcome-step-icon-wrap">
-                <span className="welcome-step-icon">🔍</span>
+                <span className="welcome-step-num">1</span>
               </div>
               <h3 className="welcome-step-title">אבחון</h3>
               <p className="welcome-step-desc">המאמן בוחן את המסמך שלך מול מחוון כשירות ייעודי ומזהה את נקודות השיפור</p>
             </div>
 
             <div className="welcome-step-card">
-              <div className="welcome-step-number">2</div>
               <div className="welcome-step-icon-wrap">
-                <span className="welcome-step-icon">📖</span>
+                <span className="welcome-step-num">2</span>
               </div>
               <h3 className="welcome-step-title">למידה</h3>
               <p className="welcome-step-desc">שיעורים מותאמים אישית עם דוגמאות לפני/אחרי מתוך הטקסט שלך</p>
             </div>
 
             <div className="welcome-step-card">
-              <div className="welcome-step-number">3</div>
               <div className="welcome-step-icon-wrap">
-                <span className="welcome-step-icon">✍️</span>
+                <span className="welcome-step-num">3</span>
               </div>
               <h3 className="welcome-step-title">תרגול</h3>
               <p className="welcome-step-desc">שכתוב קטעים מהמסמך שלך וקבלת משוב מיידי מה-AI</p>
@@ -70,18 +67,9 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
           <div className="welcome-doctypes">
             <div className="welcome-doctypes-label">סוגי מסמכים נתמכים:</div>
             <div className="welcome-doctypes-grid">
-              <div className="welcome-doc-chip">
-                <div className="welcome-doc-chip-icon">📋</div>
-                סיכום דיון
-              </div>
-              <div className="welcome-doc-chip">
-                <div className="welcome-doc-chip-icon">📊</div>
-                עבודת מטה / נייר עמדה
-              </div>
-              <div className="welcome-doc-chip">
-                <div className="welcome-doc-chip-icon">✉️</div>
-                מכתב רשמי
-              </div>
+              <div className="welcome-doc-chip">סיכום דיון</div>
+              <div className="welcome-doc-chip">עבודת מטה / נייר עמדה</div>
+              <div className="welcome-doc-chip">מכתב רשמי</div>
             </div>
           </div>
         </div>

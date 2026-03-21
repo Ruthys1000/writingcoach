@@ -158,7 +158,6 @@ export default function App() {
   return (
     <div className="app-shell">
       <div className="top-bar">
-        <span className="top-bar-icon">✍️</span>
         <h1>מאמן הכתיבה המנהלית</h1>
         <span className="top-bar-sub">Writing Coach</span>
         <span className="top-bar-spacer" />
@@ -181,7 +180,7 @@ export default function App() {
         {step !== 'welcome' && <StepIndicator current={stepNumber[step]} />}
 
         {error && (
-          <div className="alert alert-error">❌ {error}</div>
+          <div className="alert alert-error">{error}</div>
         )}
 
         {loading && (

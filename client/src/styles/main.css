@@ -113,7 +113,7 @@ body {
   top: 0;
   z-index: 50;
 }
-.top-bar-icon { font-size: 1.4rem; }
+.top-bar-icon { display: none; }
 .top-bar h1  { font-size: 1.15rem; font-weight: 800; color: white; letter-spacing: -.01em; }
 .top-bar-sub { font-size: .85rem; color: var(--amber-300); font-weight: 500; }
 .top-bar-spacer { flex: 1; }
@@ -376,8 +376,8 @@ body {
    Alert
    ============================================================ */
 .alert { padding: 13px 16px; border-radius: var(--radius-md); font-size: 1rem; margin-bottom: 16px; }
-.alert-error   { background: var(--danger-50); color: var(--danger); border: 1px solid #f5b3b5; }
-.alert-success { background: var(--success-50); color: var(--success); border: 1px solid #a3d9bc; border-radius: var(--radius-md); padding: 12px 16px; font-size: 1rem; }
+.alert-error   { background: var(--danger-50); color: var(--danger); border: 1px solid #f5b3b5; border-inline-start: 4px solid var(--danger); }
+.alert-success { background: var(--success-50); color: var(--success); border: 1px solid #a3d9bc; border-inline-start: 4px solid var(--success); border-radius: var(--radius-md); padding: 12px 16px; font-size: 1rem; }
 
 /* ============================================================
    Forms
@@ -536,7 +536,7 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 .welcome-steps-container::before {
   content: '';
   position: absolute;
-  top: 88px;
+  top: 55px;
   right: 16.66%;
   left: 16.66%;
   height: 2px;
@@ -616,13 +616,22 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   opacity: .5;
 }
 .welcome-step-icon { font-size: 3rem; filter: drop-shadow(0 2px 6px rgba(0,0,0,.2)); }
+.welcome-step-num {
+  font-size: 3.6rem;
+  font-weight: 900;
+  color: var(--amber-300);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-family: 'Heebo', Arial, sans-serif;
+  filter: drop-shadow(0 2px 8px rgba(196,132,29,.4));
+}
 .welcome-step-title { font-size: 1.35rem; font-weight: 700; color: var(--ink-900); margin-bottom: 10px; }
 .welcome-step-desc { font-size: .95rem; color: var(--paper-500); line-height: 1.75; max-width: 240px; }
 
 /* Animated arrows between steps — hidden until cards finish fading in */
 .welcome-step-arrow {
   position: absolute;
-  top: 86px;
+  top: 53px;
   z-index: 2;
   color: var(--amber-300);
   font-size: 1.4rem;
@@ -1078,8 +1087,22 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   letter-spacing: .08em;
   color: var(--paper-500);
   margin-bottom: var(--sp-sm);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lesson-block-label::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--paper-400);
+  flex-shrink: 0;
+  order: 1; /* RTL: appears after text visually = at the start of reading direction */
 }
 .lesson-block-why .lesson-block-label { color: var(--amber-500); }
+.lesson-block-why .lesson-block-label::before { background: var(--amber-500); }
 
 .lesson-text { font-size: .97rem; line-height: 1.8; }
 .lesson-block-why .lesson-text { color: var(--ink-900); }
@@ -1095,6 +1118,19 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   letter-spacing: .08em;
   color: var(--paper-500);
   margin-bottom: var(--sp-md);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.before-after-title::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--paper-400);
+  flex-shrink: 0;
+  order: 1;
 }
 .before-after-grid {
   display: grid;
@@ -1207,7 +1243,14 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 .feedback-body { flex: 1; }
 .feedback-status { font-size: 1rem; font-weight: 800; margin-bottom: var(--sp-sm); color: var(--ink-900); }
 .feedback-text { font-size: .95rem; line-height: 1.8; color: var(--ink-700); }
-.feedback-tip { margin-top: var(--sp-sm); font-size: .9rem; color: var(--amber-500); font-weight: 600; }
+.feedback-tip {
+  margin-top: var(--sp-sm);
+  font-size: .9rem;
+  color: var(--ink-700);
+  font-weight: 500;
+  border-inline-start: 3px solid var(--amber-500);
+  padding-inline-start: 10px;
+}
 
 /* ============================================================
    Summary — Celebration
@@ -1219,10 +1262,23 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
   overflow: hidden;
 }
 .summary-trophy {
-  font-size: 4rem;
+  width: 88px;
+  height: 88px;
+  background: linear-gradient(135deg, var(--amber-500), var(--amber-300));
+  border-radius: 50%;
+  margin: 0 auto var(--sp-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(196,132,29,.35);
+}
+.summary-trophy::after {
+  content: '✓';
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--ink-900);
   line-height: 1;
-  margin-bottom: var(--sp-md);
-  display: block;
+  font-family: 'Heebo', Arial, sans-serif;
 }
 .summary-title {
   font-size: 2rem;

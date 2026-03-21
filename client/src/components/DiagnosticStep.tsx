@@ -82,7 +82,7 @@ export function DiagnosticStep({ report, recipe, onStartLearning, onRestart }: P
 
   return (
     <div className="card">
-      <div className="card-title">📊 תוצאות אבחון — {report.recipe_name}</div>
+      <div className="card-title">תוצאות אבחון — {report.recipe_name}</div>
 
       {/* Top: Score Ring + Insight block */}
       <div className="diagnostic-top">
@@ -143,7 +143,7 @@ export function DiagnosticStep({ report, recipe, onStartLearning, onRestart }: P
         {gaps.length === 0 ? (
           <>
             <p style={{ color: 'var(--success)', fontWeight: 700 }}>
-              🎉 מצוין! המסמך עומד בכל הקריטריונים.
+              מצוין! המסמך עומד בכל הקריטריונים.
             </p>
             <button className="btn btn-secondary" onClick={onRestart}>
               ← ניתוח מסמך חדש
