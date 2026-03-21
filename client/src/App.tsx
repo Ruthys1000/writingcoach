@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api, RecipeInfo, DiagnosticReport, Recipe, LearningUnit } from './api';
+import { api, settingsApi, RecipeInfo, DiagnosticReport, Recipe, LearningUnit } from './api';
 import { StepIndicator } from './components/StepIndicator';
 import { DocTypeStep } from './components/DocTypeStep';
 import { DocumentStep } from './components/DocumentStep';
@@ -37,6 +37,9 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [siteTitle, setSiteTitle] = useState('מאמן כתיבה מנהלית');
+  const [siteTagline, setSiteTagline] = useState('AI לשיפור כתיבה מנהלית מקצועית');
+
   const [state, setState] = useState<AppState>({
     recipes: [],
     selectedRecipeId: null,
@@ -53,6 +56,9 @@ export default function App() {
     api.getRecipes()
       .then((recipes) => setState((s) => ({ ...s, recipes })))
       .catch(() => setError('לא ניתן לטעון את רשימת סוגי המסמכים — בדוק שהשרת פועל'));
+    settingsApi.get()
+      .then((s) => { setSiteTitle(s.site_title); setSiteTagline(s.site_tagline); })
+      .catch(() => {/* use defaults */});
   }, []);
 
   useEffect(() => {
@@ -158,7 +164,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <div className="top-bar">
-        <h1>מאמן כתיבה מנהלית</h1>
+        <h1>{siteTitle}</h1>
         <span className="top-bar-sub">Writing Coach</span>
         <span className="top-bar-spacer" />
         {step !== 'welcome' && (
@@ -194,6 +200,8 @@ export default function App() {
           <WelcomeStep
             onStart={() => setStep('select-type')}
             onAdminOpen={() => setStep('admin')}
+            siteTitle={siteTitle}
+            siteTagline={siteTagline}
           />
         )}
 

@@ -1,9 +1,11 @@
 interface Props {
   onStart: () => void;
   onAdminOpen: () => void;
+  siteTitle: string;
+  siteTagline: string;
 }
 
-export function WelcomeStep({ onStart, onAdminOpen }: Props) {
+export function WelcomeStep({ onStart, onAdminOpen, siteTitle, siteTagline }: Props) {
   return (
     <div className="welcome-page">
 
@@ -12,7 +14,7 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
         <div className="welcome-hero-inner">
           <div className="welcome-hero-badge">AI לכתיבה מנהלית</div>
           <h1 className="welcome-title">
-            מאמן כתיבה <span className="accent">מנהלית</span>
+            {siteTitle}
           </h1>
           <p className="welcome-subtitle">
             העלה מסמך, קבל אבחון מדויק, ולמד לשפר את כתיבתך עם דוגמאות מהטקסט שלך עצמו
@@ -79,8 +81,8 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
         <div className="welcome-footer-inner">
           <div className="welcome-footer-content">
             <div className="welcome-footer-brand">
-              <span className="welcome-footer-name">מאמן כתיבה מנהלית</span>
-              <span className="welcome-footer-tagline">AI לשיפור כתיבה מנהלית מקצועית</span>
+              <span className="welcome-footer-name">{siteTitle}</span>
+              <span className="welcome-footer-tagline">{siteTagline}</span>
             </div>
             <button className="welcome-footer-admin" onClick={onAdminOpen}>
               ניהול מערכת

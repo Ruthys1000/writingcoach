@@ -3,7 +3,7 @@
 // ============================================================
 
 import { useState, useEffect, useRef } from 'react';
-import { adminApi, systemPromptApi, llmConfigApi, Recipe, SystemPrompts, LLMConfig, LLMProvider } from '../api';
+import { adminApi, systemPromptApi, llmConfigApi, settingsApi, Recipe, SystemPrompts, LLMConfig, LLMProvider, SystemSettings } from '../api';
 
 // ================================================================
 // CSV helpers (for recipes)
@@ -773,7 +773,127 @@ function LLMManager() {
   );
 }
 
-type AdminTab = 'recipes' | 'prompts' | 'llm';
+// ================================================================
+// Settings Manager Panel
+// ================================================================
+
+function SettingsManager() {
+  const [settings, setSettings] = useState<SystemSettings | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    settingsApi.get()
+      .then(setSettings)
+      .catch((e) => setError(String(e)))
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function handleSave() {
+    if (!settings) return;
+    setSaving(true); setError(null);
+    try {
+      const updated = await settingsApi.update(settings);
+      setSettings(updated);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function patch(field: keyof SystemSettings, value: unknown) {
+    setSettings((s) => s ? { ...s, [field]: value } : s);
+  }
+
+  if (loading) return <div className="admin-loading">טוען הגדרות...</div>;
+  if (!settings) return null;
+
+  return (
+    <div>
+      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>{error}</div>}
+
+      {/* Site identity */}
+      <div className="admin-section">
+        <h3 className="admin-section-title">זהות הכלי</h3>
+        <p className="admin-section-subtitle">הטקסטים שמופיעים בדף הבית ובכותרת</p>
+        <label className="admin-label">
+          שם הכלי
+          <input className="admin-input" value={settings.site_title}
+            onChange={(e) => patch('site_title', e.target.value)} />
+        </label>
+        <label className="admin-label" style={{ marginTop: '0.75rem' }}>
+          תיאור קצר (Footer)
+          <input className="admin-input" value={settings.site_tagline}
+            onChange={(e) => patch('site_tagline', e.target.value)} />
+        </label>
+      </div>
+
+      {/* Learning */}
+      <div className="admin-section">
+        <h3 className="admin-section-title">למידה</h3>
+        <label className="admin-label">
+          מספר שיעורים לסשן (1–5)
+          <input className="admin-input" type="number" min={1} max={5}
+            value={settings.max_lessons}
+            onChange={(e) => patch('max_lessons', Math.min(5, Math.max(1, Number(e.target.value))))} />
+          <span className="admin-hint">כמה פערים ילמד המשתמש בכל סשן</span>
+        </label>
+      </div>
+
+      {/* AI timeout */}
+      <div className="admin-section">
+        <h3 className="admin-section-title">ביצועים</h3>
+        <label className="admin-label">
+          Timeout ל-AI (שניות)
+          <input className="admin-input" type="number" min={30} max={600}
+            value={settings.llm_timeout_seconds}
+            onChange={(e) => patch('llm_timeout_seconds', Number(e.target.value))} />
+          <span className="admin-hint">להגדיל אם ה-AI מקומי (Ollama) איטי</span>
+        </label>
+      </div>
+
+      {/* Rate limit */}
+      <div className="admin-section">
+        <h3 className="admin-section-title">הגבלת קצב</h3>
+        <label className="admin-label" style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <input type="checkbox" checked={settings.rate_limit_enabled}
+            onChange={(e) => patch('rate_limit_enabled', e.target.checked)} />
+          הפעל הגבלת קצב (מומלץ לכבות ברשת פנימית)
+        </label>
+        {settings.rate_limit_enabled && (
+          <div style={{ display: 'flex', gap: 16, marginTop: '0.75rem' }}>
+            <label className="admin-label" style={{ flex: 1 }}>
+              מקסימום בקשות
+              <input className="admin-input" type="number" min={1}
+                value={settings.rate_limit_max}
+                onChange={(e) => patch('rate_limit_max', Number(e.target.value))} />
+            </label>
+            <label className="admin-label" style={{ flex: 1 }}>
+              חלון זמן (דקות)
+              <input className="admin-input" type="number" min={1}
+                value={settings.rate_limit_window_minutes}
+                onChange={(e) => patch('rate_limit_window_minutes', Number(e.target.value))} />
+            </label>
+          </div>
+        )}
+      </div>
+
+      <div className="adm-save-row">
+        <button className="btn-primary" onClick={handleSave} disabled={saving}>
+          {saving ? 'שומר...' : 'שמור הגדרות'}
+        </button>
+        {saved && <span className="adm-saved-badge">✓ נשמר</span>}
+      </div>
+    </div>
+  );
+}
+
+type AdminTab = 'recipes' | 'prompts' | 'llm' | 'settings';
 
 interface Props {
   onBack: () => void;
@@ -814,6 +934,12 @@ export function AdminDashboard({ onBack }: Props) {
           >
             ספק AI
           </button>
+          <button
+            className={`adm-tab ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+          >
+            הגדרות מערכת
+          </button>
         </div>
       </div>
 
@@ -823,20 +949,24 @@ export function AdminDashboard({ onBack }: Props) {
           <h2 className="adm-content-title">
             {activeTab === 'recipes' ? 'מתכוני כתיבה'
               : activeTab === 'prompts' ? 'סיסטם פרומפט'
-              : 'ספק AI'}
+              : activeTab === 'llm' ? 'ספק AI'
+              : 'הגדרות מערכת'}
           </h2>
           <p className="adm-content-subtitle">
             {activeTab === 'recipes'
               ? 'הגדר את סוגי המסמכים, הקריטריונים והשיעורים שיוצגו למשתמשים'
               : activeTab === 'prompts'
               ? 'ערוך את ההנחיות שמנחות את ה-AI בכל שלב של הדרכה'
-              : 'בחר את מנוע ה-AI וספק את פרטי הגישה — השינוי נכנס לתוקף מיידית'}
+              : activeTab === 'llm'
+              ? 'בחר את מנוע ה-AI וספק את פרטי הגישה — השינוי נכנס לתוקף מיידית'
+              : 'הגדרות כלליות — שם הכלי, מספר שיעורים, timeout והגבלת קצב'}
           </p>
         </div>
 
         {activeTab === 'recipes' && <RecipeManager />}
         {activeTab === 'prompts' && <PromptManager />}
         {activeTab === 'llm' && <LLMManager />}
+        {activeTab === 'settings' && <SettingsManager />}
       </main>
     </div>
   );

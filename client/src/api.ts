@@ -182,3 +182,18 @@ export const llmConfigApi = {
   get: (): Promise<LLMConfig> => get('/admin/llm-config'),
   update: (config: Partial<LLMConfig>): Promise<LLMConfig> => put('/admin/llm-config', config),
 };
+
+export interface SystemSettings {
+  max_lessons: number;
+  llm_timeout_seconds: number;
+  rate_limit_enabled: boolean;
+  rate_limit_max: number;
+  rate_limit_window_minutes: number;
+  site_title: string;
+  site_tagline: string;
+}
+
+export const settingsApi = {
+  get: (): Promise<SystemSettings> => get('/admin/settings'),
+  update: (patch: Partial<SystemSettings>): Promise<SystemSettings> => put('/admin/settings', patch),
+};
