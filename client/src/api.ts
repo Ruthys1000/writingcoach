@@ -7,6 +7,7 @@ export interface RecipeInfo {
   id: string;
   name: string;
   description: string;
+  criteria_count: number;
 }
 
 export interface DiagnosticReport {
