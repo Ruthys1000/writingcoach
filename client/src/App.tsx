@@ -32,6 +32,9 @@ export interface AppState {
   completedUnits: Set<number>;
 }
 
+const ADMIN_PASSWORD = '1234';
+const ADMIN_SESSION_KEY = 'adminUnlocked';
+
 export default function App() {
   const [step, setStep] = useState<AppStep>('welcome');
   const [loading, setLoading] = useState(false);
@@ -39,6 +42,9 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [siteTitle, setSiteTitle] = useState('מאמן כתיבה מנהלית');
   const [siteTagline, setSiteTagline] = useState('AI לשיפור כתיבה מנהלית מקצועית');
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [adminPasswordInput, setAdminPasswordInput] = useState('');
+  const [adminPasswordError, setAdminPasswordError] = useState(false);
 
   const [state, setState] = useState<AppState>({
     recipes: [],
@@ -156,30 +162,78 @@ export default function App() {
     'summary': 3,
   };
 
+  const openAdmin = () => {
+    if (sessionStorage.getItem(ADMIN_SESSION_KEY)) {
+      setStep('admin');
+    } else {
+      setAdminPasswordInput('');
+      setAdminPasswordError(false);
+      setShowAdminModal(true);
+    }
+  };
+
+  const submitAdminPassword = () => {
+    if (adminPasswordInput === ADMIN_PASSWORD) {
+      sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+      setShowAdminModal(false);
+      setStep('admin');
+    } else {
+      setAdminPasswordError(true);
+    }
+  };
+
   // Admin page gets its own full-page layout (no top-bar, no main-content wrapper)
   if (step === 'admin') {
     return <AdminDashboard onBack={() => setStep('welcome')} />;
   }
 
+  const hasActiveSession = ['diagnostic', 'learning', 'assessment'].includes(step);
+
   return (
     <div className="app-shell">
+      {showAdminModal && (
+        <div className="admin-password-overlay" onClick={() => setShowAdminModal(false)}>
+          <div className="admin-password-modal" onClick={(e) => e.stopPropagation()}>
+            <h3 className="admin-password-title">כניסה לניהול מערכת</h3>
+            <p className="admin-password-subtitle">הזן סיסמה כדי להמשיך</p>
+            <input
+              className={`admin-password-input${adminPasswordError ? ' admin-password-input--error' : ''}`}
+              type="password"
+              placeholder="סיסמה"
+              value={adminPasswordInput}
+              autoFocus
+              onChange={(e) => { setAdminPasswordInput(e.target.value); setAdminPasswordError(false); }}
+              onKeyDown={(e) => { if (e.key === 'Enter') submitAdminPassword(); if (e.key === 'Escape') setShowAdminModal(false); }}
+            />
+            {adminPasswordError && <p className="admin-password-error">סיסמה שגויה</p>}
+            <div className="admin-password-actions">
+              <button className="admin-password-cancel" onClick={() => setShowAdminModal(false)}>ביטול</button>
+              <button className="admin-password-submit" onClick={submitAdminPassword}>כניסה</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="top-bar">
         <h1>{siteTitle}</h1>
         <span className="top-bar-sub">Writing Coach</span>
         <span className="top-bar-spacer" />
-        {step !== 'welcome' && (
-          <button
-            className="top-bar-home-btn"
-            onClick={() => {
-              if (window.confirm('לחזור לדף הבית? ההתקדמות בשיעור הנוכחי תאבד.')) {
+        <nav className="top-bar-nav">
+          {step !== 'welcome' && (
+            <button
+              className="top-bar-nav-btn"
+              onClick={() => {
+                if (hasActiveSession && !window.confirm('לחזור לדף הבית? ההתקדמות בשיעור הנוכחי תאבד.')) return;
                 handleRestart();
-              }
-            }}
-            title="חזרה לדף הבית"
-          >
-            דף הבית
+              }}
+            >
+              דף הבית
+            </button>
+          )}
+          <button className="top-bar-nav-btn top-bar-nav-btn--admin" onClick={openAdmin}>
+            ניהול מערכת
           </button>
-        )}
+        </nav>
       </div>
 
       <div className={`main-content${step === 'welcome' ? ' main-content-welcome' : ''}`}>
@@ -199,7 +253,7 @@ export default function App() {
         {step === 'welcome' && (
           <WelcomeStep
             onStart={() => setStep('select-type')}
-            onAdminOpen={() => setStep('admin')}
+            onAdminOpen={openAdmin}
             siteTitle={siteTitle}
             siteTagline={siteTagline}
           />
