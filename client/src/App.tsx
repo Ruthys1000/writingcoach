@@ -172,7 +172,7 @@ export default function App() {
             }}
             title="חזרה לדף הבית"
           >
-            🏠 דף הבית
+            דף הבית
           </button>
         )}
       </div>

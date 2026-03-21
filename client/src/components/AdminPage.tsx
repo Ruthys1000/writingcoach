@@ -365,7 +365,7 @@ export function AdminPage({ onClose }: Props) {
               {view === 'list' ? '⚙️ ניהול מתכוני כתיבה' : isNew ? '➕ מתכון חדש' : `✏️ עריכת: ${editing?.name}`}
             </h2>
           </div>
-          <button className="btn-ghost admin-close" onClick={onClose}>✕ סגור</button>
+          <button className="btn-ghost admin-close" onClick={onClose}>סגור</button>
         </div>
 
         {error && <div className="alert alert-error admin-alert">❌ {error}</div>}
@@ -375,9 +375,9 @@ export function AdminPage({ onClose }: Props) {
         {view === 'list' && (
           <div className="admin-body">
             <div className="admin-list-toolbar">
-              <button className="btn-primary" onClick={openNew}>➕ מתכון חדש</button>
+              <button className="btn-primary" onClick={openNew}>מתכון חדש</button>
               <button className="btn-secondary" onClick={() => fileInputRef.current?.click()}>
-                📂 ייבוא מ-CSV
+                ייבוא מ-CSV
               </button>
               <input
                 ref={fileInputRef}
@@ -397,9 +397,9 @@ export function AdminPage({ onClose }: Props) {
                     <div className="admin-recipe-meta">{r.criteria.length} קריטריונים להערכה</div>
                   </div>
                   <div className="admin-recipe-actions">
-                    <button className="btn-secondary" onClick={() => openEdit(r)}>✏️ עריכה</button>
-                    <button className="btn-secondary" title="הורד כקובץ CSV לעריכה ב-Excel" onClick={() => downloadRecipeCSV(r)}>⬇️ הורד CSV</button>
-                    <button className="btn-danger" onClick={() => handleDelete(r.id)}>🗑️ מחיקה</button>
+                    <button className="btn-secondary" onClick={() => openEdit(r)}>עריכה</button>
+                    <button className="btn-secondary" title="הורד כקובץ CSV לעריכה ב-Excel" onClick={() => downloadRecipeCSV(r)}>הורד CSV</button>
+                    <button className="btn-danger" onClick={() => handleDelete(r.id)}>מחיקה</button>
                   </div>
                 </div>
               ))}
@@ -486,7 +486,7 @@ export function AdminPage({ onClose }: Props) {
                     כל קריטריון הוא שאלה כן/לא שה-AI ישאל על המסמך. לכל קריטריון מצורף מיקרו-שיעור שיוצג למשתמש אם הוא נכשל.
                   </p>
                 </div>
-                <button className="btn-secondary" onClick={addCriterion}>➕ הוסף קריטריון</button>
+                <button className="btn-secondary" onClick={addCriterion}>הוסף קריטריון</button>
               </div>
 
               {editing.criteria.map((c, idx) => {

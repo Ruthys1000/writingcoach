@@ -152,7 +152,7 @@ export function DiagnosticStep({ report, recipe, onStartLearning, onRestart }: P
         ) : (
           <>
             <button className="btn btn-primary" onClick={onStartLearning}>
-              📚 התחל למידה ותרגול ({Math.min(gaps.length, 3)} שיעורים)
+              התחל למידה ותרגול ({Math.min(gaps.length, 3)} שיעורים)
             </button>
             <button className="btn btn-secondary" onClick={onRestart}>
               ← ניתוח מסמך חדש

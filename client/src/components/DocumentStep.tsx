@@ -69,7 +69,7 @@ export function DocumentStep({ recipeName, onSubmit, onBack }: Props) {
           disabled={!ready}
           onClick={() => onSubmit(text.trim())}
         >
-          🔍 נתח את המסמך
+          נתח את המסמך
         </button>
         <button className="btn btn-secondary" onClick={onBack}>
           ← חזור

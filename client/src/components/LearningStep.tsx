@@ -83,7 +83,7 @@ export function LearningStep({
           className="btn btn-primary"
           onClick={() => onStartAssessment(currentIndex)}
         >
-          ✍️ תרגל כישור זה
+          תרגל כישור זה
         </button>
         <button
           className="btn btn-secondary"

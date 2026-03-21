@@ -224,14 +224,16 @@ body {
   padding: 11px 24px;
   border-radius: var(--radius-md);
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   font-family: 'Heebo', Arial, sans-serif;
   cursor: pointer;
   border: none;
   outline: none;
   transition: all .18s;
+  letter-spacing: 0.01em;
 }
 .btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn:focus-visible { outline: 2px solid var(--amber-500); outline-offset: 2px; }
 
 /* Primary — Ink gradient */
 .btn-primary {
@@ -240,11 +242,13 @@ body {
   box-shadow: var(--shadow-sm);
   display: inline-flex; align-items: center; gap: 6px;
   padding: 11px 24px; border-radius: var(--radius-md);
-  font-size: 1rem; font-weight: 700; cursor: pointer; border: none;
+  font-size: 1rem; font-weight: 600; cursor: pointer; border: none;
   font-family: 'Heebo', Arial, sans-serif; transition: all .18s;
+  letter-spacing: 0.01em;
 }
-.btn-primary:hover:not(:disabled) { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.btn-primary:hover:not(:disabled) { box-shadow: var(--shadow-md); transform: translateY(-1px); filter: brightness(1.06); }
 .btn-primary:disabled { opacity:.4; cursor:not-allowed; }
+.btn-primary:focus-visible { outline: 2px solid var(--amber-500); outline-offset: 2px; }
 
 /* Amber — CTA */
 .btn-amber {
@@ -252,12 +256,14 @@ body {
   color: var(--ink-900);
   box-shadow: var(--shadow-sm);
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 13px 32px; border-radius: var(--radius-md);
-  font-size: 1.05rem; font-weight: 800; cursor: pointer; border: none;
+  padding: 12px 28px; border-radius: var(--radius-md);
+  font-size: 1rem; font-weight: 700; cursor: pointer; border: none;
   font-family: 'Heebo', Arial, sans-serif; transition: all .18s;
+  letter-spacing: 0.01em;
 }
-.btn-amber:hover:not(:disabled) { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.btn-amber:hover:not(:disabled) { box-shadow: var(--shadow-md); transform: translateY(-1px); filter: brightness(1.04); }
 .btn-amber:disabled { opacity:.4; cursor:not-allowed; }
+.btn-amber:focus-visible { outline: 2px solid var(--ink-700); outline-offset: 2px; }
 
 /* Secondary — outline Ink */
 .btn-secondary {
@@ -266,11 +272,13 @@ body {
   border: 1px solid var(--paper-400);
   display: inline-flex; align-items: center; gap: 6px;
   padding: 10px 22px; border-radius: var(--radius-md);
-  font-size: 1rem; font-weight: 700; cursor: pointer;
+  font-size: 1rem; font-weight: 500; cursor: pointer;
   font-family: 'Heebo', Arial, sans-serif; transition: all .18s;
+  letter-spacing: 0.01em;
 }
-.btn-secondary:hover:not(:disabled) { background: var(--paper-100); }
+.btn-secondary:hover:not(:disabled) { background: var(--paper-100); border-color: var(--paper-500); }
 .btn-secondary:disabled { opacity:.4; cursor:not-allowed; }
+.btn-secondary:focus-visible { outline: 2px solid var(--amber-500); outline-offset: 2px; }
 
 /* Success */
 .btn-success {
@@ -278,31 +286,37 @@ body {
   color: white;
   display: inline-flex; align-items: center; gap: 6px;
   padding: 11px 24px; border-radius: var(--radius-md);
-  font-size: 1rem; font-weight: 700; cursor: pointer; border: none;
+  font-size: 1rem; font-weight: 600; cursor: pointer; border: none;
   font-family: 'Heebo', Arial, sans-serif; transition: all .18s;
+  letter-spacing: 0.01em;
 }
 .btn-success:hover:not(:disabled) { filter: brightness(1.08); }
+.btn-success:focus-visible { outline: 2px solid var(--success); outline-offset: 2px; }
 
 /* Ghost */
 .btn-ghost {
   background: transparent; color: var(--paper-500); border: none;
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 14px; border-radius: var(--radius-md);
-  font-size: .95rem; font-weight: 600; cursor: pointer;
+  font-size: .95rem; font-weight: 500; cursor: pointer;
   font-family: 'Heebo', Arial, sans-serif; transition: all .18s;
+  letter-spacing: 0.01em;
 }
 .btn-ghost:hover:not(:disabled) { background: var(--paper-200); color: var(--ink-900); }
+.btn-ghost:focus-visible { outline: 2px solid var(--amber-500); outline-offset: 2px; }
 
 /* Danger */
 .btn-danger {
   display: inline-flex; align-items: center; gap: 6px;
   background: transparent; color: var(--danger);
   border: 1.5px solid var(--danger); border-radius: var(--radius-md);
-  padding: 9px 16px; font-size: 1rem; font-weight: 700;
+  padding: 9px 18px; font-size: 1rem; font-weight: 500;
   cursor: pointer; transition: all .18s;
   font-family: 'Heebo', Arial, sans-serif;
+  letter-spacing: 0.01em;
 }
 .btn-danger:hover { background: var(--danger); color: white; }
+.btn-danger:focus-visible { outline: 2px solid var(--danger); outline-offset: 2px; }
 
 /* Small button modifier */
 .btn-sm { padding: 7px 14px; font-size: .9rem; }

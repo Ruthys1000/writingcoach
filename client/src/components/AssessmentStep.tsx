@@ -55,7 +55,7 @@ export function AssessmentStep({ sessionId, unitIndex, unit, onDone, onSkip }: P
         {error && <div className="alert alert-error">{error}</div>}
         <div className="btn-row">
           <button className="btn btn-primary" onClick={loadExercise} disabled={loading}>
-            {loading ? '⏳ מכין תרגיל...' : '🎯 הכן לי תרגיל'}
+            {loading ? 'מכין תרגיל...' : 'הכן לי תרגיל'}
           </button>
           <button className="btn btn-secondary" onClick={() => onSkip(unitIndex)}>דלג</button>
         </div>
@@ -103,7 +103,7 @@ export function AssessmentStep({ sessionId, unitIndex, unit, onDone, onSkip }: P
               onClick={submit}
               disabled={loading || rewrite.trim().length < 10}
             >
-              {loading ? '⏳ מעריך...' : '📤 שלח לבדיקה'}
+              {loading ? 'מעריך...' : 'שלח לבדיקה'}
             </button>
             <button className="btn btn-secondary" onClick={() => onSkip(unitIndex)}>דלג</button>
           </div>
@@ -140,7 +140,7 @@ export function AssessmentStep({ sessionId, unitIndex, unit, onDone, onSkip }: P
               </button>
             ) : attempts < 3 ? (
               <>
-                <button className="btn btn-primary" onClick={retry}>🔄 נסה שוב</button>
+                <button className="btn btn-primary" onClick={retry}>נסה שוב</button>
                 <button className="btn btn-secondary" onClick={() => onDone(unitIndex)}>
                   המשך בכל זאת →
                 </button>

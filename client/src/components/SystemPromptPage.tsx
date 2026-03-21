@@ -76,7 +76,7 @@ export function SystemPromptPage({ onClose }: Props) {
         {/* Header */}
         <div className="admin-header">
           <h2 className="admin-title">✏️ עריכת סיסטם פרומפט</h2>
-          <button className="btn-ghost" onClick={onClose}>✕ סגור</button>
+          <button className="btn-ghost" onClick={onClose}>סגור</button>
         </div>
 
         {error && <div className="alert alert-error">❌ {error}</div>}

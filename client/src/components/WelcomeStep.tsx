@@ -96,7 +96,7 @@ export function WelcomeStep({ onStart, onAdminOpen }: Props) {
               <span className="welcome-footer-tagline">AI לשיפור כתיבה מנהלית מקצועית</span>
             </div>
             <button className="welcome-footer-admin" onClick={onAdminOpen}>
-              ⚙️ ניהול מערכת
+              ניהול מערכת
             </button>
           </div>
           <div className="welcome-footer-bottom">
