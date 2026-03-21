@@ -45,6 +45,9 @@ export default function App() {
   const [footerColor, setFooterColor] = useState('#0f172a');
   const [footerText, setFooterText] = useState('');
   const [logoDataUrl, setLogoDataUrl] = useState('');
+  const [heroBadge, setHeroBadge] = useState('AI לכתיבה מנהלית');
+  const [heroSubtitle, setHeroSubtitle] = useState('העלה מסמך, קבל אבחון מדויק, ולמד לשפר את כתיבתך עם דוגמאות מהטקסט שלך עצמו');
+  const [ctaButtonText, setCtaButtonText] = useState('התחל אימון ←');
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminPasswordInput, setAdminPasswordInput] = useState('');
   const [adminPasswordError, setAdminPasswordError] = useState(false);
@@ -72,6 +75,9 @@ export default function App() {
         if (s.footer_color) setFooterColor(s.footer_color);
         if (s.footer_text !== undefined) setFooterText(s.footer_text);
         if (s.logo_data_url !== undefined) setLogoDataUrl(s.logo_data_url);
+        if (s.hero_badge) setHeroBadge(s.hero_badge);
+        if (s.hero_subtitle) setHeroSubtitle(s.hero_subtitle);
+        if (s.cta_button_text) setCtaButtonText(s.cta_button_text);
       })
       .catch(() => {/* use defaults */});
   }, []);
@@ -267,6 +273,9 @@ export default function App() {
             footerColor={footerColor}
             footerText={footerText}
             logoDataUrl={logoDataUrl}
+            heroBadge={heroBadge}
+            heroSubtitle={heroSubtitle}
+            ctaButtonText={ctaButtonText}
           />
         )}
 

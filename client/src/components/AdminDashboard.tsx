@@ -826,14 +826,35 @@ function SettingsManager() {
         <h3 className="admin-section-title">זהות הכלי</h3>
         <p className="admin-section-subtitle">הטקסטים שמופיעים בדף הבית ובכותרת</p>
         <label className="admin-label">
-          שם הכלי
+          שם הכלי (כותרת ראשית)
           <input className="admin-input" value={settings.site_title}
             onChange={(e) => patch('site_title', e.target.value)} />
+          <span className="admin-hint">מופיע בסרגל העליון, בכותרת הגדולה ובFooter</span>
         </label>
         <label className="admin-label" style={{ marginTop: '0.75rem' }}>
-          תיאור קצר (tagline)
+          Tagline (תיאור קצר — תכלת)
           <input className="admin-input" value={settings.site_tagline}
             onChange={(e) => patch('site_tagline', e.target.value)} />
+          <span className="admin-hint">מופיע בFooter מתחת לשם הכלי</span>
+        </label>
+        <label className="admin-label" style={{ marginTop: '0.75rem' }}>
+          Badge על הכותרת
+          <input className="admin-input" value={settings.hero_badge || ''}
+            onChange={(e) => patch('hero_badge', e.target.value)}
+            placeholder="AI לכתיבה מנהלית" />
+          <span className="admin-hint">הכיתוב הקטן מעל הכותרת הגדולה. השאר ריק להסתרה.</span>
+        </label>
+        <label className="admin-label" style={{ marginTop: '0.75rem' }}>
+          כיתוב משנה (מתחת לכותרת)
+          <input className="admin-input" value={settings.hero_subtitle || ''}
+            onChange={(e) => patch('hero_subtitle', e.target.value)}
+            placeholder="העלה מסמך, קבל אבחון מדויק..." />
+        </label>
+        <label className="admin-label" style={{ marginTop: '0.75rem' }}>
+          טקסט כפתור התחלה
+          <input className="admin-input" value={settings.cta_button_text || ''}
+            onChange={(e) => patch('cta_button_text', e.target.value)}
+            placeholder="התחל אימון ←" />
         </label>
       </div>
 

@@ -6,24 +6,27 @@ interface Props {
   footerColor?: string;
   footerText?: string;
   logoDataUrl?: string;
+  heroBadge?: string;
+  heroSubtitle?: string;
+  ctaButtonText?: string;
 }
 
-export function WelcomeStep({ onStart, onAdminOpen, siteTitle, siteTagline, footerColor, footerText, logoDataUrl }: Props) {
+export function WelcomeStep({ onStart, onAdminOpen, siteTitle, siteTagline, footerColor, footerText, logoDataUrl, heroBadge, heroSubtitle, ctaButtonText }: Props) {
   return (
     <div className="welcome-page">
 
       {/* Hero — full-width dark banner */}
       <div className="welcome-hero">
         <div className="welcome-hero-inner">
-          <div className="welcome-hero-badge">AI לכתיבה מנהלית</div>
+          {heroBadge && <div className="welcome-hero-badge">{heroBadge}</div>}
           <h1 className="welcome-title">
             {siteTitle}
           </h1>
           <p className="welcome-subtitle">
-            העלה מסמך, קבל אבחון מדויק, ולמד לשפר את כתיבתך עם דוגמאות מהטקסט שלך עצמו
+            {heroSubtitle}
           </p>
           <button className="welcome-cta" onClick={onStart}>
-            התחל אימון ←
+            {ctaButtonText || 'התחל אימון ←'}
           </button>
         </div>
       </div>
