@@ -266,7 +266,7 @@ function RecipeManager() {
 
   if (view === 'list') return (
     <div>
-      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
+      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>{error}</div>}
       <div className="adm-toolbar">
         <button className="btn-primary" onClick={openNew}>+ מתכון חדש</button>
         <button className="btn-secondary" onClick={() => fileInputRef.current?.click()}>
@@ -300,7 +300,7 @@ function RecipeManager() {
 
   if (view === 'edit' && editing) return (
     <div>
-      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
+      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>{error}</div>}
 
       <div className="adm-edit-nav">
         <button className="adm-back-btn" onClick={() => setView('list')}>← רשימת מתכונים</button>
@@ -542,7 +542,7 @@ function PromptManager() {
 
   return (
     <div>
-      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
+      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>{error}</div>}
 
       <div className="adm-prompts-info">
         <p>הסיסטם פרומפטים קובעים כיצד ה-AI מתנהג בכל שלב. שינוי ללא זהירות עלול לפגוע בתפקוד המערכת.</p>
@@ -571,7 +571,7 @@ function PromptManager() {
       <div className="admin-save-bar" style={{ marginTop: 24 }}>
         {saved && <span className="admin-save-success">✅ נשמר בהצלחה!</span>}
         <button className="btn-primary" onClick={handleSave} disabled={saving}>
-          {saving ? 'שומר...' : '💾 שמור פרומפטים'}
+          {saving ? 'שומר...' : 'שמור פרומפטים'}
         </button>
       </div>
     </div>
@@ -587,10 +587,17 @@ function PromptManager() {
 // ================================================================
 
 const PROVIDER_LABELS: Record<LLMProvider, string> = {
-  anthropic: '🟣 Anthropic Claude',
-  openai:    '🟢 OpenAI / תואם-OpenAI',
-  cohere:    '🔵 Cohere',
-  ollama:    '🟡 Ollama (מקומי)',
+  anthropic: 'Anthropic Claude',
+  openai:    'OpenAI / תואם-OpenAI',
+  cohere:    'Cohere',
+  ollama:    'Ollama (מקומי)',
+};
+
+const PROVIDER_COLORS: Record<LLMProvider, string> = {
+  anthropic: '#8b5cf6',
+  openai:    '#22c55e',
+  cohere:    '#3b82f6',
+  ollama:    '#eab308',
 };
 
 const PROVIDER_DESCS: Record<LLMProvider, string> = {
@@ -640,7 +647,7 @@ function LLMManager() {
 
   return (
     <div>
-      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>❌ {error}</div>}
+      {error && <div className="alert alert-error" style={{ marginBottom: 16 }}>{error}</div>}
 
       {/* Provider selector */}
       <div className="admin-section">
@@ -664,7 +671,10 @@ function LLMManager() {
                 transition: 'all .18s',
               }}
             >
-              <div style={{ fontWeight: 700, fontSize: '.95rem' }}>{PROVIDER_LABELS[p]}</div>
+              <div style={{ fontWeight: 700, fontSize: '.95rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8 }}>
+                {PROVIDER_LABELS[p]}
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: PROVIDER_COLORS[p], flexShrink: 0, display: 'inline-block' }} />
+              </div>
               <div style={{ fontSize: '.78rem', opacity: .75, marginTop: 3 }}>{PROVIDER_DESCS[p]}</div>
             </button>
           ))}
@@ -686,7 +696,7 @@ function LLMManager() {
               onChange={(e) => update({ anthropic_api_key: e.target.value })}
             />
             <span className="admin-hint">
-              מצא את המפתח ב־<a href="https://console.anthropic.com" target="_blank" rel="noreferrer" style={{ color: 'var(--ink-500)' }}>console.anthropic.com</a> ← API Keys
+              מפתח ה-API זמין תחת <em>API Keys</em> ב-<a href="https://console.anthropic.com" target="_blank" rel="noreferrer" style={{ color: 'var(--ink-500)' }}>console.anthropic.com</a>
             </span>
           </label>
         )}
@@ -764,7 +774,7 @@ function LLMManager() {
       <div className="admin-save-bar">
         {saved && <span className="admin-save-success">✅ נשמר — הספק הוחלף מיידית</span>}
         <button className="btn-primary" onClick={handleSave} disabled={saving}>
-          {saving ? 'שומר...' : '💾 שמור הגדרות'}
+          {saving ? 'שומר...' : 'שמור הגדרות'}
         </button>
       </div>
     </div>
@@ -787,7 +797,6 @@ export function AdminDashboard({ onBack }: Props) {
         <button className="adm-back-top" onClick={onBack}>
           ← חזרה
         </button>
-        <span>⚙️</span>
         <h1>ניהול מערכת</h1>
         <span className="top-bar-spacer" />
       </div>
@@ -799,19 +808,19 @@ export function AdminDashboard({ onBack }: Props) {
             className={`adm-tab ${activeTab === 'recipes' ? 'active' : ''}`}
             onClick={() => setActiveTab('recipes')}
           >
-            📋 מתכוני כתיבה
+            מתכוני כתיבה
           </button>
           <button
             className={`adm-tab ${activeTab === 'prompts' ? 'active' : ''}`}
             onClick={() => setActiveTab('prompts')}
           >
-            ✏️ סיסטם פרומפט
+            סיסטם פרומפט
           </button>
           <button
             className={`adm-tab ${activeTab === 'llm' ? 'active' : ''}`}
             onClick={() => setActiveTab('llm')}
           >
-            🤖 ספק AI
+            ספק AI
           </button>
         </div>
       </div>
@@ -820,9 +829,9 @@ export function AdminDashboard({ onBack }: Props) {
       <main className="adm-content">
         <div className="adm-content-header">
           <h2 className="adm-content-title">
-            {activeTab === 'recipes' ? '📋 מתכוני כתיבה'
-              : activeTab === 'prompts' ? '✏️ סיסטם פרומפט'
-              : '🤖 ספק AI'}
+            {activeTab === 'recipes' ? 'מתכוני כתיבה'
+              : activeTab === 'prompts' ? 'סיסטם פרומפט'
+              : 'ספק AI'}
           </h2>
           <p className="adm-content-subtitle">
             {activeTab === 'recipes'

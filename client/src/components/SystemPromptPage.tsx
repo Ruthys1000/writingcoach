@@ -121,7 +121,7 @@ export function SystemPromptPage({ onClose }: Props) {
               {saved && <span style={{ color: 'var(--success)', fontSize: '0.9rem' }}>✓ נשמר בהצלחה</span>}
               <button className="btn-secondary" onClick={onClose}>ביטול</button>
               <button className="btn-primary" onClick={handleSave} disabled={saving}>
-                {saving ? '...' : '💾 שמור'}
+                {saving ? '...' : 'שמור'}
               </button>
             </div>
           </div>

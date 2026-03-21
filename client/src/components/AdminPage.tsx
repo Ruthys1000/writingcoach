@@ -679,7 +679,7 @@ export function AdminPage({ onClose }: Props) {
               {error && <span className="admin-save-error">❌ {error}</span>}
               {saved && <span className="admin-save-success">✅ נשמר בהצלחה!</span>}
               <button className="btn-primary" onClick={handleSave} disabled={loading}>
-                {loading ? 'שומר...' : '💾 שמור מתכון'}
+                {loading ? 'שומר...' : 'שמור מתכון'}
               </button>
             </div>
           </div>

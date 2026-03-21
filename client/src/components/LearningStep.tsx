@@ -70,7 +70,7 @@ export function LearningStep({
             <div className="ba-label">לפני</div>
             <div>{unit.before_from_doc}</div>
           </div>
-          <div className="ba-arrow">↓</div>
+          <div className="ba-arrow">←</div>
           <div className="ba-box after">
             <div className="ba-label">אחרי</div>
             <div>{unit.after_from_doc}</div>
