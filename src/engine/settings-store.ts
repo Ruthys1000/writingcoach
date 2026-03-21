@@ -18,6 +18,9 @@ export interface SystemSettings {
   footer_color: string;
   footer_text: string;
   logo_data_url: string;
+  hero_badge: string;
+  hero_subtitle: string;
+  cta_button_text: string;
 }
 
 const CONFIG_PATH = path.join(
@@ -37,6 +40,9 @@ const DEFAULTS: SystemSettings = {
   footer_color: '#0f172a',
   footer_text: '',
   logo_data_url: '',
+  hero_badge: 'AI לכתיבה מנהלית',
+  hero_subtitle: 'העלה מסמך, קבל אבחון מדויק, ולמד לשפר את כתיבתך עם דוגמאות מהטקסט שלך עצמו',
+  cta_button_text: 'התחל אימון ←',
 };
 
 function load(): SystemSettings {

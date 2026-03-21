@@ -195,6 +195,9 @@ export interface SystemSettings {
   footer_color: string;
   footer_text: string;
   logo_data_url: string;
+  hero_badge: string;
+  hero_subtitle: string;
+  cta_button_text: string;
 }
 
 export const settingsApi = {
