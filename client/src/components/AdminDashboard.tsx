@@ -839,28 +839,10 @@ function SettingsManager() {
 
       {/* Footer customization */}
       <div className="admin-section">
-        <h3 className="admin-section-title">עיצוב Footer</h3>
-        <p className="admin-section-subtitle">צבע הרקע והטקסט שיופיעו בתחתית הדף</p>
+        <h3 className="admin-section-title">טקסט Footer</h3>
+        <p className="admin-section-subtitle">שורת הטקסט שתופיע בתחתית הדף</p>
         <label className="admin-label">
-          צבע רקע Footer
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 6 }}>
-            <input
-              type="color"
-              value={settings.footer_color || '#0f172a'}
-              onChange={(e) => patch('footer_color', e.target.value)}
-              style={{ width: 48, height: 36, border: 'none', borderRadius: 6, cursor: 'pointer', background: 'none' }}
-            />
-            <input
-              className="admin-input"
-              value={settings.footer_color || '#0f172a'}
-              onChange={(e) => patch('footer_color', e.target.value)}
-              placeholder="#0f172a"
-              style={{ flex: 1 }}
-            />
-          </div>
-        </label>
-        <label className="admin-label" style={{ marginTop: '0.75rem' }}>
-          טקסט תחתית Footer (לבן)
+          טקסט תחתית Footer
           <input
             className="admin-input"
             value={settings.footer_text || ''}
@@ -874,7 +856,7 @@ function SettingsManager() {
       {/* Logo */}
       <div className="admin-section">
         <h3 className="admin-section-title">לוגו</h3>
-        <p className="admin-section-subtitle">הלוגו יופיע ב-Footer. פורמטים נתמכים: PNG, JPG, SVG (מומלץ גודל עד 200×60 פיקסל)</p>
+        <p className="admin-section-subtitle">הלוגו יופיע בסרגל העליון ובתחתית הדף. פורמטים נתמכים: PNG, JPG, SVG (מומלץ גודל עד 200×60 פיקסל)</p>
         {settings.logo_data_url && (
           <div style={{ marginBottom: 12 }}>
             <img

@@ -224,6 +224,9 @@ export default function App() {
       )}
 
       <div className="top-bar">
+        {logoDataUrl && (
+          <img src={logoDataUrl} alt="לוגו" className="top-bar-logo" />
+        )}
         <h1>{siteTitle}</h1>
         <span className="top-bar-spacer" />
         <nav className="top-bar-nav">

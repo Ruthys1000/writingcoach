@@ -114,6 +114,7 @@ body {
   z-index: 50;
 }
 .top-bar-icon { display: none; }
+.top-bar-logo { height: 36px; max-width: 120px; object-fit: contain; margin-left: 12px; }
 .top-bar h1  { font-size: 1.15rem; font-weight: 800; color: white; letter-spacing: -.01em; }
 .top-bar-sub { font-size: .85rem; color: var(--amber-300); font-weight: 500; }
 .top-bar-spacer { flex: 1; }

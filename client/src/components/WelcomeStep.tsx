@@ -197,7 +197,7 @@ export function WelcomeStep({ onStart, onAdminOpen, siteTitle, siteTagline, foot
       </section>
 
       {/* Footer */}
-      <footer className="welcome-footer" style={footerColor ? { background: footerColor } : undefined}>
+      <footer className="welcome-footer">
         <div className="welcome-footer-inner">
           <div className="welcome-footer-content">
             {logoDataUrl && (
