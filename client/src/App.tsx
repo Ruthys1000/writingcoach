@@ -216,7 +216,6 @@ export default function App() {
 
       <div className="top-bar">
         <h1>{siteTitle}</h1>
-        <span className="top-bar-sub">Writing Coach</span>
         <span className="top-bar-spacer" />
         <nav className="top-bar-nav">
           {step !== 'welcome' && (
