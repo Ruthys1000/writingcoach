@@ -42,6 +42,9 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [siteTitle, setSiteTitle] = useState('מאמן כתיבה מנהלית');
   const [siteTagline, setSiteTagline] = useState('AI לשיפור כתיבה מנהלית מקצועית');
+  const [footerColor, setFooterColor] = useState('#0f172a');
+  const [footerText, setFooterText] = useState('');
+  const [logoDataUrl, setLogoDataUrl] = useState('');
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminPasswordInput, setAdminPasswordInput] = useState('');
   const [adminPasswordError, setAdminPasswordError] = useState(false);
@@ -63,7 +66,13 @@ export default function App() {
       .then((recipes) => setState((s) => ({ ...s, recipes })))
       .catch(() => setError('לא ניתן לטעון את רשימת סוגי המסמכים — בדוק שהשרת פועל'));
     settingsApi.get()
-      .then((s) => { setSiteTitle(s.site_title); setSiteTagline(s.site_tagline); })
+      .then((s) => {
+        setSiteTitle(s.site_title);
+        setSiteTagline(s.site_tagline);
+        if (s.footer_color) setFooterColor(s.footer_color);
+        if (s.footer_text !== undefined) setFooterText(s.footer_text);
+        if (s.logo_data_url !== undefined) setLogoDataUrl(s.logo_data_url);
+      })
       .catch(() => {/* use defaults */});
   }, []);
 
@@ -229,9 +238,6 @@ export default function App() {
               דף הבית
             </button>
           )}
-          <button className="top-bar-nav-btn top-bar-nav-btn--admin" onClick={openAdmin}>
-            ניהול מערכת
-          </button>
         </nav>
       </div>
 
@@ -255,6 +261,9 @@ export default function App() {
             onAdminOpen={openAdmin}
             siteTitle={siteTitle}
             siteTagline={siteTagline}
+            footerColor={footerColor}
+            footerText={footerText}
+            logoDataUrl={logoDataUrl}
           />
         )}
 

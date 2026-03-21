@@ -15,6 +15,9 @@ export interface SystemSettings {
   rate_limit_window_minutes: number;
   site_title: string;
   site_tagline: string;
+  footer_color: string;
+  footer_text: string;
+  logo_data_url: string;
 }
 
 const CONFIG_PATH = path.join(
@@ -31,6 +34,9 @@ const DEFAULTS: SystemSettings = {
   rate_limit_window_minutes: 15,
   site_title: 'מאמן כתיבה מנהלית',
   site_tagline: 'AI לשיפור כתיבה מנהלית מקצועית',
+  footer_color: '#0f172a',
+  footer_text: '',
+  logo_data_url: '',
 };
 
 function load(): SystemSettings {

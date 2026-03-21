@@ -372,6 +372,14 @@ body {
 
 /* Small button modifier */
 .btn-sm { padding: 7px 14px; font-size: .9rem; }
+.btn-danger-sm {
+  display: inline-flex; align-items: center;
+  padding: 7px 14px; font-size: .9rem; font-weight: 600;
+  background: transparent; color: var(--danger);
+  border: 1.5px solid var(--danger); border-radius: var(--radius-md);
+  cursor: pointer; transition: background .15s, color .15s;
+}
+.btn-danger-sm:hover { background: var(--danger); color: white; }
 
 /* Icon btn */
 .btn-icon {
@@ -859,6 +867,12 @@ textarea:focus { outline: none; border-color: var(--amber-500); box-shadow: var(
 /* Footer */
 .welcome-footer {
   background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-700) 100%);
+}
+.welcome-footer-logo {
+  max-height: 52px;
+  max-width: 160px;
+  object-fit: contain;
+  margin-left: var(--sp-md);
 }
 .welcome-footer-inner {
   max-width: 1100px;
