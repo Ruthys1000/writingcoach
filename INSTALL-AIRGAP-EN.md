@@ -8,7 +8,9 @@
 | Your server OS | Docker available? | Go to |
 |---|---|---|
 | **Windows** | No (most common) | [Windows — Node.js (no Docker)](#windows--nodejs-no-docker) |
-| Linux / Windows | Yes | [Section 2 onwards (Docker)](#2-prepare-the-files-on-an-internet-connected-machine) |
+| **Linux** | Not sure / No | [Linux — Node.js (no Docker)](#linux--nodejs-no-docker) |
+| **Linux** | Yes | [Linux — Docker (recommended)](#linux--docker-recommended) |
+| Linux / Windows | Docker confirmed | [Section 2 onwards (full Docker guide)](#2-prepare-the-files-on-an-internet-connected-machine) |
 
 ---
 
@@ -58,6 +60,145 @@ NODE_ENV=production
 1. Press `Win + R`, type `shell:startup`, press Enter
 2. Create a shortcut to `C:\writingcoach\start.bat` in that folder
 3. The app will start automatically every time Windows boots
+
+---
+
+---
+
+## Linux — Node.js (no Docker)
+
+Use this if Docker is not installed on your Linux server. Works on Ubuntu, Debian, RHEL, CentOS, and similar.
+
+### Step 1 — On your internet-connected machine
+
+```bash
+git clone https://github.com/Ruthys1000/writingcoach.git
+cd writingcoach
+git fetch origin
+git checkout claude/air-gapped-deployment-hCfD4
+
+bash scripts/install-linux.sh
+```
+
+The script installs dependencies, builds the React frontend, compiles the TypeScript server,
+and optionally downloads the Node.js Linux binary to bundle on the USB.
+
+When it finishes, copy the entire `writingcoach` folder to a USB drive.
+
+### Step 2 — On the air-gapped Linux server
+
+**If Node.js is not installed** and you bundled the tarball:
+
+```bash
+sudo tar -xzf node-v20*-linux-x64.tar.gz -C /usr/local --strip-components=1
+node --version   # confirm: v20.x.x
+```
+
+**Copy files and configure:**
+
+```bash
+sudo cp -r /path/to/usb/writingcoach /opt/writingcoach
+cd /opt/writingcoach
+
+cp .env.example .env
+nano .env   # fill in your AI server details:
+```
+
+```
+LLM_PROVIDER=openai
+OPENAI_BASE_URL=http://YOUR-INTERNAL-AI-IP:PORT/v1
+OPENAI_API_KEY=your-token
+OPENAI_MODEL=your-model-name
+PORT=3000
+NODE_ENV=production
+```
+
+**Start the server:**
+
+```bash
+bash start.sh
+```
+
+Health check: `curl http://localhost:3000/health` → `{"status":"ok"}`
+
+### Step 3 — Run automatically on boot (systemd)
+
+```bash
+sudo bash scripts/setup-service-linux.sh
+```
+
+This installs and starts a systemd service. The app will restart automatically after reboots or crashes.
+
+```bash
+# Useful commands after setup:
+sudo systemctl status writingcoach
+sudo journalctl -u writingcoach -f   # live logs
+```
+
+---
+
+## Linux — Docker (recommended)
+
+Use this if Docker is installed (run `docker --version` to check). Docker is the
+cleanest option and handles everything in one container.
+
+### Step 1 — On your internet-connected machine
+
+```bash
+git clone https://github.com/Ruthys1000/writingcoach.git
+cd writingcoach
+git fetch origin
+git checkout claude/air-gapped-deployment-hCfD4
+
+docker build -t writingcoach:latest .
+docker save writingcoach:latest | gzip > writingcoach.tar.gz
+```
+
+Copy `writingcoach.tar.gz` to USB (it will be ~150 MB). Also copy the `writingcoach` folder
+(for the `recipes/` and `config/` directories and the `docker-compose.yml`).
+
+### Step 2 — On the air-gapped Linux server
+
+```bash
+docker load < writingcoach.tar.gz
+sudo mkdir -p /opt/writingcoach
+cd /opt/writingcoach
+
+# Create .env
+cat > .env <<'EOF'
+LLM_PROVIDER=openai
+OPENAI_BASE_URL=http://YOUR-INTERNAL-AI-IP:PORT/v1
+OPENAI_API_KEY=your-token
+OPENAI_MODEL=your-model-name
+PORT=3000
+NODE_ENV=production
+EOF
+
+# Create docker-compose.yml
+cat > docker-compose.yml <<'EOF'
+version: '3.9'
+services:
+  app:
+    image: writingcoach:latest
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./recipes:/app/recipes:rw
+      - ./config:/app/config:rw
+    restart: unless-stopped
+EOF
+
+docker compose up -d
+curl http://localhost:3000/health
+```
+
+**Auto-start on boot** (Docker handles this automatically via `restart: unless-stopped`):
+
+```bash
+sudo systemctl enable docker
+```
 
 ---
 
