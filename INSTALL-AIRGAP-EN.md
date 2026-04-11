@@ -3,7 +3,65 @@
 
 ---
 
-## Table of Contents
+## Which guide applies to you?
+
+| Your server OS | Docker available? | Go to |
+|---|---|---|
+| **Windows** | No (most common) | [Windows — Node.js (no Docker)](#windows--nodejs-no-docker) |
+| Linux / Windows | Yes | [Section 2 onwards (Docker)](#2-prepare-the-files-on-an-internet-connected-machine) |
+
+---
+
+## Windows — Node.js (no Docker)
+
+Use this path if Docker is not available on your Windows server. No virtualization needed.
+
+### Step 1 — On your internet-connected machine
+
+**Install Node.js 20 LTS** from nodejs.org if you haven't already, then:
+
+```
+git clone https://github.com/Ruthys1000/writingcoach.git
+cd writingcoach
+git fetch origin
+git checkout claude/air-gapped-deployment-hCfD4
+```
+
+Double-click **`scripts\install-windows.bat`** — it will:
+- Install all dependencies
+- Build the React frontend
+- Compile the TypeScript server
+- Optionally download the Node.js installer to bundle on the USB
+
+When it finishes, copy the entire `writingcoach` folder to a USB drive.
+
+### Step 2 — On the air-gapped Windows server
+
+1. **Install Node.js** (if not already installed): double-click `node-v20-x64.msi` from the USB
+2. Copy the `writingcoach` folder to `C:\writingcoach`
+3. Open `.env.example` in Notepad, fill in your AI server details, and save it as `.env`:
+
+```
+LLM_PROVIDER=openai
+OPENAI_BASE_URL=http://YOUR-INTERNAL-AI-IP:PORT/v1
+OPENAI_API_KEY=your-token
+OPENAI_MODEL=your-model-name
+PORT=3000
+NODE_ENV=production
+```
+
+4. Double-click **`start.bat`** — the server starts and prints the URL
+5. Open a browser and go to **http://localhost:3000**
+
+### Step 3 — Run automatically on Windows startup
+
+1. Press `Win + R`, type `shell:startup`, press Enter
+2. Create a shortcut to `C:\writingcoach\start.bat` in that folder
+3. The app will start automatically every time Windows boots
+
+---
+
+## Table of Contents (Docker path)
 
 1. [What You Need Before You Start](#1-what-you-need-before-you-start)
 2. [Prepare the Files (on an Internet-Connected Machine)](#2-prepare-the-files-on-an-internet-connected-machine)
