@@ -57,7 +57,7 @@
 # הורידי את קוד המקור
 git clone https://github.com/Ruthys1000/writingcoach.git
 cd writingcoach
-git checkout claude/setup-internal-ai-tool-2xD4i
+git checkout claude/air-gapped-deployment-hCfD4
 
 # בני את ה-Docker Image
 docker build -t writingcoach:latest .
@@ -75,7 +75,7 @@ gzip writingcoach-image.tar
 ```bash
 git clone https://github.com/Ruthys1000/writingcoach.git
 cd writingcoach
-git checkout claude/setup-internal-ai-tool-2xD4i
+git checkout claude/air-gapped-deployment-hCfD4
 
 # התקני תלויות (כולל client)
 npm install
