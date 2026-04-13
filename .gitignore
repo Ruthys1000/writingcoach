@@ -2,3 +2,5 @@ node_modules/
 dist/
 .env
 *.js.map
+writingcoach-ready.tar.gz
+writingcoach-transfer/
