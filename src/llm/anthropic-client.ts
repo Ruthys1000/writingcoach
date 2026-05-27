@@ -57,7 +57,7 @@ export class AnthropicClient extends LLMClient {
     const message = await this.client.messages.create({
       model: this.model,
       max_tokens: 4096,
-      system: systemPrompt,
+      system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
       messages: [{ role: 'user', content: userMessage }],
     });
 

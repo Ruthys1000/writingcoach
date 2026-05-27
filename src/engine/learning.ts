@@ -38,21 +38,16 @@ export class LearningEngine {
     maxLessons = 3,
   ): Promise<LearningUnit[]> {
     const topGaps = report.gaps.slice(0, maxLessons);
-    const lessons: LearningUnit[] = [];
 
-    for (const gap of topGaps) {
-      const criterion = recipe.criteria.find((c) => c.id === gap.criterion_id);
-      if (!criterion) continue;
+    const results = await Promise.all(
+      topGaps.map((gap) => {
+        const criterion = recipe.criteria.find((c) => c.id === gap.criterion_id);
+        if (!criterion) return null;
+        return this.generateSingleLesson(documentText, gap, criterion);
+      }),
+    );
 
-      const lesson = await this.generateSingleLesson(
-        documentText,
-        gap,
-        criterion,
-      );
-      lessons.push(lesson);
-    }
-
-    return lessons;
+    return results.filter((l): l is LearningUnit => l !== null);
   }
 
   private async generateSingleLesson(
