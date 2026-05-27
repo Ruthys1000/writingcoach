@@ -106,6 +106,7 @@ router.get('/session/:id/exercise/:unitIndex', async (req: Request, res: Respons
   const unitIndex = parseInt(req.params['unitIndex'] as string, 10);
   try {
     const exercise = await getCoach().generateExercise(session, unitIndex);
+    setSession(req.params['id'] as string, { ...session, exercises: { ...session.exercises, [unitIndex]: exercise } });
     res.json({ exercise });
   } catch (err) {
     res.status(500).json({ error: String(err) });
@@ -129,7 +130,9 @@ router.post('/session/:id/assess/:unitIndex', async (req: Request, res: Response
 
   const unitIndex = parseInt(req.params['unitIndex'] as string, 10);
   try {
-    const exercise = await getCoach().generateExercise(session, unitIndex);
+    const exercise =
+      session.exercises[unitIndex] ??
+      await getCoach().generateExercise(session, unitIndex);
     const result = await getCoach().evaluateRewrite(exercise, userRewrite, session, unitIndex);
     res.json({ result, exercise });
   } catch (err) {

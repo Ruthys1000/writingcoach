@@ -22,6 +22,7 @@ export interface CoachSession {
   documentText: string;
   diagnosticReport: DiagnosticReport;
   learningUnits: LearningUnit[];
+  exercises: Record<number, PracticeExercise>;
 }
 
 export class WritingCoach {
@@ -61,6 +62,7 @@ export class WritingCoach {
       documentText,
       diagnosticReport,
       learningUnits: [],
+      exercises: {},
     };
   }
 
