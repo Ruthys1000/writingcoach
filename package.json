@@ -12,10 +12,7 @@
     "client:build": "cd client && npm run build",
     "dev:web": "concurrently -n server,client -c blue,cyan \"npm run server\" \"npm run client:dev\"",
     "build": "npm run client:build && tsc",
-    "start": "NODE_ENV=production node dist/server/index.js",
-    "docker:build": "docker compose build",
-    "docker:up": "docker compose up",
-    "docker:ollama": "docker compose --profile ollama up"
+    "start": "NODE_ENV=production node dist/server/index.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",

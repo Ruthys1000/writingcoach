@@ -1,141 +1,141 @@
-# מאמן הכתיבה — הנחיות פריסה
+# מאמן הכתיבה — התקנה והפעלה בסביבה מנותקת (Airgap)
+
+הענף הזה הוא **חבילה מוכנה להרצה**: הוא כולל את הקוד המקומפל (`dist/`),
+הממשק הבנוי (`client/dist/`), כל התלויות (`node_modules/`) וגם את קובץ
+ההתקנה של Node.js 20 ללינוקס. **אין צורך באינטרנט, בבנייה או ב-npm install
+על השרת הפנימי.**
 
 ## תוכן עניינים
-1. [הרצה מקומית לפיתוח](#1-הרצה-מקומית-לפיתוח)
-2. [פריסה ב-Railway.app (אינטרנט)](#2-פריסה-ב-railwayapp-אינטרנט)
-3. [פריסה ל-Airgap (ללא אינטרנט)](#3-פריסה-ל-airgap-ללא-אינטרנט)
-4. [הגדרת .env — בחירת ספק AI](#4-הגדרת-env--בחירת-ספק-ai)
+1. [העברה ל-disk on key](#1-העברה-ל-disk-on-key)
+2. [התקנה על השרת הפנימי](#2-התקנה-על-השרת-הפנימי)
+3. [חיבור ל-AI הפנימי (.env)](#3-חיבור-ל-ai-הפנימי-env)
+4. [הפעלה](#4-הפעלה)
+5. [הפעלה אוטומטית כ-Service](#5-הפעלה-אוטומטית-כ-service)
+6. [בדיקת תקינות ופתרון תקלות](#6-בדיקת-תקינות-ופתרון-תקלות)
+7. [הוספת סוגי מסמכים (Recipes)](#7-הוספת-סוגי-מסמכים-recipes)
 
 ---
 
-## 1. הרצה מקומית לפיתוח
+## 1. העברה ל-disk on key
 
-**דרישות:** Node.js 20+, npm
+במחשב עם אינטרנט:
 
-```bash
-# התקנת תלויות
-npm install
-cd client && npm install && cd ..
-
-# הרצה במצב פיתוח (שרת + ממשק ביחד)
-npm run dev:web
-```
-
-האפליקציה תהיה זמינה בכתובת: **http://localhost:3000**
+1. הורידי את הענף כ-ZIP מ-GitHub:
+   **Code ← Download ZIP** (כשהענף `claude/airgapped-app-deployment-kta89e` נבחר),
+   או `git clone` של הענף.
+2. חלצי את ה-ZIP והעתיקי את **כל התיקייה כמות שהיא** ל-disk on key.
+   הכול כבר בפנים — אין שום דבר נוסף להוריד.
 
 ---
 
-## 2. פריסה ב-Railway.app (אינטרנט)
+## 2. התקנה על השרת הפנימי
 
-Railway.app בונה ומריץ את האפליקציה אוטומטית מה-GitHub.
+1. העתיקי את התיקייה מה-USB לשרת, למשל ל-`/opt/writingcoach`:
+   ```bash
+   sudo mkdir -p /opt/writingcoach
+   sudo cp -r /media/usb/writingcoach/* /opt/writingcoach/
+   cd /opt/writingcoach
+   ```
 
-**שלבים:**
-1. Push לענף הרלוונטי ב-GitHub
-2. Railway יזהה את ה-Dockerfile ויבנה אוטומטית
-3. בדשבורד של Railway — הגדר משתני סביבה (ראה [חלק 4](#4-הגדרת-env--בחירת-ספק-ai))
-
-**משתני סביבה מינימליים ב-Railway:**
-```
-LLM_PROVIDER=anthropic
-ANTHROPIC_API_KEY=sk-ant-...
-```
-(או לפי הספק — ראה חלק 4)
+2. בדקי אם Node.js מותקן:
+   ```bash
+   node --version
+   ```
+   - אם מוצג מספר גרסה 18 ומעלה — הכול טוב, המשיכי לשלב 3.
+   - אם לא — התקיני מהקובץ שמצורף בתיקייה (בלי אינטרנט):
+     ```bash
+     sudo tar -xzf node-v20.19.1-linux-x64.tar.gz -C /usr/local --strip-components=1
+     node --version   # אמור להציג v20.19.1
+     ```
 
 ---
 
-## 3. פריסה ל-Airgap (ללא אינטרנט)
-
-**המחשב שלך צריך אינטרנט. השרת הפנימי — לא.**
-
-### שלב א: בנייה על מחשב עם אינטרנט
+## 3. חיבור ל-AI הפנימי (.env)
 
 ```bash
-bash scripts/install-linux.sh
-```
-
-הסקריפט מבצע:
-- התקנת תלויות (`npm install`)
-- בניית ממשק React (`client/dist/`)
-- קומפילציית TypeScript (`dist/`)
-- בסיום — שואל אם להוריד Node.js v20 לצרף לתיקייה (לשרת ללא Node.js)
-
-### שלב ב: העברה לשרת הפנימי
-
-העתק את כל תיקיית `writingcoach/` לשרת (USB, רשת פנימית וכו').
-
-**כולל:** `dist/`, `client/dist/`, `node_modules/`, `recipes/`, `config/`
-
-**לא לכלול:** `.git/`
-
-### שלב ג: הפעלה על השרת הפנימי
-
-```bash
-# אם Node.js לא מותקן על השרת — התקנה מהקובץ שהורדת:
-sudo tar -xzf node-v20*-linux-x64.tar.gz -C /usr/local --strip-components=1
-
-# הגדרת קובץ .env:
 cp .env.example .env
-nano .env    # מלא את פרטי שרת ה-AI הפנימי
+nano .env
+```
 
-# הפעלה:
+מלאי **רק** את החלק של הספק שלך. לרוב שרתי AI פנימיים (vLLM / LocalAI /
+LM Studio / Azure וכד') משתמשים בממשק תואם-OpenAI:
+
+```env
+LLM_PROVIDER=openai
+OPENAI_BASE_URL=http://כתובת-שרת-ה-AI:פורט/v1
+OPENAI_API_KEY=הטוקן-הפנימי        # אם אין טוקן — כתבי כל טקסט, למשל none
+OPENAI_MODEL=שם-המודל-בשרת
+```
+
+אם ה-AI הפנימי הוא Ollama:
+
+```env
+LLM_PROVIDER=ollama
+OLLAMA_BASE_URL=http://כתובת-השרת:11434
+OLLAMA_MODEL=שם-המודל
+```
+
+> את שלושת הפרטים (כתובת, טוקן, שם מודל) מקבלים ממנהל מערכת ה-AI בארגון.
+
+---
+
+## 4. הפעלה
+
+```bash
 bash start.sh
 ```
 
-האפליקציה תהיה זמינה בכתובת: **http://localhost:3000**
+האפליקציה תהיה זמינה בדפדפן:
+- מהשרת עצמו: **http://localhost:3000**
+- ממחשבים אחרים ברשת הפנימית: **http://כתובת-השרת:3000**
 
-#### הגדרה כ-Service (הפעלה אוטומטית עם השרת):
+לעצירה: `Ctrl+C`. לשינוי פורט — הוסיפי `PORT=8080` לקובץ `.env`.
+
+---
+
+## 5. הפעלה אוטומטית כ-Service
+
+כדי שהאפליקציה תעלה לבד אחרי הפעלה מחדש של השרת:
+
 ```bash
 bash scripts/setup-service-linux.sh
 ```
 
 ---
 
-## 4. הגדרת .env — בחירת ספק AI
-
-העתק `.env.example` ל-`.env` ומלא **רק** את הספק הרלוונטי:
-
-### ספק פנימי (vLLM / LocalAI / LM Studio / Azure):
-```env
-LLM_PROVIDER=openai
-OPENAI_BASE_URL=http://YOUR-AI-SERVER-IP:PORT/v1
-OPENAI_API_KEY=your-internal-token
-OPENAI_MODEL=your-model-name
-```
-
-### Anthropic Claude (ענן):
-```env
-LLM_PROVIDER=anthropic
-ANTHROPIC_API_KEY=sk-ant-...
-```
-
-### Ollama (מקומי/airgap):
-```env
-LLM_PROVIDER=ollama
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=llama3
-```
-
-### Cohere (ענן):
-```env
-LLM_PROVIDER=cohere
-COHERE_API_KEY=your-cohere-key
-COHERE_MODEL=command-r-plus
-```
-
----
-
-## הוספת סוגי מסמכים חדשים (Recipes)
-
-ניתן להוסיף סוגי מסמכים נוספים ללא שינוי קוד:
-1. צור קובץ YAML חדש בתיקיית `recipes/`
-2. עקוב אחר מבנה אחד הקבצים הקיימים
-3. הפעל מחדש את השרת — המסמך יופיע אוטומטית בממשק
-
----
-
-## בדיקת תקינות
+## 6. בדיקת תקינות ופתרון תקלות
 
 ```bash
 curl http://localhost:3000/health
 # תגובה תקינה: {"status":"ok"}
+```
+
+| תופעה | סיבה נפוצה | פתרון |
+|---|---|---|
+| `node: command not found` | Node.js לא מותקן | שלב 2, סעיף 2 |
+| הדף עולה אבל השיחה נתקעת/שגיאה | פרטי ה-AI ב-.env שגויים | בדקי כתובת/טוקן/שם מודל מול מנהל ה-AI |
+| הדף לא נפתח ממחשב אחר | חומת אש על השרת | פתחי את פורט 3000 (`sudo firewall-cmd --add-port=3000/tcp --permanent && sudo firewall-cmd --reload` או `sudo ufw allow 3000`) |
+
+בדיקה ישירה של החיבור לשרת ה-AI (מהשרת של האפליקציה):
+```bash
+curl http://כתובת-שרת-ה-AI:פורט/v1/models
+```
+
+---
+
+## 7. הוספת סוגי מסמכים (Recipes)
+
+ניתן להוסיף סוגי מסמכים חדשים ללא שינוי קוד:
+1. צרי קובץ YAML חדש בתיקיית `recipes/` (העתיקי אחד קיים כבסיס)
+2. הפעילי מחדש את השרת — המסמך יופיע אוטומטית בממשק
+
+---
+
+## למפתחים: בנייה מחדש (דורש אינטרנט)
+
+אם בעתיד ישתנה קוד המקור (`src/`, `server/`, `client/src/`), יש לבנות מחדש
+על מחשב עם אינטרנט לפני העברה:
+
+```bash
+bash scripts/pack-for-transfer.sh
 ```

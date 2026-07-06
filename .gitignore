@@ -1,5 +1,5 @@
-node_modules/
-dist/
+# Airgap transfer branch: dist/, client/dist/ and node_modules/ ARE committed
+# on purpose, so a checkout of this branch is a ready-to-run bundle.
 .env
 *.js.map
 writingcoach-ready.tar.gz
