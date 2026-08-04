@@ -82,6 +82,8 @@ sudo bash scripts/setup-service-linux.sh
 
 אין קוד מקור, אין Docker, ואין צורך ב-`npm install` על השרת.
 
+גודל הארכיון הטיפוסי: כ־40MB (כולל Node.js מובנה).
+
 ## פתרון תקלות
 
 | תופעה | מה לבדוק |
