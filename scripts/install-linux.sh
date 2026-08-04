@@ -1,8 +1,8 @@
 #!/bin/bash
 # ============================================================
 # install-linux.sh
-# Run this on a machine WITH internet access (Linux or Mac).
-# Builds the app and optionally bundles Node.js for the server.
+# Legacy build helper. Prefer: bash scripts/pack-for-transfer.sh
+# which produces a minimal airgap tarball with bundled Node.
 # ============================================================
 
 set -e
@@ -18,6 +18,8 @@ echo ""
 echo "════════════════════════════════════════════════════"
 echo " WritingCoach — Build Script (Internet Machine)"
 echo "════════════════════════════════════════════════════"
+echo -e "${YELLOW}Tip: for a clean airgap package use:${NC}"
+echo "  bash scripts/pack-for-transfer.sh"
 echo ""
 
 # ── Check Node.js ─────────────────────────────────────────────────────────────

@@ -47,45 +47,44 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 **המחשב שלך צריך אינטרנט. השרת הפנימי — לא.**
 
-### שלב א: בנייה על מחשב עם אינטרנט
+המטרה: חבילה קטנה ונקייה, בלי קוד מקור ובלי בלאגן בהפעלה.
+על השרת הפנימי נשארים רק: חילוץ → מילוי `.env` → `bash start.sh`.
+
+### שלב א: בניית החבילה (מחשב עם אינטרנט)
 
 ```bash
-bash scripts/install-linux.sh
+bash scripts/pack-for-transfer.sh
 ```
 
-הסקריפט מבצע:
-- התקנת תלויות (`npm install`)
-- בניית ממשק React (`client/dist/`)
-- קומפילציית TypeScript (`dist/`)
-- בסיום — שואל אם להוריד Node.js v20 לצרף לתיקייה (לשרת ללא Node.js)
+הסקריפט:
+- בונה את הממשק והשרת
+- משאיר תלויות production בלבד
+- מצרף Node.js מובנה תחת `runtime/` (בלי צורך ב-sudo על השרת)
+- יוצר `writingcoach-ready.tar.gz` + תיקיית `writingcoach-transfer/`
 
-### שלב ב: העברה לשרת הפנימי
+**לא נכנס לחבילה:** `src/`, `server/`, `client/src/`, Docker, Railway, תלויות פיתוח.
 
-העתק את כל תיקיית `writingcoach/` לשרת (USB, רשת פנימית וכו').
+### שלב ב: העברה
 
-**כולל:** `dist/`, `client/dist/`, `node_modules/`, `recipes/`, `config/`
-
-**לא לכלול:** `.git/`
+העתיקי את `writingcoach-ready.tar.gz` (או את התיקייה) ב-USB / scp לשרת הפנימי.
 
 ### שלב ג: הפעלה על השרת הפנימי
 
 ```bash
-# אם Node.js לא מותקן על השרת — התקנה מהקובץ שהורדת:
-sudo tar -xzf node-v20*-linux-x64.tar.gz -C /usr/local --strip-components=1
-
-# הגדרת קובץ .env:
+tar -xzf writingcoach-ready.tar.gz
+cd writingcoach-transfer
 cp .env.example .env
-nano .env    # מלא את פרטי שרת ה-AI הפנימי
-
-# הפעלה:
+nano .env          # פרטי שרת ה-AI הפנימי בלבד
 bash start.sh
 ```
 
-האפליקציה תהיה זמינה בכתובת: **http://localhost:3000**
+האפליקציה: **http://localhost:3000**
 
-#### הגדרה כ-Service (הפעלה אוטומטית עם השרת):
+בתוך החבילה יש `README.md` קצר לגוף המקבל — אפשר להעביר רק אותו כהנחיות.
+
+#### הפעלה אוטומטית עם עליית השרת:
 ```bash
-bash scripts/setup-service-linux.sh
+sudo bash scripts/setup-service-linux.sh
 ```
 
 ---

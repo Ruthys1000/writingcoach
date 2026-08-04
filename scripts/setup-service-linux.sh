@@ -20,7 +20,14 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 INSTALL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-NODE_BIN="$(command -v node 2>/dev/null || echo '')"
+
+# Prefer bundled runtime (airgap package), then system node
+NODE_BIN=""
+if [ -x "${INSTALL_DIR}/runtime/bin/node" ]; then
+    NODE_BIN="${INSTALL_DIR}/runtime/bin/node"
+elif command -v node >/dev/null 2>&1; then
+    NODE_BIN="$(command -v node)"
+fi
 
 echo ""
 echo "════════════════════════════════════════════════════"
@@ -32,7 +39,9 @@ echo "  Node.js       : ${NODE_BIN:-NOT FOUND}"
 echo ""
 
 if [ -z "$NODE_BIN" ]; then
-    echo -e "${RED}[ERROR] Node.js not found. Install it first, then re-run this script.${NC}"
+    echo -e "${RED}[ERROR] Node.js not found.${NC}"
+    echo "  Expected bundled runtime at: ${INSTALL_DIR}/runtime/bin/node"
+    echo "  Or install Node.js 20+ system-wide, then re-run."
     exit 1
 fi
 
