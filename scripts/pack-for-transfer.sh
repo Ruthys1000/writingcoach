@@ -119,8 +119,20 @@ if [ "$INCLUDE_NODE" = "1" ]; then
 
   mkdir -p "$BUNDLE/runtime"
   tar -xzf "$NODE_FILE" -C "$BUNDLE/runtime" --strip-components=1
-  # Keep only what we need to run node (drop npm docs etc. partially by leaving tree as-is —
-  # strip-components already gives a clean node prefix layout)
+  # Keep only the node binary + license — drop npm/npx/corepack/docs/headers
+  rm -rf \
+    "$BUNDLE/runtime/bin/npm" \
+    "$BUNDLE/runtime/bin/npx" \
+    "$BUNDLE/runtime/bin/corepack" \
+    "$BUNDLE/runtime/lib" \
+    "$BUNDLE/runtime/include" \
+    "$BUNDLE/runtime/share" \
+    "$BUNDLE/runtime/CHANGELOG.md" \
+    "$BUNDLE/runtime/README.md"
+  if [ ! -x "$BUNDLE/runtime/bin/node" ]; then
+    echo -e "${RED}[ERROR] runtime/bin/node חסר אחרי צירוף Node.${NC}"
+    exit 1
+  fi
 else
   echo "[5/5] מדלג על צירוף Node.js (INCLUDE_NODE=0)"
 fi
