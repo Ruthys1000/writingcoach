@@ -13,6 +13,7 @@
     "dev:web": "concurrently -n server,client -c blue,cyan \"npm run server\" \"npm run client:dev\"",
     "build": "npm run client:build && tsc",
     "start": "NODE_ENV=production node dist/server/index.js",
+    "pack:airgap": "bash scripts/pack-for-transfer.sh",
     "docker:build": "docker compose build",
     "docker:up": "docker compose up",
     "docker:ollama": "docker compose --profile ollama up"

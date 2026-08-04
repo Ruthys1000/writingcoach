@@ -4,3 +4,5 @@ dist/
 *.js.map
 writingcoach-ready.tar.gz
 writingcoach-transfer/
+node-v*-linux-x64.tar.gz
+runtime/
